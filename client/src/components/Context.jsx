@@ -14,15 +14,24 @@ const Context = () => {
       .then((res) => { setTime(() => res.data) })
       .catch((err) => console.log('err?: ', err));
   };
-  if (!time) {
-    getAlarmTime();
-  }
+  // uncomment:
+  // if (!time) {
+  //   getAlarmTime();
+  // }
 
   useEffect(() => {
   }, [time])
 
+  // delete testing code:
+  if (!time) {
+    setTime(() => [
+      {'time_': '6:05:00 AM', 'habit': 'Wake Up'},
+      {'time_': '6:12:00 AM', 'habit': 'Run'}
+  ]);
+  }
+
   return !time ? <Spinner /> : (
-    <App times={time} getTime={() => {getAlarmTime()}}/>
+    <App times={time} getTime={getAlarmTime}/>
   );
 };
 

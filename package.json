@@ -1,23 +1,21 @@
 {
   "name": "routinepi",
   "version": "1.0.0",
-  "description": "Using http requests and a rPi, automate your life.",
-  "main": "index.js",
+  "description": "- clone on your pi and local computer. - run: npm install pi: - From the dir root, run: sudo node piServer/server.js local computer: - termianl 1 run: npm start - termianl 2 run: npm run server",
+  "main": "webpack.config.js",
   "scripts": {
     "start": "webpack -w",
     "server": "nodemon server/server.js -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "pi": "sudo node piServer/server.js",
+    "aws": "bash server/init.sh",
+    "test": "sudo node piServer/testServer.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/daurham/RoutinePi.git"
   },
-  "keywords": [
-    "pi",
-    "smart",
-    "routine"
-  ],
-  "author": "Jake Daurahm",
+  "keywords": [],
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/daurham/RoutinePi/issues"
@@ -26,14 +24,13 @@
   "dependencies": {
     "axios": "^0.26.1",
     "express": "^4.17.3",
-    "mysql2": "^2.3.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "styled-components": "^5.3.3",
-    "webfontloader": "^1.6.28"
+    "react-is": "^17.0.2",
+    "styled-components": "^5.3.3"
   },
   "devDependencies": {
-    "@babel/core": "^7.17.7",
+    "@babel/core": "^7.17.8",
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
@@ -42,6 +39,8 @@
     "file-loader": "^6.2.0",
     "nodemon": "^2.0.15",
     "style-loader": "^3.3.1",
+    "ttf-loader": "github:unimonkiez/ttf-loader",
+    "url-loader": "^4.1.1",
     "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2"
   }

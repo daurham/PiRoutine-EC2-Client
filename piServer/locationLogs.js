@@ -1,12 +1,10 @@
 const fs = require('fs');
 const file = 'Log.txt';
 
-const writeLog = (loc, lat, lon, des, oldData = null) => {
+const writeLog = (loc, des, oldData = null) => {
   let mergedData = `
 {
     "Location": ${loc},
-    "Latitude": ${lat},
-    "Longitude": ${lon},
     "Description: ${des}
 }
 ${oldData}
@@ -29,12 +27,12 @@ const readLog = (cb) => {
   });
 };
 
-module.exports = passData = (loc, lat, lon, des) => {
+module.exports = passData = (loc, des) => {
   readLog((err, txt) => {
     if (err) {
       console.log('[function] "readData" ERROR: ', err);
     } else {
-      writeLog(loc, lat, lon, des, txt);
+      writeLog(loc, des, txt);
     }
   })
 };
