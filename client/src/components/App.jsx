@@ -69,45 +69,28 @@ const App = ({ times, getTime }) => {
     return time.join('');
   };
 
-  // const setupAlarmTime = () => {
-  //   // setAlarmTime(() => routines[0].time_)
-  //   // setAlarmTimeTwo(() => routines[1].time_)
-  //   alarmTime1 = routines[0].time_;
-  //   alarmTime2 = routines[1].time_;
-  //   let d = alarmTime1.split('').splice(-5, 1, '3');
-  //   console.log(3);
-  //   difuseTime2 = d;
-  //   setCurrAlarmTime(() => alarmTime1);
-  // };
-  // const getDifuseTime = (time) => {
-  //   // 12hr difuse time
-  //   // let d = alarmTime.slice(-2);
-  //   // let t = alarmTime.slice(0, -2);
-  //   // return t + (d === 'AM' ? 'PM' : 'AM');
-
-  //   let d = time.slice(-2);
-  //   console.log(d);
-  //   let t = time.slice(0, -2);
-  //   return t + (d === 'AM' ? 'PM' : 'AM');
-  // }
-
-  // if (alarmTime1 && !disfuseTime) {
-  //   let d = getDifuseTime();
-  //   console.log('difuse time:', d);
-  //   setDisfuseTime(() => d);
-  // }
-
-  // take mysql data and allows it to be processed.
-  // if (times && !routines) {
-  //   if (!once) {
-  //     setRoutines(() => times)
-  //     ignore(() => true);
-  //   }
-  // }
-
-  // if (routines && !alarmTime1) {
-  //   setupAlarmTime();
-  // }
+  const setupAlarmTime = () => {
+    // let temptime;
+    // let cache = {};
+    // if (currentTime.slice(-2) === 'PM') {
+    //   temptime = currentTime.slice(0, -3);
+    //   temptime + 12
+    //   routine.forEach((r) => {
+    //     if (r.time_)
+    //   })
+    // } else {
+    // }
+    setAlarmTime(() => routines[0].time_)
+  };
+  const getDifuseTime = () => {
+    let d = alarmTime.split('')
+    let n = Number(alarmTime.slice(-5, -6));
+    console.log(n);
+    d.splice(-5, 1, `${n+1}`);
+    d = d.join('');
+    console.log(d);
+    return d;
+  }
 
   const handleCurrentTime = () => {
     setCurrentTime(() => new Date().toLocaleTimeString('en-US', { hour12: true }));
