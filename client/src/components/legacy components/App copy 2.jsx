@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react';
-// import ReactDOM from 'react-dom';
-// import { Text, View } from 'react-native';
+import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-// import Habit from './Habit';
+import Habit from './Habit';
 import Spinner from './Spinner';
 import css from './css.css';
+// import WebFont from 'webfontloader';
 import font from '../font.css';
-// import Technology from '../fonts/Technology.ttf';
-import Geolocator from './Geolocator';
+import Technology from '../fonts/Technology.ttf';
+// const timeCSS = styled`
+//   @font-face {
+//     font-family: 'Technology';
+//     src: url('../fonts/Technology.ttf') format('ttf'),
+//   }
+// `;
 
 
-
-const App = ({ times, getTime, distance }) => {
+const App = ({ times, getTime }) => {
   const [currentTime, setCurrentTime] = useState('');
+  // const [alarmTime, setAlarmTime] = useState();
+  // const [alarmTimeTwo, setAlarmTimeTwo] = useState();
+  // const [disfuseTime, setDisfuseTime] = useState();
   const [status, setStatus] = useState('Pump is Armed.');
   const [isDisarmed, toggleDisarmed] = useState(false);
   const [alarmMessage, setAlarmMessage] = useState('');
@@ -28,41 +35,29 @@ const App = ({ times, getTime, distance }) => {
   const [currAlarmTime, setCurrAlarmTime] = useState();
   const [canDifuseTime1, setCanDifuseTime1] = useState();
   const [canDifuseTime2, setCanDifuseTime2] = useState();
-  // Time
-  const [hr, setHr] = useState('6');
-  const [min, setMin] = useState('05');
-  const [timeOfDay, setTOD] = useState('AM');
-
+  // const [alarms, setAlarms] = useState();
+  // const [lon, getUserLon] = useState();
   let clock;
   let interval;
   let isArmed = (isDisarmed ? 'Disfused...' : 'DISARM');
   let goal;
   let userLoc;
   // set it up to get it dynamically
-  let alarm1Hour = hr;
-  let alarm2Hour = '6';
-  let alarm1Min = min;
-  let alarm2Min = '12';
-  let alarm1Sec = '00';
-  let alarm2Sec = '00';
+  let alarm1Hour = 6;
+  let alarm2Hour = 6;
+  let alarm1Min = 6;
+  let alarm2Min = 6;
+  let alarm1Sec = 6;
+  let alarm2Sec = 6;
   let alarm1TOD = 'AM';
   let alarm2TOD = 'AM';
 
-  let alarmTime1 = `${hr}:${min}:00 ${timeOfDay}`;
+  let alarmTime1 = `${alarm1Hour}:05:00 AM`;
   let alarmTime2 = `${alarm2Hour}:12:00 AM`;
   let difuseTime1 = `${alarm1Hour}:05:00 PM`;
   let difuseTime2 = `${alarm2Hour}:06:00 AM`;
   let resetTime1 = `${alarm1Hour}:30:00 PM`;
   let resetTime2 = `${alarm2Hour}:15:00 AM`;
-
-  const range = (s, e) => {
-    let result = [s];
-    if (s === e) { return [e] }
-    if (s < e) { result = [...result, ...range(s + 1, e)] }
-    return result;
-  }
-  const hours = range(1, 12);
-  const minutues = range(1, 59);
 
   const tConvert = (time) => {
     time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)(:[0-5]\d)?$/) || [time];
@@ -74,33 +69,24 @@ const App = ({ times, getTime, distance }) => {
     return time.join('');
   };
 
-  const handleHr = (e) => {
-    setHr(() => e.target.value);
-    setHr(() => e.target.value);
-    console.log(e.target.value);
-  };
-  const handleMin = (e) => {
-    setMin(() => e.target.value);
-    setMin(() => e.target.value);
-    console.log(e.target.value);
-  };
-  const handleTOD = (e) => {
-    setTOD(() => e.target.value);
-    setTOD(() => e.target.value);
-    console.log(e.target.value);
-  };
-
-  useEffect(() => {}, [hr, min, timeOfDay]);
-
   const setupAlarmTime = () => {
+    // let temptime;
+    // let cache = {};
+    // if (currentTime.slice(-2) === 'PM') {
+    //   temptime = currentTime.slice(0, -3);
+    //   temptime + 12
+    //   routine.forEach((r) => {
+    //     if (r.time_)
+    //   })
+    // } else {
+    // }
     setAlarmTime(() => routines[0].time_)
   };
-
   const getDifuseTime = () => {
     let d = alarmTime.split('')
     let n = Number(alarmTime.slice(-5, -6));
     console.log(n);
-    d.splice(-5, 1, `${n + 1}`);
+    d.splice(-5, 1, `${n+1}`);
     d = d.join('');
     console.log(d);
     return d;
@@ -147,9 +133,12 @@ const App = ({ times, getTime, distance }) => {
   const handleDisarm = () => {
     getLocation();
     setTimeout(function () {
-
+      console.log(userLoc);
+      console.log(homeLon);
       let me = String(userLoc).slice(4, 8);
       let home = String(homeLon).slice(4, 8);
+      console.log(me);
+      console.log(home);
 
       if (canDifuseTime1 && !isDisarmed) {
         updateDisarm();
@@ -179,13 +168,13 @@ const App = ({ times, getTime, distance }) => {
       setCurrAlarmTime(() => alarmTime1);
     }
   }
-  // let val = (isDisarmed ? 0 : 1);
-  // axios.put(`/disarm/`)
-  // let val = (isDisarmed ? 0 : 1);
-  // axios.put(`/disarm/${val}/${routines[0].habit}`)
-  //   .then(() => toggleDisarmed(() => !isDisarmed))
-  //   .then(() => setStatus(() => 'Keep going.'))
-  // .then(() => setRoutines((routines) => routines.slice(1, routines.length)));
+    // let val = (isDisarmed ? 0 : 1);
+    // axios.put(`/disarm/`)
+    // let val = (isDisarmed ? 0 : 1);
+    // axios.put(`/disarm/${val}/${routines[0].habit}`)
+    //   .then(() => toggleDisarmed(() => !isDisarmed))
+    //   .then(() => setStatus(() => 'Keep going.'))
+    // .then(() => setRoutines((routines) => routines.slice(1, routines.length)));
 
   // const enableDisarm = () => {
   //   let colInd = alarmTime.indexOf(':');
@@ -216,12 +205,12 @@ const App = ({ times, getTime, distance }) => {
     // updateDisarm();
 
     // if (currentTime === disfuseTime) {
-    // setRunable(() => true);
-    // axios.post('/pi/run');
-    // console.log('turning off');
-    // }
-    // if (alarmTime == 'undefined' || !alarmTime) {
-    //   setAlarmMessage(() => "Please set your alarm.");
+      // setRunable(() => true);
+      // axios.post('/pi/run');
+      // console.log('turning off');
+      // }
+      // if (alarmTime == 'undefined' || !alarmTime) {
+      //   setAlarmMessage(() => "Please set your alarm.");
     // }
     if (currentTime.slice(-5, -4) === '5') {
       setMsg(() => 'You can do it!')
@@ -238,113 +227,87 @@ const App = ({ times, getTime, distance }) => {
     }
   }
 
-  // const failsafe = () => {
-  //   axios.post('/pi/run');
-  // }
+// const failsafe = () => {
+//   axios.post('/pi/run');
+// }
 
-  // const demo = () => {
-  //   setAlarmTime(() => currentTime)
-  //   getDifuseTime();
-  //   axios.post('/pi/run');
-  // }
+// const demo = () => {
+//   setAlarmTime(() => currentTime)
+//   getDifuseTime();
+//   axios.post('/pi/run');
+// }
 
-  // console.log('a:', alarmTime, 'd:', disfuseTime);
-  useEffect(() => {
-    clock = setInterval(() => handleCurrentTime(), 1000);
-    interval = setInterval(() => checkAlarmClock(), 1000);
-    return () => {
-      clearInterval(clock);
-      clearInterval(interval);
-    }
-  }, [currentTime]);
-  // useEffect(() => {
-  //   clock = setInterval(() => handleCurrentTime(), 1000);
-  //   interval = setInterval(() => checkAlarmClock(), 1000);
-  //   return () => {
-  //     clearInterval(clock);
-  //     clearInterval(interval);
-  //   }
-  // }, [currentTime, currAlarmTime, routines]);
+// console.log('a:', alarmTime, 'd:', disfuseTime);
+useEffect(() => {
+  clock = setInterval(() => handleCurrentTime(), 1000);
+  interval = setInterval(() => checkAlarmClock(), 1000);
+  return () => {
+    clearInterval(clock);
+    clearInterval(interval);
+  }
+}, [currentTime]);
+// useEffect(() => {
+//   clock = setInterval(() => handleCurrentTime(), 1000);
+//   interval = setInterval(() => checkAlarmClock(), 1000);
+//   return () => {
+//     clearInterval(clock);
+//     clearInterval(interval);
+//   }
+// }, [currentTime, currAlarmTime, routines]);
 
 
 
-  return (!currentTime || !alarmMessage) ? <Spinner /> : (
-    // return (!routines || !currentTime || !alarmMessage) ? <Spinner /> : (
+return (!currentTime || !alarmMessage) ? <Spinner /> : (
+  // return (!routines || !currentTime || !alarmMessage) ? <Spinner /> : (
 
-    <AppContainer className="Technology">
+  <AppnContainer className="Technology">
 
-      <Container>
-        <Header style={{ fontFamily: 'Righteous' }}>{status}</Header>
-      </Container>
-      <Container>
-        <Header style={{ fontFamily: 'Righteous', color: 'red' }}>
-          {currentTime}
-        </Header>
-        {/* <timeCSS>{currentTime}</timeCSS> */}
-      </Container>
-      <Container>
-        <Subheader style={{ fontFamily: 'Righteous' }}>{alarmMessage}</Subheader>
-        {/* <Subheader style={{ fontFamily: 'Righteous' }}>{goal ? goal : null}</Subheader> */}
-      </Container>
-      <ButtonContainer>
-        <DisarmButton onClick={handleDisarm}><HeaderB>{isArmed}</HeaderB></DisarmButton>
-      </ButtonContainer>
-      <Container>
-        {/* <InputBar onChange={handleHr} type="number" placeholder={hr}></InputBar> */}
-        <SelectBar onChange={handleHr} type="text" placeholder={timeOfDay}>
-          {hours.map((h, index) => <option key={index} value={h}></option>)}
-        </SelectBar>
-      </Container>
-      <Container>
-        {/* <InputBar onChange={handleMin} size={500} type="number" placeholder={min}></InputBar> */}
-        <SelectBar onChange={handleMin} type="text" placeholder={timeOfDay}>
-          {minutues.map((m, index) => <option key={index} value={m}></option>)}
-        </SelectBar>
-      </Container>
-      <GeoContainer>
-        <Geolocator distance={distance}/>
-      </GeoContainer>
-      <Container>
-        <SelectBar onChange={handleTOD} type="text" placeholder={timeOfDay}>
-          {['AM', 'PM'].map((tod, index) => <option key={index} value={tod}></option>)}
-        </SelectBar>
-      </Container>
-        {/* <InputBar onChange={handleTOD} type="number"></InputBar> */}
-      {/* <Container> */}
-      {/* <form> */}
-      {/* <input onChange={handleInputTime} type="time"></input> */}
-      {/* <InputBar onChange={handleRoutine} type="text"></InputBar> */}
-      {/* <input onClick={handleRoutineSubmit} type="submit"></input> */}
-      {/* </form> */}
-      {/* </Container> */}
-      <Container>
-        <ListContainer>
-          <Subheader>
-            {msg}
-          </Subheader>
-          {/* <List> */}
-          {/* {routines.length < 2 ? null : <h3 style={{ fontFamily: 'Righteous' }}>Upcoming Routines</h3>} */}
-          {/* {routines.length < 2 ? null : (routines.map((t, index) => ( */}
-          {/* // <Habit key={index} habit={t} currentTime={currentTime} /> */}
-          {/* // )))} */}
-          {/* </List> */}
-        </ListContainer>
-      </Container>
-      {/* <button onClick={failsafe}>failsafe</button> */}
-      {/* <button onClick={demo}>demo 10sec</button> */}
-    </AppContainer>
+    <Container>
+      <Header style={{ fontFamily: 'Righteous' }}>{status}</Header>
+    </Container>
+    <Container>
+      <Header style={{ fontFamily: 'Righteous', color: 'red' }}>
+        {currentTime}
+      </Header>
+      {/* <timeCSS>{currentTime}</timeCSS> */}
+    </Container>
+    <Container>
+      <Subheader style={{ fontFamily: 'Righteous' }}>{alarmMessage}</Subheader>
+      {/* <Subheader style={{ fontFamily: 'Righteous' }}>{goal ? goal : null}</Subheader> */}
+    </Container>
+    <ButtonContainer>
+      <DisarmButton onClick={handleDisarm}><HeaderB>{isArmed}</HeaderB></DisarmButton>
+    </ButtonContainer>
+    {/* <Container> */}
+    {/* <form> */}
+    {/* <input onChange={handleInputTime} type="time"></input> */}
+    {/* <InputBar onChange={handleRoutine} type="text"></InputBar> */}
+    {/* <input onClick={handleRoutineSubmit} type="submit"></input> */}
+    {/* </form> */}
+    {/* </Container> */}
+    <Container>
+      <ListContainer>
+        <Subheader>
+          {msg}
+        </Subheader>
+        {/* <List> */}
+        {/* {routines.length < 2 ? null : <h3 style={{ fontFamily: 'Righteous' }}>Upcoming Routines</h3>} */}
+        {/* {routines.length < 2 ? null : (routines.map((t, index) => ( */}
+        {/* // <Habit key={index} habit={t} currentTime={currentTime} /> */}
+        {/* // )))} */}
+        {/* </List> */}
+      </ListContainer>
+    </Container>
+    {/* <button onClick={failsafe}>failsafe</button> */}
+    {/* <button onClick={demo}>demo 10sec</button> */}
+  </AppnContainer>
 
-  )
+)
 }
+
 
 export default App;
 
-// width: 80vw;
-const GeoContainer = styled.div`
-height: 20vh;
-display: flex;
-justify-content: center;
-`;
 
 const Location = styled.h1`
 `;
@@ -359,16 +322,8 @@ const Subheader = styled.h2`
 font-size: 3rem;
 `;
 const InputBar = styled.input`
-width: 79vw;
-height: 15vh;
-size: 500%;
+size: 400%;
 `;
-const SelectBar = styled.select`
-width: 10vw;
-resize: 10vw;
-`;
-// width: 79vw;
-// height: 15vh;
 
 // width: 90%;
 // height: 100%;
@@ -384,7 +339,7 @@ height: 30vh;
   cursor: pointer;
 `;
 
-const AppContainer = styled.div`
+const AppnContainer = styled.div`
   display: block;
   justify-content: center;
   `;

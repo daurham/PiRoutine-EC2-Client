@@ -1,7 +1,7 @@
 {
-  "name": "routinepi",
-  "version": "1.0.0",
-  "description": "- clone on your pi and local computer. - run: npm install pi: - From the dir root, run: sudo node piServer/server.js local computer: - termianl 1 run: npm start - termianl 2 run: npm run server",
+  "name": "piroutine-ec2-client",
+  "version": "1.0.1",
+  "description": "Client-side portion of the PiRoutine project.",
   "main": "webpack.config.js",
   "scripts": {
     "start": "webpack -w",
@@ -12,34 +12,42 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/daurham/RoutinePi.git"
+    "url": "git+https://github.com/daurham/PiRoutine-EC2-Client.git"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "Pi"
+  ],
+  "author": "Jake Daurham",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/daurham/RoutinePi/issues"
+    "url": "https://github.com/daurham/PiRoutine-EC2-Client/issues"
   },
-  "homepage": "https://github.com/daurham/RoutinePi#readme",
+  "homepage": "https://github.com/daurham/PiRoutine-EC2-Client#readme",
   "dependencies": {
     "axios": "^0.26.1",
+    "bootstrap": "^5.1.3",
+    "clean-webpack-plugin": "^4.0.0",
     "express": "^4.17.3",
+    "json-loader": "^0.5.7",
     "react": "^17.0.2",
+    "react-bootstrap": "^2.2.2",
     "react-dom": "^17.0.2",
-    "react-is": "^17.0.2",
-    "styled-components": "^5.3.3"
+    "react-native": "^0.67.4",
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@babel/core": "^7.17.8",
     "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
-    "babel-loader": "^8.2.3",
+    "babel-loader": "^8.2.4",
+    "babel-plugin-syntax-trailing-function-commas": "^7.0.0-beta.0",
+    "babel-plugin-transform-flow-strip-types": "^6.22.0",
     "css-loader": "^6.7.1",
     "file-loader": "^6.2.0",
     "nodemon": "^2.0.15",
+    "react-native-webpack": "^0.1.1",
     "style-loader": "^3.3.1",
-    "ttf-loader": "github:unimonkiez/ttf-loader",
     "url-loader": "^4.1.1",
     "webpack": "^5.70.0",
     "webpack-cli": "^4.9.2"

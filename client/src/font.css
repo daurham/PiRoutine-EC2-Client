@@ -18,14 +18,14 @@
   color: white;
 } */
 
-@font-face {
+/* @font-face {
   font-family: 'Technology';
   src: url('./fonts/Technology.ttf') format('ttf'),
 }
 @font-face {
   font-family: 'Technology-Bold';
   src: url('./fonts/Technology-Bold.ttf') format('ttf'),
-}
+} */
 
 .time {
   color: rgb(255, 0, 0);
