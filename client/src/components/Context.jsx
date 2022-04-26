@@ -68,11 +68,13 @@ const Context = () => {
       .then((res) => {
         setAlarmTime(() => new Temporal.PlainTime(((res.data[0].hour===24?0:res.data[0].hour)), res.data[0].minute));
         setInitialAlarmTime(() =>  new Temporal.PlainTime(((res.data[0].hour===24?0:res.data[0].hour)), res.data[0].minute));
+        console.log('Made contact with PI, getting alarmtime @', Temporal.Now.plainTimeISO());
       })
       .catch((err) => {
 	      console.log('err?: ', err);
 		 console.log('Err getting alarm data from db, setting time to 6:05am to avoid crash. Fix err though.');
 		 setInitialAlarmTime(() => new Temporal.PlainTime(6,5).toString());
+     console.log('Err contacting PI, setting default alarmtime @', Temporal.Now.plainTimeISO());
 	//	 axios.post('/err')
 	  //		.catch((err) => console.log('err in sending the error warning: ', err));
 
@@ -80,11 +82,15 @@ const Context = () => {
   };
   const getStreak = () => {
     axios.get('/streak')
-      .then((res) => setStreak(() => res.data[0].streak))
+      .then((res) => {
+        setStreak(() => res.data[0].streak)
+        console.log('Made contact with PI, getting current streak @', Temporal.Now.plainTimeISO());
+      })
       .catch((err) => {
 	      console.log('err?: ', err);
 		 console.log('Err getting streak data from db, filling in 0 to avoid crash. Fix err though.');
 		 setStreak(() => 0);
+     console.log('Err contacting PI, setting default streak @', Temporal.Now.plainTimeISO());
 //	  	 axios.post('/err')
   //                      .catch((err) => console.log('err in sending the error warning: ', err));
  	});
