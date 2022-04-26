@@ -70,22 +70,22 @@ const Context = () => {
         setInitialAlarmTime(() =>  new Temporal.PlainTime(((res.data[0].hour===24?0:res.data[0].hour)), res.data[0].minute));
       })
       .catch((err) => {
-	      console.log('err?: ', err); 
+	      console.log('err?: ', err);
 		 console.log('Err getting alarm data from db, setting time to 6:05am to avoid crash. Fix err though.');
-		 setInitialAlarmTime(() => new Temporal.PlainTime(6,5).toString()); 
+		 setInitialAlarmTime(() => new Temporal.PlainTime(6,5).toString());
 	//	 axios.post('/err')
 	  //		.catch((err) => console.log('err in sending the error warning: ', err));
-  
+
 	  });
   };
   const getStreak = () => {
     axios.get('/streak')
       .then((res) => setStreak(() => res.data[0].streak))
       .catch((err) => {
-	      console.log('err?: ', err); 
-		 console.log('Err getting streak data from db, filling in 0 to avoid crash. Fix err though.'); 
+	      console.log('err?: ', err);
+		 console.log('Err getting streak data from db, filling in 0 to avoid crash. Fix err though.');
 		 setStreak(() => 0);
-//	  	 axios.post('/err') 
+//	  	 axios.post('/err')
   //                      .catch((err) => console.log('err in sending the error warning: ', err));
  	});
   };

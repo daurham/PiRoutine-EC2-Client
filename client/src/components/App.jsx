@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import ReactDOM from 'react-dom';
+// import ReactDOM from 'react-dom';
+// import { Text, View } from 'react-native';
 import styled from 'styled-components';
 import axios from 'axios';
 import Spinner from './Spinner';
@@ -93,7 +94,7 @@ const App = () => {
         //axios.post('/');
 
 	      	.then(() => getStreak())
-	      	.catch(() => {      
+	      	.catch(() => {
 			console.log('err?: ', err)
       console.log('Err updating streak data from server, filling in 0 to avoid crash. Fix err though.');
       setStreak(() => 0);
@@ -265,7 +266,7 @@ const App = () => {
         </ListContainer>
       </Container>
       {/* <button onClick={failsafe}>failsafe</button> */}
-	  {/*<Button variant='dark' onClick={demo}>testing</Button>*/} 
+	  {/*<Button variant='dark' onClick={demo}>testing</Button>*/}
       {dropdown ?
         <Button variant='secondary-outline' onClick={handleFormDropdown}>Close</Button>
         :
@@ -276,9 +277,109 @@ const App = () => {
   )
 }
 
+  // const demo = () => {
+  //   setAlarmTime(() => currentTime)
+  //   getDifuseTime();
+  //   axios.post('/pi/run');
+  // }
+
+  // console.log('a:', alarmTime, 'd:', disfuseTime);
+  useEffect(() => {
+    clock = setInterval(() => handleCurrentTime(), 1000);
+    interval = setInterval(() => checkAlarmClock(), 1000);
+    return () => {
+      clearInterval(clock);
+      clearInterval(interval);
+    }
+  }, [currentTime]);
+  // useEffect(() => {
+  //   clock = setInterval(() => handleCurrentTime(), 1000);
+  //   interval = setInterval(() => checkAlarmClock(), 1000);
+  //   return () => {
+  //     clearInterval(clock);
+  //     clearInterval(interval);
+  //   }
+  // }, [currentTime, currAlarmTime, routines]);
+
+
+
+  return (!currentTime || !alarmMessage) ? <Spinner /> : (
+    // return (!routines || !currentTime || !alarmMessage) ? <Spinner /> : (
+
+    <AppContainer className="Technology">
+
+      <Container>
+        <Header style={{ fontFamily: 'Righteous' }}>{status}</Header>
+      </Container>
+      <Container>
+        <Header style={{ fontFamily: 'Righteous', color: 'red' }}>
+          {currentTime}
+        </Header>
+        {/* <timeCSS>{currentTime}</timeCSS> */}
+      </Container>
+      <Container>
+        <Subheader style={{ fontFamily: 'Righteous' }}>{alarmMessage}</Subheader>
+        {/* <Subheader style={{ fontFamily: 'Righteous' }}>{goal ? goal : null}</Subheader> */}
+      </Container>
+      <ButtonContainer>
+        <DisarmButton onClick={handleDisarm}><HeaderB>{isArmed}</HeaderB></DisarmButton>
+      </ButtonContainer>
+      <Container>
+        {/* <InputBar onChange={handleHr} type="number" placeholder={hr}></InputBar> */}
+        <SelectBar onChange={handleHr} type="text" placeholder={timeOfDay}>
+          {hours.map((h, index) => <option key={index} value={h}></option>)}
+        </SelectBar>
+      </Container>
+      <Container>
+        {/* <InputBar onChange={handleMin} size={500} type="number" placeholder={min}></InputBar> */}
+        <SelectBar onChange={handleMin} type="text" placeholder={timeOfDay}>
+          {minutues.map((m, index) => <option key={index} value={m}></option>)}
+        </SelectBar>
+      </Container>
+      <GeoContainer>
+        <Geolocator distance={distance}/>
+      </GeoContainer>
+      <Container>
+        <SelectBar onChange={handleTOD} type="text" placeholder={timeOfDay}>
+          {['AM', 'PM'].map((tod, index) => <option key={index} value={tod}></option>)}
+        </SelectBar>
+      </Container>
+        {/* <InputBar onChange={handleTOD} type="number"></InputBar> */}
+      {/* <Container> */}
+      {/* <form> */}
+      {/* <input onChange={handleInputTime} type="time"></input> */}
+      {/* <InputBar onChange={handleRoutine} type="text"></InputBar> */}
+      {/* <input onClick={handleRoutineSubmit} type="submit"></input> */}
+      {/* </form> */}
+      {/* </Container> */}
+      <Container>
+        <ListContainer>
+          <Subheader>
+            {msg}
+          </Subheader>
+          {/* <List> */}
+          {/* {routines.length < 2 ? null : <h3 style={{ fontFamily: 'Righteous' }}>Upcoming Routines</h3>} */}
+          {/* {routines.length < 2 ? null : (routines.map((t, index) => ( */}
+          {/* // <Habit key={index} habit={t} currentTime={currentTime} /> */}
+          {/* // )))} */}
+          {/* </List> */}
+        </ListContainer>
+      </Container>
+      {/* <button onClick={failsafe}>failsafe</button> */}
+      {/* <button onClick={demo}>demo 10sec</button> */}
+    </AppContainer>
+
+  )
+}
 
 export default App;
 
+// width: 80vw;
+const GeoContainer = styled.div`
+height: 20vh;
+display: flex;
+justify-content: center;
+`;
 
 const Location = styled.h1`
 `;
@@ -296,8 +397,16 @@ const Subsubheader = styled.h3`
 font-size: 2rem;
 `;
 const InputBar = styled.input`
-size: 400%;
+width: 79vw;
+height: 15vh;
+size: 500%;
 `;
+const SelectBar = styled.select`
+width: 10vw;
+resize: 10vw;
+`;
+// width: 79vw;
+// height: 15vh;
 
 // width: 90%;
 // height: 100%;
@@ -313,7 +422,7 @@ height: 30vh;
   cursor: pointer;
 `;
 
-const AppnContainer = styled.div`
+const AppContainer = styled.div`
   display: block;
   justify-content: center;
   `;
