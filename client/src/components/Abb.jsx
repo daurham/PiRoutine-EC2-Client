@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react';
-// import ReactDOM from 'react-dom';
-// import { Text, View } from 'react-native';
+import ReactDOM from 'react-dom';
 import styled from 'styled-components';
 import axios from 'axios';
-import Spinner from './Spinner';
 import css from '../styles/css.css';
 // import font from '../styles/font.css';
-// import Technology from '../fonts/Technology.ttf';
+//import Technology from '../fonts/Technology.ttf';
 import { Temporal, Intl, toTemporalInstant } from '@js-temporal/polyfill';
 import { Form, ProgressBar, Button } from 'react-bootstrap';
 import { useData } from './Context';
@@ -92,15 +90,17 @@ const App = () => {
         setDistance(() => 0);
         switchAlarms();
         //axios.post('/');
-        axios.put(`/streak/${streak}/${streak + 1}`) // update the streak val
-          .then(() => getStreak())
-          .catch(() => {
+
+	      	.then(() => getStreak())
+	      	.catch(() => {      
+			console.log('err?: ', err)
             console.log('err?: ', err)
             console.log('Err updating streak data from server, filling in 0 to avoid crash. Fix err though.');
             setStreak(() => 0);
             //      axios.post('/err')
             //        .catch((err) => console.log('err in sending the error warning: ', err));
           });
+
         //	      .then((res) => {console.log(res.data); setStreak(() => res.data[0].streak)})
         //.catch((err) => console.log('err catching: ', err); // update the streak val.
       }
@@ -336,112 +336,3 @@ return (!currentTime || !alarmMessage) ? <Spinner /> : (
       </SelectBar>
     </Container>
     <GeoContainer>
-      <Geolocator distance={distance} />
-    </GeoContainer>
-    <Container>
-      <SelectBar onChange={handleTOD} type="text" placeholder={timeOfDay}>
-        {['AM', 'PM'].map((tod, index) => <option key={index} value={tod}></option>)}
-      </SelectBar>
-    </Container>
-    {/* <InputBar onChange={handleTOD} type="number"></InputBar> */}
-    {/* <Container> */}
-    {/* <form> */}
-    {/* <input onChange={handleInputTime} type="time"></input> */}
-    {/* <InputBar onChange={handleRoutine} type="text"></InputBar> */}
-    {/* <input onClick={handleRoutineSubmit} type="submit"></input> */}
-    {/* </form> */}
-    {/* </Container> */}
-    <Container>
-      <ListContainer>
-        <Subheader>
-          {msg}
-        </Subheader>
-        {/* <List> */}
-        {/* {routines.length < 2 ? null : <h3 style={{ fontFamily: 'Righteous' }}>Upcoming Routines</h3>} */}
-        {/* {routines.length < 2 ? null : (routines.map((t, index) => ( */}
-        {/* // <Habit key={index} habit={t} currentTime={currentTime} /> */}
-        {/* // )))} */}
-        {/* </List> */}
-      </ListContainer>
-    </Container>
-    {/* <button onClick={failsafe}>failsafe</button> */}
-    {/* <button onClick={demo}>demo 10sec</button> */}
-  </AppContainer>
-
-)
-}
-
-export default App;
-
-// width: 80vw;
-const GeoContainer = styled.div`
-height: 20vh;
-display: flex;
-justify-content: center;
-`;
-
-const Location = styled.h1`
-`;
-const Header = styled.h1`
-font-size: 4rem;
-`;
-// const HeaderB = styled.h1`
-// font-size: 5rem;
-// color: white;
-// `;
-const Subheader = styled.h2`
-font-size: 3rem;
-`;
-const Subsubheader = styled.h3`
-font-size: 2rem;
-`;
-const InputBar = styled.input`
-width: 79vw;
-height: 15vh;
-size: 500%;
-`;
-const SelectBar = styled.select`
-width: 10vw;
-resize: 10vw;
-`;
-// width: 79vw;
-// height: 15vh;
-
-// width: 90%;
-// height: 100%;
-// background-color: rgb(56, 55, 61);
-const DisarmButton = styled.button`
-background-color: black;
-padding: 10px 60px;
-border-radius: 20px;
-margin: 10px 0px;
-
-width: 79vw;
-height: 30vh;
-  cursor: pointer;
-`;
-
-const AppContainer = styled.div`
-  display: block;
-  justify-content: center;
-  `;
-// width: 80vw;
-// height: 50hw;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  `;
-// width: 80vw;
-// height: 20rem;
-const ListContainer = styled.div`
-  display: block;
-  justify-content: center;
-`;
-const List = styled.ul`
-  justify-content: center;
- `;
-const Container = styled.div`
-  display: flex;
-  justify-content: center;
-`;
