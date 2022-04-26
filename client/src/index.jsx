@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import Context from './components/Context';
+import './fonts/Technology.ttf';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import './fonts/Technology.ttf';
 // import WebFont from 'webfontloader';
 
 // import './fonts/Technology.ttf';
