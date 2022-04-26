@@ -16,7 +16,7 @@ import convert from './Utils/convert';
 
 
 const App = () => {
-  const { latitude, longitude, currentTime, setCurrentTime, alarmTime, setAlarmTime, distance, setDistance, initialAlarmTime, setInitialAlarmTime, streak } = useData(); // works
+  const { latitude, longitude, currentTime, setCurrentTime, alarmTime, setAlarmTime, distance, setDistance, initialAlarmTime, setInitialAlarmTime, streak, setStreak, getStreak, getAlarmTime } = useData(); // works
   // console.log(latitude, time);
 
   const now = Temporal.Now.plainTimeISO(); // move to context
@@ -29,10 +29,10 @@ const App = () => {
   const [active, setActive] = useState(true);
   const [dropdown, setDropdown] = useState(false);
   const [inputHr, setInputHr] = useState();
-  const [inputMin, setInputMin] = useState();
+  const [inputMin, setInputMin] = useState(0);
   const [inputTod, setInputTod] = useState('AM');
-  const hours = ['00', ...range(1, 12)];
-  const minutes = ['00', ...range(1, 59)];
+  const hours = [0, ...range(1, 12)];
+  const minutes = [0, ...range(1, 59)];
 
   let clock;
   let interval;
@@ -82,7 +82,7 @@ const App = () => {
     } else {
       if (currentAlarm === 1) { // first alarm defused
         setStatus(() => 'Nice, Now lets get moving!');
-        setAlarmTime(() => alarmTime.add({ minutes: 7 }));
+        setAlarmTime(() => now.add({ minutes: 7 }));
         switchAlarms();
         toggleDisarmed(() => true);
       } else if (currentAlarm === 2) { // second alarm defused
@@ -90,7 +90,19 @@ const App = () => {
         setAlarmTime(() => initialAlarmTime);
         setDistance(() => 0);
         switchAlarms();
-        axios.put(`/streak/${streak}/${streak + 1}`); // update the streak val.
+        //axios.post('/');
+
+	      	.then(() => getStreak())
+	      	.catch(() => {      
+			console.log('err?: ', err)
+      console.log('Err updating streak data from server, filling in 0 to avoid crash. Fix err though.');
+      setStreak(() => 0);
+//      axios.post('/err')
+//        .catch((err) => console.log('err in sending the error warning: ', err));
+    });
+
+//	      .then((res) => {console.log(res.data); setStreak(() => res.data[0].streak)})
+		//.catch((err) => console.log('err catching: ', err); // update the streak val.
       }
     }
   };
@@ -107,6 +119,7 @@ const App = () => {
     setInputMin(() => Number(e.target.value));
   };
   const handleTod = (e) => {
+	  //console.log(e.target.value);
     setInputTod(() => e.target.value);
   };
 
@@ -115,9 +128,19 @@ const App = () => {
     if (typeof inputHr === 'number' && typeof inputMin === 'number') {
       data = { newAlarm: { h: inputHr, m: inputMin }, oldAlarm: { h: alarmTime.hour, m: alarmTime.minute } };
       if (inputTod === 'PM') {
-        data.newAlarm.h + 12;
+	      //console.log('tod: ', inputTod);
+        data.newAlarm.h = data.newAlarm.h + 12;
       }
-      axios.put('/updateAlarm', data);
+      axios.put('/updateAlarm', data)
+	    .then((res) => getAlarmTime())
+	    .catch((err) => {
+  console.log('Err: ', err)
+  console.log('Err updating alarmtime data to server. This .PUT request is ran via App.jsx. The new data was: ');
+  console.log(data);
+  setInitialAlarmTime(() => new Temporal.PlainTime(6, 5).toString());
+//  axios.post('/err')
+//    .catch((err) => console.log('err in sending the error warning: ', err));
+});
     } else {
       alert('Select numbers to update the time.')
       console.log('Niceee bish!');
@@ -128,9 +151,9 @@ const App = () => {
   const handleProgressBar = () => { // enables button to be clicked again and diffuses alarm
     if (currentAlarm === 2) {
       if (distance < 100) {
-        setDistance(() => distance + 5); // remove after testing
+        //setDistance(() => distance + 50); // remove after testing
       }
-      if (distance === 100) {
+      if (distance >= 100) {
         toggleDisarmed(() => false);
       }
     }
@@ -142,11 +165,24 @@ const App = () => {
     setAlarmMessage(() => "Your alarm is set for " + convert(alarmTime) + ".");
     if (currentTime === convert(alarmTime)) {
       setStatus(() => 'Do Better...');
-      axios.post('/pi/run');
-      axios.put(`/streak/${streak}/${0}`);
+      axios.post('/pi/run')
+	    .catch((err) => console.log('err running the pump: ', err));
+      axios.put(`/streak/${streak}/${0}`)
+	    .then(() => getStreak())
+	    .catch((err) => {
+      console.log('err?: ', err)
+      console.log('Err getting streak data from server, filling in 0 to avoid crash. Fix err though.');
+      setStreak(() => 0);
+  //    axios.post('/err')
+  //      .catch((err) => console.log('err in sending the error warning: ', err));
+    });
+	    //.then((res) => { console.log(res.data); setStreak(() => res.data[0].streak) });
       console.log('get wet bish!');
+    // later, add a streak for counting times soaked.
     }
   }
+
+//console.log('appside: ', streak);
 
   useEffect(() => {
     clock = setInterval(() => handleCurrentTime(), 1000);
@@ -157,8 +193,8 @@ const App = () => {
     }
   }, [currentTime]);
 
-  useEffect(() => {}, [streak])
-  console.log('distance?: ', distance);
+  //useEffect(() => {}, [streak])
+  //console.log('distance?: ', distance);
 
   return (!currentTime || !alarmMessage) ? <Spinner /> : (
 
@@ -229,7 +265,7 @@ const App = () => {
         </ListContainer>
       </Container>
       {/* <button onClick={failsafe}>failsafe</button> */}
-      <Button variant='dark' onClick={demo}>testing</Button>
+	  {/*<Button variant='dark' onClick={demo}>testing</Button>*/} 
       {dropdown ?
         <Button variant='secondary-outline' onClick={handleFormDropdown}>Close</Button>
         :
@@ -247,7 +283,7 @@ export default App;
 const Location = styled.h1`
 `;
 const Header = styled.h1`
-font-size: 5rem;
+font-size: 4rem;
 `;
 // const HeaderB = styled.h1`
 // font-size: 5rem;
@@ -296,7 +332,7 @@ const ListContainer = styled.div`
 `;
 const List = styled.ul`
   justify-content: center;
-`;
+ `;
 const Container = styled.div`
   display: flex;
   justify-content: center;
