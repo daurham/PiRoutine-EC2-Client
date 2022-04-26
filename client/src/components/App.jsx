@@ -106,6 +106,7 @@ const App = ({ times, getTime, distance }) => {
     return d;
   }
 
+  // gets current time
   const handleCurrentTime = () => {
     setCurrentTime(() => new Date().toLocaleTimeString('en-US', { hour12: true }));
   };
