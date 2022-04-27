@@ -17,7 +17,6 @@ import convert from './Utils/convert';
 
 const App = () => {
   const { latitude, longitude, currentTime, setCurrentTime, alarmTime, setAlarmTime, distance, setDistance, initialAlarmTime, setInitialAlarmTime, streak, setStreak, getStreak, getAlarmTime } = useData(); // works
-  // console.log(latitude, time);
 
   const now = Temporal.Now.plainTimeISO(); // move to context
 
@@ -50,18 +49,14 @@ const App = () => {
   };
 
 
-  // identify the current phase:
-  // determine if phase is active
   const isActive = (aTime) => {
     if (((now.hour >= aTime.hour - 2) && now.hour < aTime.hour) || // if within a safe hour block or
       (now.hour === aTime.hour && now.minute < aTime.minute) || // if during alarm hour, its within a safe min / sec block
       (now.hour === aTime.hour && now.minute === aTime.minute && now.second < aTime.second)) { // if current time is within the active block.
-      // console.log('should open');
       if (!active) {
         setActive(() => true);
       }
     } else {
-      // console.log('should close');
       if (active) {
         setActive(() => false);
       }
@@ -71,7 +66,6 @@ const App = () => {
   const statusGenerator = () => { // randomly returns a positive phrase
     let phrases = ['Make them proud', 'Keep it up', 'Keep proving you\'ve had enough', 'Keep crushing it!', 'Captain the fuck out this day!', 'Stick to your goals', 'Trust your wiser self', 'Keep going cap'];
     let r = Math.floor(Math.random() * (phrases.length));
-    // console.log(phrases[r]);
     return phrases[r];
   };
 
@@ -90,19 +84,13 @@ const App = () => {
         setAlarmTime(() => initialAlarmTime);
         setDistance(() => 0);
         switchAlarms();
-        //axios.post('/');
         axios.put(`/streak/${streak}/${streak + 1}`) // update the streak val
           .then(() => getStreak())
           .catch(() => {
             console.log('err?: ', err)
             console.log('Err updating streak data from server, filling in 0 to avoid crash. Fix err though.');
             setStreak(() => 0);
-            //      axios.post('/err')
-            //        .catch((err) => console.log('err in sending the error warning: ', err));
           });
-
-        //	      .then((res) => {console.log(res.data); setStreak(() => res.data[0].streak)})
-        //.catch((err) => console.log('err catching: ', err); // update the streak val.
       }
     }
   };
@@ -119,7 +107,6 @@ const App = () => {
     setInputMin(() => Number(e.target.value));
   };
   const handleTod = (e) => {
-    //console.log(e.target.value);
     setInputTod(() => e.target.value);
   };
 
@@ -128,7 +115,6 @@ const App = () => {
     if (typeof inputHr === 'number' && typeof inputMin === 'number') {
       data = { newAlarm: { h: inputHr, m: inputMin }, oldAlarm: { h: alarmTime.hour, m: alarmTime.minute } };
       if (inputTod === 'PM') {
-        //console.log('tod: ', inputTod);
         data.newAlarm.h = data.newAlarm.h + 12;
       }
       axios.put('/updateAlarm', data)
@@ -138,8 +124,6 @@ const App = () => {
           console.log('Err updating alarmtime data to server. This .PUT request is ran via App.jsx. The new data was: ');
           console.log(data);
           setInitialAlarmTime(() => new Temporal.PlainTime(6, 5).toString());
-          //  axios.post('/err')
-          //    .catch((err) => console.log('err in sending the error warning: ', err));
         });
     } else {
       alert('Select numbers to update the time.')
@@ -173,16 +157,10 @@ const App = () => {
           console.log('err?: ', err)
           console.log('Err getting streak data from server, filling in 0 to avoid crash. Fix err though.');
           setStreak(() => 0);
-          //    axios.post('/err')
-          //      .catch((err) => console.log('err in sending the error warning: ', err));
         });
-      //.then((res) => { console.log(res.data); setStreak(() => res.data[0].streak) });
       console.log('get wet bish!');
-      // later, add a streak for counting times soaked.
     }
   }
-
-  //console.log('appside: ', streak);
 
   useEffect(() => {
     clock = setInterval(() => handleCurrentTime(), 1000);
@@ -193,8 +171,6 @@ const App = () => {
     }
   }, [currentTime]);
 
-  //useEffect(() => {}, [streak])
-  //console.log('distance?: ', distance);
 
   return (!currentTime || !alarmMessage) ? <Spinner /> : (
 
@@ -207,17 +183,13 @@ const App = () => {
         <Header style={{ fontFamily: Technology, color: 'red' }}>
           {currentTime}
         </Header>
-        {/* <timeCSS>{currentTime}</timeCSS> */}
       </Container>
       <Container>
         <Subsubheader style={{ fontFamily: 'Righteous' }}>{alarmMessage}</Subsubheader>
-        {/* <Subheader style={{ fontFamily: 'Righteous' }}>{goal ? goal : null}</Subheader> */}
       </Container>
       {active ?
         <ButtonContainer>
           <Button size='lg' variant='dark' onClick={handleDisarm}>{isArmed}</Button>
-          {/* <DisarmButton onClick={handleDisarm}>{isArmed}</DisarmButton> */}
-          {/* <DisarmButton onClick={handleDisarm}><HeaderB>{isArmed}</HeaderB></DisarmButton> */}
         </ButtonContainer>
         : null}
       {active ?
@@ -256,12 +228,6 @@ const App = () => {
               </>
               : null}
           </Container>
-          {/* <List> */}
-          {/* {routines.length < 2 ? null : <h3 style={{ fontFamily: 'Righteous' }}>Upcoming Routines</h3>} */}
-          {/* {routines.length < 2 ? null : (routines.map((t, index) => ( */}
-          {/* // <Habit key={index} habit={t} currentTime={currentTime} /> */}
-          {/* // )))} */}
-          {/* </List> */}
         </ListContainer>
       </Container>
       {/* <button onClick={failsafe}>failsafe</button> */}
