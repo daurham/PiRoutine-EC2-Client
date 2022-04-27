@@ -25,6 +25,7 @@ const alertError = () => {
   // axios.post('http://70.188.209.178:3000/piRoutine/err')
     //.then((result) => res.status(statusCode).send('Yellow LED should be on.'))
     // .catch((err) => console.log('Issue triggering the yellow LED: ', err));
+    console.log(`ERROR DETECTED @`, new Date().toISOString().replace('T', ' '));
 };
 
 // app.post('/', (req, res) => {
@@ -35,7 +36,6 @@ const alertError = () => {
 
 app.get('/alarmTime', (req, res) => {
   console.log('getting alarm data');
-  //  axios.get(`http://192.168.0.164:3000/piRoutine/${'alarmtime'}`)
   axios.get(`http://70.188.209.178:3000/piRoutine/${'alarmtime'}`)
     .then((result) => { console.log('got my "/alarmTime" return data'); res.status(200).send(result.data); })
     .catch((err) => {
@@ -45,8 +45,7 @@ app.get('/alarmTime', (req, res) => {
     });
 });
 app.get('/streak', (req, res) => {
-  // console.log('getting streak data');
-  //axios.get(`http://192.168.0.164:3000/piRoutine/${'streakcount'}`)
+  console.log('getting streak data');
   axios.get(`http://70.188.209.178:3000/piRoutine/${'streakcount'}`)
     .then((result) => res.status(200).send(result.data))
     .catch((err) => {
@@ -56,10 +55,9 @@ app.get('/streak', (req, res) => {
     });
 });
 app.put('/updateAlarm', (req, res) => {
-  // console.log('getting alarm data');
+  console.log('updating alarm data');
   let data = req.body;
   console.log('updating alarm: ', data);
-  //  axios.put(`http://192.168.0.164:3000/piRoutine/updateAlarm/${data.oldAlarm}/${data.newAlarm}`, data)
   axios.put(`http://70.188.209.178:3000/piRoutine/updateAlarm/${data.oldAlarm}/${data.newAlarm}`, data)
     .then((result) => res.status(203).send(result.data))
     .catch((err) => {
@@ -70,8 +68,7 @@ app.put('/updateAlarm', (req, res) => {
 });
 app.put('/streak/:oldStreak/:newStreak', (req, res) => {
   console.log('updating streaks: ', req.params.oldStreak);
-  // console.log('updating alarm data');
-  //axios.put(`http://192.168.0.164:3000/piRoutine/updateStreak/${req.params.oldStreak}/${req.params.newStreak}/`)
+  console.log('updating alarm data');
   axios.put(`http://70.188.209.178:3000/piRoutine/updateStreak/${req.params.oldStreak}/${req.params.newStreak}/`)
     .then((result) => res.status(203).send(result.data))
     .catch((err) => {

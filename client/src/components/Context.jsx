@@ -75,11 +75,9 @@ const Context = () => {
         console.log('Err getting alarm data from db, setting time to 6:05am to avoid crash. Fix err though.');
         setInitialAlarmTime(() => new Temporal.PlainTime(6, 5).toString());
         console.log('Err contacting PI, setting default alarmtime @', Temporal.Now.plainTimeISO());
-        //	 axios.post('/err')
-        //		.catch((err) => console.log('err in sending the error warning: ', err));
-
       });
   };
+
   const getStreak = () => {
     axios.get('/streak')
       .then((res) => {
@@ -91,39 +89,30 @@ const Context = () => {
         console.log('Err getting streak data from db, filling in 0 to avoid crash. Fix err though.');
         setStreak(() => 0);
         console.log('Err contacting PI, setting default streak @', Temporal.Now.plainTimeISO());
-        //  axios.post('/err')
-        //    .catch((err) => console.log('err in sending the error warning: ', err));
       });
   };
 
-  // uncomment:
-  useEffect(() => {
+  const handleCurrentTime = () => {
+    setCurrentTime(() => convert(Temporal.Now.plainTimeISO()));
+  };
+
+  useEffect(() => { // TRACK STREAK CHANGE
     if (!alarmTime) {
       getAlarmTime();
-      // setAlarmTime(() => new Temporal.PlainTime(6, 5)); // remove when ready for backend
     }
-    //  if (!streak) {
     getStreak();
-    // setStreak(() => 8); // remove when ready for backend
-    //}
   }, [streak])
 
-  useEffect(() => {
+  useEffect(() => { // TRACK CURRENT LOCATION CHANGE
     dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
     dif(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
     setDistance(() => dConvert(changeLat));
   }, [latitude]);
 
-
-  const handleCurrentTime = () => {
-    setCurrentTime(() => convert(Temporal.Now.plainTimeISO()));
-  };
-  useEffect(() => {
+  useEffect(() => { // TRACK TIME CHANGE
     clock = setInterval(() => handleCurrentTime(), 1000);
-    // interval = setInterval(() => checkAlarmClock(), 1000);
     return () => {
       clearInterval(clock);
-      // clearInterval(interval);
     }
   }, [currentTime]);
 
