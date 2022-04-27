@@ -22,16 +22,16 @@ app.use(express.json());
 // });
 
 const alertError = () => {
-  axios.post('http://70.188.209.178:3000/piRoutine/err')
+  // axios.post('http://70.188.209.178:3000/piRoutine/err')
     //.then((result) => res.status(statusCode).send('Yellow LED should be on.'))
-    .catch((err) => console.log('Issue triggering the yellow LED: ', err));
+    // .catch((err) => console.log('Issue triggering the yellow LED: ', err));
 };
 
-app.post('/', (req, res) => {
-  //	 axios.post(`http://192.168.0.164:3000/`)
-  axios.post(`http://70.188.209.178:3000/`)
-    .then(() => res.status(201).send(console.log('Ayeeoooo')));
-});
+// app.post('/', (req, res) => {
+//   //	 axios.post(`http://192.168.0.164:3000/`)
+//   axios.post(`http://70.188.209.178:3000/`)
+//     .then(() => res.status(201).send(console.log('Ayeeoooo')));
+// });
 
 app.get('/alarmTime', (req, res) => {
   console.log('getting alarm data');
