@@ -1,7 +1,7 @@
 {
-  "name": "leetcode-tracker",
+  "name": "FILL_ME_IN",
   "version": "1.0.0",
-  "description": "Track toy problem stats",
+  "description": "FILL_ME_IN",
   "main": "webpack.config.js",
   "scripts": {
     "start": "webpack --watch",
@@ -10,18 +10,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/daurham/Leetcode-Tracker.git"
+    "url": "git+https://github.com/daurham/FILL_ME_IN.git"
   },
-  "keywords": [
-    "leetcode",
-    "tracker"
-  ],
+  "keywords": [],
   "author": "daurham",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/daurham/Leetcode-Tracker/issues"
+    "url": "https://github.com/daurham/FILL_ME_IN/issues"
   },
-  "homepage": "https://github.com/daurham/Leetcode-Tracker#readme",
+  "homepage": "https://github.com/daurham/FILL_ME_IN#readme",
   "dependencies": {
     "axios": "^0.27.2",
     "bluebird": "^3.7.2",
