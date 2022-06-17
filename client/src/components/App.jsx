@@ -135,7 +135,7 @@ const App = () => {
   const handleProgressBar = () => { // enables button to be clicked again and diffuses alarm
     if (currentAlarm === 2) {
       if (distance < 100) {
-        //setDistance(() => distance + 50); // remove after testing
+        setDistance(() => distance + 5); // remove after testing
       }
       if (distance >= 100) {
         toggleDisarmed(() => false);

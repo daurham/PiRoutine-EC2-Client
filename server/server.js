@@ -37,12 +37,26 @@ const alertError = () => {
 app.get('/alarmTime', (req, res) => {
   console.log('getting alarm data');
   axios.get(`http://70.188.209.178:3000/piRoutine/${'alarmtime'}`)
-    .then((result) => { console.log('got my "/alarmTime" return data'); res.status(200).send(result.data); })
+    .then((result) => { 
+	    console.log('got my "/alarmTime" return data'); 
+	 //   res.status(200).send(result.data); 
+            axios.post('http://70.188.209.178:3000/piRoutine/run')
+	     res.status(200).send(result.data);
+           //   .then((result) => res.status(201).send('Pump should have ran.'));
+    })
     .catch((err) => {
       console.log('Issue getting data: ', err)
       alertError();
       res.status(200).send({ hour: 6, minute: 5 });
     });
+///	    axios.post('http://70.188.209.178:3000/piRoutine/run')
+   //     .then((result) => res.status(201).send('Pump should have ran.'))
+     //   .catch((err) => {
+       //    console.log('Err running the pump: ', err)
+         //  alertError();
+       //    res.status(201).send('Pump had an Error. Alerting myself via yellow LED');
+       // });
+    //});
 });
 app.get('/streak', (req, res) => {
   console.log('getting streak data');
