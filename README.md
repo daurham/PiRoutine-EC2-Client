@@ -1,4 +1,4 @@
-# RoutinePi
+# PiRoutine
 
 - clone on your pi and local computer.
 - run: npm install
