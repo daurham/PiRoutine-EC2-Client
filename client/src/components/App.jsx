@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import axios from 'axios';
 import Spinner from './Spinner';
 import css from '../styles/css.css';
-// import font from '../styles/font.css';
 import Technology from '../fonts/Technology.ttf';
 import { Temporal, Intl, toTemporalInstant } from '@js-temporal/polyfill';
 import { Form, ProgressBar, Button } from 'react-bootstrap';
@@ -16,7 +15,22 @@ import convert from './Utils/convert';
 
 
 const App = () => {
-  const { latitude, longitude, currentTime, setCurrentTime, alarmTime, setAlarmTime, distance, setDistance, initialAlarmTime, setInitialAlarmTime, streak, setStreak, getStreak, getAlarmTime } = useData(); // works
+  const {
+    latitude,
+    longitude,
+    currentTime,
+    setCurrentTime,
+    alarmTime,
+    setAlarmTime,
+    distance,
+    setDistance,
+    initialAlarmTime,
+    setInitialAlarmTime,
+    streak,
+    setStreak,
+    getStreak,
+    getAlarmTime
+  } = useData();
 
   const now = Temporal.Now.plainTimeISO(); // move to context
 
@@ -27,27 +41,23 @@ const App = () => {
   const [currentAlarm, setCurrentAlarm] = useState(1);
   const [active, setActive] = useState(true);
   const [dropdown, setDropdown] = useState(false);
-  const [inputHr, setInputHr] = useState();
-  const [inputMin, setInputMin] = useState(0);
+  const [inputHr, setInputHr] = useState(1);
+  const [inputMin, setInputMin] = useState('00');
   const [inputTod, setInputTod] = useState('AM');
-  const hours = [0, ...range(1, 12)];
-  const minutes = [0, ...range(1, 59)];
+  const hours = [1, ...range(2, 12)];
+  const minutes = ['00', ...range(1, 59).map(n => n < 10 ? '0' + n : n)];
 
   let clock;
   let interval;
   let isArmed = (isDisarmed ? 'LOCKED' : 'DISARM');
 
-
   const switchAlarms = () => { // runs after button is pressed.
     setCurrentAlarm(() => (currentAlarm === 1 ? 2 : 1));
   }
 
-
-
   const handleCurrentTime = () => {
     setCurrentTime(() => convert(Temporal.Now.plainTimeISO()));
   };
-
 
   const isActive = (aTime) => {
     if (((now.hour >= aTime.hour - 2) && now.hour < aTime.hour) || // if within a safe hour block or
@@ -69,98 +79,88 @@ const App = () => {
     return phrases[r];
   };
 
-
-  const handleDisarm = () => {
+  const handleDisarm = async () => {
     if (isDisarmed) {
       return;
-    } else {
-      if (currentAlarm === 1) { // first alarm defused
-        setStatus(() => 'Nice, Now lets get moving!');
-        setAlarmTime(() => now.add({ minutes: 7 }));
-        switchAlarms();
-        toggleDisarmed(() => true);
-      } else if (currentAlarm === 2) { // second alarm defused
-        setStatus(() => statusGenerator())
+    } else if (currentAlarm === 1) { // first alarm defused
+      setStatus(() => 'Nice, Now lets get moving!');
+      console.log(now);
+      setAlarmTime(() => now.add({ minutes: 7 }));
+      console.log(now);
+      switchAlarms();
+      toggleDisarmed(() => true);
+    } else if (currentAlarm === 2) { // second alarm defused
+      try {
+        setStatus(() => statusGenerator());
         setAlarmTime(() => initialAlarmTime);
         setDistance(() => 0);
         switchAlarms();
-        axios.put(`/streak/${streak}/${streak + 1}`) // update the streak val
-          .then(() => getStreak())
-          .catch(() => {
-            console.log('err?: ', err)
-            console.log('Err updating streak data from server, filling in 0 to avoid crash. Fix err though.');
-            setStreak(() => 0);
-          });
-      }
+        await axios.put(`/streak/${streak + 1}`); // update the streak val
+        getStreak();
+        await axios.put(`/defused/${1}`); // update the backend's defused value
+      } catch (err) {
+        console.error('Err updating streak data from server', err);
+        setStreak(() => 0);
+      };
     }
   };
 
   const demo = () => { setAlarmTime(() => now.add({ seconds: 10 })) }
 
-  const handleFormDropdown = () => {
-    setDropdown(() => (dropdown === true ? false : true));
-  };
-  const handleHr = (e) => {
-    setInputHr(() => Number(e.target.value));
-  };
-  const handleMin = (e) => {
-    setInputMin(() => Number(e.target.value));
-  };
-  const handleTod = (e) => {
-    setInputTod(() => e.target.value);
-  };
+  const handleFormDropdown = () => setDropdown(() => (dropdown === true ? false : true));
+  const handleHr = e => setInputHr(() => e.target.value);
+  const handleMin = e => setInputMin(() => e.target.value);
+  const handleTod = e => setInputTod(() => { console.log(e.target.value); return e.target.value });
 
-  const handleUpdateAlarm = (e) => {
-    let data;
-    if (typeof inputHr === 'number' && typeof inputMin === 'number') {
-      data = { newAlarm: { h: inputHr, m: inputMin }, oldAlarm: { h: alarmTime.hour, m: alarmTime.minute } };
-      if (inputTod === 'PM') {
-        data.newAlarm.h = data.newAlarm.h + 12;
-      }
-      axios.put('/updateAlarm', data)
-        .then((res) => getAlarmTime())
-        .catch((err) => {
-          console.log('Err: ', err)
-          console.log('Err updating alarmtime data to server. This .PUT request is ran via App.jsx. The new data was: ');
-          console.log(data);
-          setInitialAlarmTime(() => new Temporal.PlainTime(6, 5).toString());
-        });
-    } else {
-      alert('Select numbers to update the time.')
-      console.log('Niceee bish!');
-    }
+  const handleUpdateAlarm = async e => {
+    // if (typeof inputHr === 'number' && typeof inputMin === 'number') {
+    try {
+      let finalInputHour = inputHr;
+      let finalInputMinute = inputMin;
+      if (inputTod === 'PM') finalInputHour = Number(finalInputHour) + 12;
+      if (inputMin[0] == 0) finalInputMinute = finalInputMinute[1];
+      console.log(finalInputHour, finalInputMinute, inputTod)
+      await axios.put(`/updateAlarm/${finalInputHour}/${finalInputMinute}/${inputTod}`);
+      getAlarmTime();
+    } catch (err) {
+      console.error('Err updating alarmtime data to server: ', err);
+      setInitialAlarmTime(() => new Temporal.PlainTime(6, 5).toString());
+    };
+    // } else {
+    // alert('Select numbers to update the time.');
+    // console.log('Niceee bish!');
+    // }
   };
 
   // run after progressBar is filled.
   const handleProgressBar = () => { // enables button to be clicked again and diffuses alarm
     if (currentAlarm === 2) {
-      if (distance < 100) {
-        setDistance(() => distance + 5); // remove after testing
-      }
-      if (distance >= 100) {
-        toggleDisarmed(() => false);
-      }
+      if (distance < 100) setDistance(() => distance + 5); // remove after testing
+      if (distance >= 100) toggleDisarmed(() => false);
     }
   };
 
-  const checkAlarmClock = () => {
+  const checkAlarmClock = async () => {
     handleProgressBar();
     isActive(alarmTime);
     setAlarmMessage(() => "Your alarm is set for " + convert(alarmTime) + ".");
     if (currentTime === convert(alarmTime)) {
-      setStatus(() => 'Do Better...');
-      axios.post('/pi/run')
-        .catch((err) => console.log('err running the pump: ', err));
-      axios.put(`/streak/${streak}/${0}`)
-        .then(() => getStreak())
-        .catch((err) => {
-          console.log('err?: ', err)
-          console.log('Err getting streak data from server, filling in 0 to avoid crash. Fix err though.');
+      try {
+        setStatus(() => 'Do Better...');
+        await axios.post('/pi/run');
+      } catch (err) {
+        console.error('Err running the pump: ', err);
+        try {
+          await axios.put(`/streak/${0}`);
+          getStreak();
+        } catch (err) {
+          console.error('Err getting streak data from server: ', err);
           setStreak(() => 0);
-        });
-      console.log('get wet bish!');
+          console.log('get wet bish!');
+        };
+      };
     }
-  }
+  };
 
   useEffect(() => {
     clock = setInterval(() => handleCurrentTime(), 1000);
@@ -168,6 +168,7 @@ const App = () => {
     return () => {
       clearInterval(clock);
       clearInterval(interval);
+
     }
   }, [currentTime]);
 
@@ -214,12 +215,12 @@ const App = () => {
                   )}
                 </Form.Select>
                 <Subheader>:</Subheader>
-                <Form.Select value={inputMin} onChange={handleMin} aria-label="Select alarm minute">
+                <Form.Select onChange={handleMin} aria-label="Select alarm minute">
                   {minutes.map((min, index) =>
                     <option key={index} value={min}>{min}</option>
                   )}
                 </Form.Select>
-                <Form.Select value={inputTod} onChange={handleTod} aria-label="Select alarms time of day">
+                <Form.Select onChange={handleTod} aria-label="Select alarms time of day">
                   {['AM', 'PM'].map((tod, index) =>
                     <option key={index} value={tod}>{tod}</option>
                   )}
@@ -238,7 +239,6 @@ const App = () => {
         <Button variant='dark' onClick={handleFormDropdown}>Edit</Button>
       }
     </AppnContainer>
-
   )
 }
 
@@ -246,8 +246,7 @@ const App = () => {
 export default App;
 
 
-const Location = styled.h1`
-`;
+const Location = styled.h1``;
 const Header = styled.h1`
 font-size: 4rem;
 `;
@@ -261,29 +260,29 @@ const InputBar = styled.input`
 size: 400%;
 `;
 const DisarmButton = styled.button`
-background-color: black;
-padding: 10px 60px;
-border-radius: 20px;
-margin: 10px 0px;
-width: 79vw;
-height: 30vh;
+  background-color: black;
+  padding: 10px 60px;
+  border-radius: 20px;
+  margin: 10px 0px;
+  width: 79vw;
+  height: 30vh;
   cursor: pointer;
 `;
 const AppnContainer = styled.div`
   display: block;
   justify-content: center;
-  `;
+`;
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
-  `;
+`;
 const ListContainer = styled.div`
   display: block;
   justify-content: center;
 `;
 const List = styled.ul`
   justify-content: center;
- `;
+`;
 const Container = styled.div`
   display: flex;
   justify-content: center;

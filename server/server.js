@@ -2,112 +2,100 @@ const express = require('express');
 const path = require('path');
 const http = require('http');
 const axios = require('axios');
-// const gpio = require('onoff').Gpio;
-// const logger = require('./locationLogs.js');
+const controller = require('./controller');
+
 const app = express();
 const PORT = 3000;
 const DIST_DIR = path.join(__dirname, '../client/dist');
 
-const controller = require('./controller');
 
 app.use(express.static(DIST_DIR));
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
-// let lox;
-// app.post('/pi', (req, res) => {
-//   lox = String(req.body.loc);
-//   logger(String(req.body.loc), req.body.des);
-//   res.sendStatus(201);
-// });
+const alertError = () => console.log(`ERROR DETECTED @`, new Date().toISOString().replace('T', ' '));
 
-const alertError = () => {
-  // axios.post('http://70.188.209.178:3000/piRoutine/err')
-    //.then((result) => res.status(statusCode).send('Yellow LED should be on.'))
-    // .catch((err) => console.log('Issue triggering the yellow LED: ', err));
-    console.log(`ERROR DETECTED @`, new Date().toISOString().replace('T', ' '));
-};
-
-// app.post('/', (req, res) => {
-//   //	 axios.post(`http://192.168.0.164:3000/`)
-//   axios.post(`http://70.188.209.178:3000/`)
-//     .then(() => res.status(201).send(console.log('Ayeeoooo')));
-// });
-
-app.get('/alarmTime', (req, res) => {
-  console.log('getting alarm data');
-  axios.get(`http://70.188.209.178:3000/piRoutine/${'alarmtime'}`)
-    .then((result) => { 
-	    console.log('got my "/alarmTime" return data'); 
-	 //   res.status(200).send(result.data); 
-            axios.post('http://70.188.209.178:3000/piRoutine/run')
-	     res.status(200).send(result.data);
-           //   .then((result) => res.status(201).send('Pump should have ran.'));
-    })
-    .catch((err) => {
-      console.log('Issue getting data: ', err)
-      alertError();
-      res.status(200).send({ hour: 6, minute: 5 });
-    });
-///	    axios.post('http://70.188.209.178:3000/piRoutine/run')
-   //     .then((result) => res.status(201).send('Pump should have ran.'))
-     //   .catch((err) => {
-       //    console.log('Err running the pump: ', err)
-         //  alertError();
-       //    res.status(201).send('Pump had an Error. Alerting myself via yellow LED');
-       // });
-    //});
-});
-app.get('/streak', (req, res) => {
-  console.log('getting streak data');
-  axios.get(`http://70.188.209.178:3000/piRoutine/${'streakcount'}`)
-    .then((result) => res.status(200).send(result.data))
-    .catch((err) => {
-      console.log('Issue getting data: ', err)
-      alertError();
-      res.status(200).send({ streak: 0 });
-    });
-});
-app.put('/updateAlarm', (req, res) => {
-  console.log('updating alarm data');
-  let data = req.body;
-  console.log('updating alarm: ', data);
-  axios.put(`http://70.188.209.178:3000/piRoutine/updateAlarm/${data.oldAlarm}/${data.newAlarm}`, data)
-    .then((result) => res.status(203).send(result.data))
-    .catch((err) => {
-      console.log('Issue getting data: ', err)
-      alertError();
-      res.status(203).send({ hour: 6, minute: 5 });
-    });
-});
-app.put('/streak/:oldStreak/:newStreak', (req, res) => {
-  console.log('updating streaks: ', req.params.oldStreak);
-  console.log('updating alarm data');
-  axios.put(`http://70.188.209.178:3000/piRoutine/updateStreak/${req.params.oldStreak}/${req.params.newStreak}/`)
-    .then((result) => res.status(203).send(result.data))
-    .catch((err) => {
-      console.log('Issue getting data: ', err)
-      alertError();
-      res.status(203).send({ streak: 0 });
-    });
+app.get('/alarmTime', async (req, res) => {
+  try {
+    let result = await axios.get(`http://70.188.209.178:3000/piRoutine/${'alarmtime'}`);
+    res.status(200).send(result.data);
+    // console.log('got my "/alarmTime" return data', result.data);
+  } catch (err) {
+    // console.log('Issue getting alarm data: ', err)
+    alertError();
+    res.status(200).send({ hour: 6, minute: 5 });
+  };
 });
 
-app.post('/pi/run', (req, res) => { // run water
-  console.log('reached backend server, Now requesting the Pi');
-  axios.post('http://70.188.209.178:3000/piRoutine/run')
-    .then((result) => res.status(201).send('Pump should have ran.'))
-    .catch((err) => {
-      console.log('Err running the pump: ', err)
-      alertError();
-      res.status(201).send('Pump had an Error. Alerting myself via yellow LED');
-    });
+
+
+app.get('/streak', async (req, res) => {
+  try {
+    let result = await axios.get(`http://70.188.209.178:3000/piRoutine/${'streakcount'}`);
+    res.status(200).send(result.data);
+    // console.log('getting streak data');
+  } catch (err) {
+    // console.log('Issue getting streak data: ', err)
+    alertError();
+    res.status(200).send({ streak: 0 });
+  };
 });
 
-app.post('/err', (req, res) => {
-  console.log('sensing an err, triggering the yellow LED to tend to the code.');
-  axios.post('http://70.188.209.178:3000/piRoutine/err')
-    .then((result) => res.status(201).send('Yellow LED should be on.'))
-    .catch((err) => console.log('Issue triggering the yellow LED: ', err));
+app.put('/defused/:newVal', async (req, res) => {
+  try {
+    await axios.put(`http://70.188.209.178:3000/piRoutine/updateDefusal/${req.params.newVal}`);
+    res.sendStatus(203);
+  } catch (err) {
+    alertError();
+    res.status(200).send({ streak: 0 });
+  };
+});
+
+app.put('/updateAlarm/:hour/:minute/:tod', async (req, res) => {
+  try {
+    console.log(req.params);
+    let result = await axios.put(`http://70.188.209.178:3000/piRoutine/updateAlarm/${req.params.hour}/${req.params.minute}/${req.params.tod}`);
+    res.sendStatus(203);
+  } catch (err) {
+    alertError();
+    console.log('Issue updating alarm data: ', err)
+    res.status(203).send({ hour: 6, minute: 5, tod: 'AM' }); // remove this when refactoring... Time must match db / backend
+  }
+});
+
+app.put('/streak/:newStreak', async (req, res) => {
+  try {
+    console.log('updating streaks: ', req.params.newStreak);
+    let result = await axios.put(`http://70.188.209.178:3000/piRoutine/updateStreak/${req.params.newStreak}/`);
+    res.status(203).send(result.data);
+    // console.log('updating alarm data');
+  } catch (err) {
+    // console.log('Issue updating streak data: ', err)
+    alertError();
+    res.status(203).send({ streak: 0 });
+  };
+});
+
+app.post('/pi/run', async (req, res) => { // run water
+  try {
+    let result = await axios.post('http://70.188.209.178:3000/piRoutine/run');
+    res.status(201).send('Pump should have ran.');
+    // console.log('reached backend server, Now requesting the Pi');
+  } catch (err) {
+    alertError();
+    res.status(201).send('Pump had an Error');
+  };
+});
+
+app.post('/err', async (req, res) => {
+  // console.log('sensing an err, triggering the yellow LED to tend to the code.');
+  try {
+    await axios.post('http://70.188.209.178:3000/piRoutine/err');
+    res.status(201).send('Yellow LED should be on.');
+  } catch (err) {
+    console.error('Issue triggering the yellow LED: ', err);
+    res.status(201).send('ERR: ', err);
+  };
 });
 
 

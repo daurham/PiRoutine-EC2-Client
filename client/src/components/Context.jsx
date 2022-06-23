@@ -32,12 +32,11 @@ const Context = () => {
   const [alarmTime, setAlarmTime] = useState();
   const [initialAlarmTime, setInitialAlarmTime] = useState();
   const [streak, setStreak] = useState();
+
   let interval;
   let clock;
 
-  const resetIntialAlarm = () => {
-    setInitialAlarmTime(() => alarmTime);
-  };
+  const resetIntialAlarm = () => setInitialAlarmTime(() => alarmTime);
 
   if (!once2 && alarmTime) {
     resetIntialAlarm();
@@ -49,9 +48,10 @@ const Context = () => {
     setInitialLon(() => longitude);
     setOnce(() => true);
   }
+
   const dConvert = (input) => Math.floor(((input - 0) * 100) / (.003 - 0));
 
-  let dif = (c, l, i, cb, ccb) => {
+  let dif = (c, l, i, cb, ccb) => { // calucate the difference between geolocation reading
     if (i !== l) {
       if (l) {
         let v = c + Math.abs(Math.abs(i) - Math.abs(l));
@@ -61,47 +61,40 @@ const Context = () => {
     }
   };
 
-
-  // get alarm data
-  const getAlarmTime = () => {
-    axios.get('/alarmTime')
-      .then((res) => {
-        setAlarmTime(() => new Temporal.PlainTime(((res.data[0].hour === 24 ? 0 : res.data[0].hour)), res.data[0].minute));
-        setInitialAlarmTime(() => new Temporal.PlainTime(((res.data[0].hour === 24 ? 0 : res.data[0].hour)), res.data[0].minute));
-        console.log('Made contact with PI, getting alarmtime @', Temporal.Now.plainTimeISO());
-      })
-      .catch((err) => {
-        console.log('err?: ', err);
-        console.log('Err getting alarm data from db, setting time to 6:05am to avoid crash. Fix err though.');
-        setInitialAlarmTime(() => new Temporal.PlainTime(6, 5).toString());
-        console.log('Err contacting PI, setting default alarmtime @', Temporal.Now.plainTimeISO());
-      });
+  const getAlarmTime = async () => {
+    try {
+      let res = await axios.get('/alarmTime');
+      setAlarmTime(() => new Temporal.PlainTime(((res.data[0].hour === 24 ? 0 : res.data[0].hour)), res.data[0].minute));
+      setInitialAlarmTime(() => new Temporal.PlainTime(((res.data[0].hour === 24 ? 0 : res.data[0].hour)), res.data[0].minute));
+      console.log('Made contact with PI, getting alarmtime @', Temporal.Now.plainTimeISO());
+    } catch (err) {
+      console.log('err?: ', err);
+      console.log('Err getting alarm data from db, setting time to 6:05am to avoid crash. Fix err though.');
+      setInitialAlarmTime(() => new Temporal.PlainTime(6, 5).toString());
+      console.log('Err contacting PI, setting default alarmtime @', Temporal.Now.plainTimeISO());
+    }
   };
 
-  const getStreak = () => {
-    axios.get('/streak')
-      .then((res) => {
-        setStreak(() => res.data[0].streak)
-        console.log('Made contact with PI, getting current streak @', Temporal.Now.plainTimeISO());
-      })
-      .catch((err) => {
-        console.log('err?: ', err);
-        console.log('Err getting streak data from db, filling in 0 to avoid crash. Fix err though.');
-        setStreak(() => 0);
-        console.log('Err contacting PI, setting default streak @', Temporal.Now.plainTimeISO());
-      });
+  const getStreak = async () => {
+    try {
+      let res = await axios.get('/streak');
+      setStreak(() => res.data[0].streak)
+      console.log(res.data[0].streak);
+      console.log('Made contact with PI, getting current streak @', Temporal.Now.plainTimeISO());
+    } catch (err) {
+      console.log('err?: ', err);
+      console.log('Err getting streak data from db, filling in 0 to avoid crash. Fix err though.');
+      setStreak(() => 0);
+      console.log('Err contacting PI, setting default streak @', Temporal.Now.plainTimeISO());
+    }
   };
 
-  const handleCurrentTime = () => {
-    setCurrentTime(() => convert(Temporal.Now.plainTimeISO()));
-  };
+  const handleCurrentTime = () => setCurrentTime(() => convert(Temporal.Now.plainTimeISO()));
 
   useEffect(() => { // TRACK STREAK CHANGE
-    if (!alarmTime) {
-      getAlarmTime();
-    }
+    if (!alarmTime) getAlarmTime();
     getStreak();
-  }, [streak])
+  }, [streak]);
 
   useEffect(() => { // TRACK CURRENT LOCATION CHANGE
     dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
@@ -111,17 +104,26 @@ const Context = () => {
 
   useEffect(() => { // TRACK TIME CHANGE
     clock = setInterval(() => handleCurrentTime(), 1000);
-    return () => {
-      clearInterval(clock);
-    }
+    return () => clearInterval(clock);
   }, [currentTime]);
 
-
   const value = useMemo(() => ({
-    distance, setDistance, latitude, longitude, streak, setStreak, currentTime, setCurrentTime, alarmTime, setAlarmTime, initialAlarmTime, setInitialAlarmTime, getAlarmTime, getStreak
+    distance,
+    setDistance,
+    latitude,
+    longitude,
+    streak,
+    setStreak,
+    currentTime,
+    setCurrentTime,
+    alarmTime,
+    setAlarmTime,
+    initialAlarmTime,
+    setInitialAlarmTime,
+    getAlarmTime,
+    getStreak
   }), [currentTime]);
 
-  //console.log(streak);
   return (!currentTime || !alarmTime) ? <Spinner /> : (
     <DataContext.Provider value={value}>
       <App />

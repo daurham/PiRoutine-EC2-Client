@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 
 export default function useGeolocation(options) {
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState()
-  const [data, setData] = useState({})
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState();
+  const [data, setData] = useState({});
 
   useEffect(() => {
     const successHandler = e => {
@@ -26,7 +26,7 @@ export default function useGeolocation(options) {
       options
     )
     return () => navigator.geolocation.clearWatch(id)
-  }, [options])
+  }, [options]);
 
-  return { loading, error, data }
-}
+  return { loading, error, data };
+};
