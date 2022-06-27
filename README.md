@@ -1,6 +1,7 @@
 # PiRoutine ⏰💦🏃‍♂️
 PiRoutine is a morning alarm system that uses a port forwarded raspberry pi and a deployed front end to  
 ![](https://media.giphy.com/media/xWtDB0EFpsnvkJUGrx/giphy.gif)
+![](https://media.giphy.com/media/5JNvh8WI9LzxUITNku/giphy.gif)
 
 - clone on your pi and local computer.
 - run: npm install
