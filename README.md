@@ -1,5 +1,5 @@
 # PiRoutine ⏰💦🏃‍♂️
-PiRoutine is a morning alarm system that uses a port forwarded raspberry pi and a deployed front end to  
+PiRoutine is a morning alarm system that uses a port forwarded raspberry pi, relay switch wired to a water pump and a deployed front end, to instill good habits in the user by waking up on time. This is done by leveraging a pavlovian fear of laying in bed after they've heard their alarm go off for too long, with getting sprayed with water. In return, the user wakes up before their alarm, and/or when they wake up by it, they jump out of bed! Ready to start their day!
 
 ---
 
