@@ -3,7 +3,7 @@ const path = require('path');
 const ctlr = require('./controller');
 
 const app = express();  
-const PORT = process.env.USER_PORT || 3010;
+const PORT = process.env.USER_PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
