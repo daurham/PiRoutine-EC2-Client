@@ -1,19 +1,25 @@
 const express = require('express');
 const path = require('path');
-const ctlr = require('./controller');
+const { get, update } = require('./controller');
 
-const app = express();  
-const PORT = process.env.USER_PORT || 3000;
+const app = express();
+const PORT = 3000;
+const DIST_DIR = path.join(__dirname, '../client/dist');
 
+app.use(express.static(DIST_DIR));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(express.urlencoded({extended: true}));
 
-// Listeners:
-app.get('/api', ctlr.getData);
-app.post('/api', ctlr.postData);
-app.put('/api', ctlr.updateData);
-app.delete('/api', ctlr.deleteData);
+// ALARM TIME
+app.get('/get-alarm-time', get.alarmTime);
+app.patch('/update-alarm-time', update.alarmTime);
 
-app.use(express.static(path.join(__dirname, '../client/dist')));
+// DISARM STATUS
+app.get('/get-disarm-status', get.disarmStatus);
+app.patch('/update-disarm-status', update.disarmStatus);
 
-app.listen(PORT, () => console.log(`Listening to port ${PORT} -> http://localhost:${PORT}`));
+// STREAK COUNT
+app.get('/get-streak-count', get.streakCount);
+app.patch('/update-streak-count', update.streakCount);
+
+app.listen(PORT, () => console.log(`Listening and running: http://localhost:${PORT}`));

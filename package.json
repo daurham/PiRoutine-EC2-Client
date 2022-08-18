@@ -1,42 +1,69 @@
 {
-  "name": "FILL_ME_IN",
-  "version": "1.0.0",
-  "description": "FILL_ME_IN",
+  "name": "piroutine-ec2-client",
+  "version": "2.0.0",
+  "description": "Client-side portion of the PiRoutine project.",
   "scripts": {
-    "start": "webpack -w",
+    "start": "webpack serve --config webpack.config.js --open ",
     "server": "nodemon server/index.js",
     "test": "nodemon server/index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/daurham/App-Template.git"
+    "url": "git+https://github.com/daurham/PiRoutine-EC2-Client.git"
   },
-  "keywords": [],
-  "author": "daurham",
-  "license": "MIT",
+  "keywords": [
+    "Pi"
+  ],
+  "author": "Jake daurham",
+  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/daurham/FILL_ME_IN/issues"
+    "url": "https://github.com/daurham/PiRoutine-EC2-Client/issues"
   },
-  "homepage": "https://github.com/daurham/FILL_ME_IN#readme",
+  "homepage": "https://github.com/daurham/PiRoutine-EC2-Client#readme",
   "dependencies": {
+    "@js-temporal/polyfill": "^0.4.2",
     "axios": "^0.27.2",
-    "bluebird": "^3.7.2",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
-    "mongoose": "^6.4.4",
-    "mysql2": "^2.3.3",
     "react": "^18.1.0",
-    "react-dom": "^18.1.0"
+    "react-bootstrap": "^2.5.0",
+    "react-dom": "^18.1.0",
+    "style-loader": "^3.3.1",
+    "styled-components": "^5.3.5"
   },
   "devDependencies": {
     "@babel/plugin-transform-runtime": "^7.18.0",
     "@babel/preset-env": "^7.18.0",
     "@babel/preset-react": "^7.17.12",
+    "@babel/preset-typescript": "^7.18.6",
+    "@types/axios": "^0.14.0",
+    "@types/express": "^4.17.13",
+    "@types/node": "^18.7.6",
+    "@types/nodemon": "^1.19.2",
+    "@types/react": "^18.0.17",
+    "@types/react-bootstrap": "^0.32.30",
+    "@types/react-dom": "^18.0.6",
+    "@types/styled-components": "^5.1.26",
+    "@types/webpack": "^5.28.0",
+    "@types/webpack-dev-server": "^4.7.2",
+    "@typescript-eslint/eslint-plugin": "^5.33.1",
+    "@typescript-eslint/parser": "^5.33.1",
     "babel": "^6.23.0",
     "babel-loader": "^8.2.5",
+    "css-loader": "^6.7.1",
+    "eslint": "^8.22.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "eslint-plugin-react": "^7.30.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "html-webpack-plugin": "^5.5.0",
     "nodemon": "^2.0.16",
-    "styled-components": "^5.3.5",
+    "ts-loader": "^9.3.1",
+    "typescript": "^4.7.4",
     "webpack": "^5.72.1",
-    "webpack-cli": "^4.9.2"
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.10.0"
   }
 }
