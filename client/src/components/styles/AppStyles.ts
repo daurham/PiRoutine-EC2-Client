@@ -29,7 +29,7 @@ export const DisarmButton = styled.button`
   height: 30vh;
   cursor: pointer;
 `;
-export const AppnContainer = styled.div`
+export const AppContainer = styled.div`
   display: block;
   justify-content: center;
 `;

@@ -1,21 +1,21 @@
-import React,
-{
-  useEffect,
-  useState,
-  useMemo,
-  useContext,
-} from 'react';
-import { Temporal } from '@js-temporal/polyfill';
-import axios from 'axios';
-import Spinner from './components/utils/Spinner';
-import useGeolocation from './components/utils/useGeolocation';
-import convert from './components/utils/convert';
+// import React,
+// {
+//   useEffect,
+//   useState,
+//   useMemo,
+//   useContext,
+// } from 'react';
+// import { Temporal } from '@js-temporal/polyfill';
+// import axios from 'axios';
+// import Spinner from './components/utils/Spinner';
+// import useGeolocation from './components/utils/useGeolocation';
+// import convert from './components/utils/convert';
 
-const DataContext = React.createContext();
+// const DataContext = React.createContext();
 
-export function useData() {
-  return useContext(DataContext);
-}
+// export function useData() {
+//   return useContext(DataContext);
+// }
 
 type ContextProps = {
   children: JSX.Element;

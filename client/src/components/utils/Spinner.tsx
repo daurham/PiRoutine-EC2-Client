@@ -1,5 +1,16 @@
 import styled, { keyframes } from 'styled-components';
 
+// Spinner Styles:
+
+export const SpinnerContainer = styled.div`
+display: flex;
+`;
+export const SpinnerInnerContainer = styled.div`
+display: flex;
+justify-content: center;
+`;
+
+// Spinner:
 const rotate360 = keyframes`
   from {
     transform: rotate(0deg);

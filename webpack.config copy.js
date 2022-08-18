@@ -1,5 +1,11 @@
+/**
+ * This version is a functioning independant devServer.
+ *  I'm refactoring to enable simple workflow.
+ * But intend on exploring this again.
+ */
+
 const path = require('path');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ENV = require('dotenv').config().parsed;
 
 const MODE = ENV.NODE_ENV || 'development';
@@ -39,16 +45,16 @@ module.exports = {
     filename: 'bundle.js',
   },
   mode: MODE,
-
-  // plugins: [
-  //   new HtmlWebpackPlugin({
-  //     template: path.resolve(__dirname, './client/dist/index.html'),
-  //   }),
-  // ],
-
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.resolve(__dirname, './client/dist/index.html'),
+    }),
+  ],
   // devServer: {
   //   historyApiFallback: true,
   //   hot: true,
+  //   // inline: true,
+
   //   host: 'localhost', // Defaults to `localhost`
   //   port: 3000, // Defaults to 8080
   //   proxy: {

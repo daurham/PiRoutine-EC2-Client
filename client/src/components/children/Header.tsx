@@ -1,7 +1,8 @@
 import React from 'react';
+import { } from '../styles/HeaderStyles';
 
 export default function Header() {
   return (
-    <div>Header</div>
+    <h1>PIROUTINE</h1>
   );
 }
