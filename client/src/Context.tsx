@@ -10,6 +10,8 @@ import axios from 'axios';
 import useGeolocation from './components/utils/useGeolocation';
 import Loading from './components/Loading';
 import {
+  addMinutes,
+  addSeconds,
   getFirstAlarm,
   getSecondAlarm,
   parseTimeData,
@@ -56,10 +58,12 @@ export default function Context({ children }: ContextProps) {
 
   const [alarm1, setAlarm1] = useState<string>();
   const [alarm2, setAlarm2] = useState<string>();
+  const [tenSecAfterAlarm1, setTenSecAfterAlarm1] = useState<string>();
   const [currentAlarm, setCurrentAlarm] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState<string>();
   const [streak, setStreak] = useState<number>(0);
   const [isDisarmed, setDisarmStatus] = useState<boolean>();
+  const [currentPhase, setCurrentPhase] = useState<number>(0);
 
   let interval;
   let clock: Timer;
@@ -82,86 +86,151 @@ export default function Context({ children }: ContextProps) {
   //   }
   // };
 
-  // const getAlarmTime = async () => {
-  //   try {
-  //     const { data } = await axios.get('/api/get-alarm-time');
-  //     const { hour, minute } = parseTimeData(data);
-  //     console.log('context data alar; h, m:', hour, minute);
-  //     await setAlarm1(() => getFirstAlarm(hour, minute));
-  //     setAlarm2(() => getSecondAlarm());
-  //   } catch (err) {
-  //     console.log('err?: ', err);
-  //     await setAlarm1(() => getFirstAlarm(6, 0));
-  //     setAlarm2(() => getSecondAlarm());
-  //   }
-  // };
+  const getAlarmTime = async () => {
+    try {
+      const { data } = await axios.get('/get-alarm-time');
+      const { hour, minute } = parseTimeData(data);
+      console.log('context data alar; h, m:', hour, minute);
+      const firstAlarmTimestamp = getFirstAlarm(hour, minute);
+      const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp);
+      const tenSecAfterTimestamp = addSeconds(firstAlarmTimestamp, 10);
+      setAlarm1(() => firstAlarmTimestamp.toLocaleTimeString());
+      setAlarm2(() => secondAlarmTimestamp.toLocaleTimeString());
+      setTenSecAfterAlarm1(() => tenSecAfterTimestamp.toLocaleTimeString());
+    } catch (err) {
+      console.log('err?: ', err);
+      const firstAlarmTimestamp = getFirstAlarm(6, 0);
+      const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp);
+      setAlarm1(() => firstAlarmTimestamp.toLocaleTimeString());
+      setAlarm2(() => secondAlarmTimestamp.toLocaleTimeString());
+    }
+  };
 
-  // const getStreak = async () => {
-  //   try {
-  //     const { data } = await axios.get('/api/get-streak-count');
-  //     const { streak } = data[0];
-  //     console.log('streak get data', data);
-  //     setStreak(() => streak);
-  //   } catch (err) {
-  //     console.log('err?: ', err);
-  //     setStreak(() => 0);
-  //   }
-  // };
+  const getDisarmStatus = async () => {
+    try {
+      const { data } = await axios.get('/get-disarm-status');
+      console.log('disarm get data', data);
+      let { disarmedstatus } = data[0];
+      disarmedstatus = swapBinaryAndBool(disarmedstatus);
+      setDisarmStatus(() => disarmedstatus);
+    } catch (err) {
+      console.log('err?: ', err);
+      setDisarmStatus(() => 0);
+    }
+  };
 
-  // const getDisarmStatus = async () => {
-  //   try {
-  //     const { data } = await axios.get('/api/get-disarm-count');
-  //     console.log('streak get data', data);
-  //     let { isDisarmed } = data[0];
-  //     isDisarmed = swapBinaryAndBool(isDisarmed);
-  //     setDisarmStatus(() => data[0].isdisarmed);
-  //   } catch (err) {
-  //     console.log('err?: ', err);
-  //     setDisarmStatus(() => 0);
-  //   }
-  // };
-  // interface TimeObj { hour: number; minute: number; }
-  // const updateAlarmTime = async (timeData: TimeObj) => {
-  //   try {
-  //     await axios.patch('/api/update-alarm-time', timeData);
-  //     const { data } = await axios.get('/api/get-alarm-time');
-  //     const { hour, minute } = parseTimeData(data);
-  //     console.log('update alarm data:', data);
-  //     setAlarm1(() => getFirstAlarm(hour, minute));
-  //   } catch (err) {
-  //     console.log('err:', err);
-  //   }
-  // };
+  const getStreak = async () => {
+    try {
+      const { data } = await axios.get('/get-streak-count');
+      const { streak } = data[0];
+      console.log('streak get data', data);
+      setStreak(() => streak);
+    } catch (err) {
+      console.log('err?: ', err);
+      setStreak(() => 0);
+    }
+  };
 
-  // const updateDisarmStatus = async (data: boolean) => {
-  //   try {
-  //     await axios.patch('/api/update-disarm-status', { data: data || !isDisarmed });
-  //     const { data } = await axios.get('/api/get-disarm-status');
-  //     console.log('update defuse data:', data);
-  //     // setDisarmStatus(data); // need to deconstruct
-  //   } catch (err) {
-  //     console.log('Error update defuse data:', data);
+  interface TimeObj { hour: number; minute: number; tod: string }
+  const updateAlarmTime = async (timeData: TimeObj) => {
+    const { hour, minute, tod } = timeData;
+    let hr = Number(hour);
+    const min = Number(minute);
+    if (tod === 'PM') hr += 12;
+    console.log('time data', timeData);
+    try {
+      await axios.patch('/update-alarm-time', { hour: hr, minute: min, tod });
+      await getAlarmTime();
+    } catch (err) {
+      console.log('err:', err);
+    }
+  };
+
+  const updateDisarmStatus = async (statusData: boolean) => {
+    const convertedStatusData = swapBinaryAndBool(statusData);
+    try {
+      await axios.patch('/update-disarm-status', { data: convertedStatusData });
+      await getDisarmStatus();
+    } catch (err) {
+      console.log('Error update defuse data:', data);
+    }
+  };
+
+  const updateStreakCount = async (newData: number) => {
+    console.log('sending streak data:', newData);
+    try {
+      await axios.patch('/update-streak-count', { data: newData });
+      await getStreak();
+    } catch (err) {
+      console.log('Error update streak data:', data);
+    }
+  };
+
+  const handleCurrentTime = () => {
+    setCurrentTime(() => theCurrentTime());
+    if (alarm1) {
+      // PHASE 1
+      if (currentTime <= alarm1) {
+        if (currentAlarm !== alarm1) {
+          setCurrentAlarm(alarm1);
+        }
+        if (currentPhase !== 1) {
+          setCurrentPhase(1);
+        }
+        if (currentTime === alarm1 && !isDisarmed) {
+          // Run Sad functions
+        }
+        // console.log('phase 1')
+      }
+      // PHASE 2
+      if (currentTime > alarm1 && currentTime <= alarm2) {
+        if (currentAlarm !== alarm2) {
+          setCurrentAlarm(alarm2);
+        }
+        if (currentAlarm === tenSecAfterAlarm1 && isDisarmed) {
+          setDisarmStatus(false);
+        }
+        if (currentPhase !== 2) {
+          setCurrentPhase(2);
+        }
+        // console.log('phase 2')
+      }
+      // AFTER 2ND ALARM
+      if (currentTime > alarm2) {
+        // console.log('phase 3')
+        if (currentAlarm !== alarm1) {
+          setCurrentAlarm(alarm1);
+        }
+        if (currentPhase !== 3) {
+          setCurrentPhase(3);
+        }
+      }
+    }
+  };
+
+  // useEffect(() => { // KEEP ALARM2 UP TO DATE
+  //   setAlarm2(() => getSecondAlarm(alarm1).toLocaleTimeString());
+  // }, [alarm1]);
+
+  // useEffect(() => { // KEEP TRACK OF CURRENT ALARM
+  //   // PHASE 1
+  //   if (currentTime <= alarm1) {
+  //     if (currentAlarm !== alarm1) {
+  //       setCurrentAlarm(alarm1);
+  //     }
   //   }
-  // };
-
-  // const updateStreakCount = useCallback(() => async (data: number) => {
-  //   try {
-  //     await axios.patch('/api/update-streak-count', { data: data || streak + 1 });
-  //     const { data } = await axios.get('/api/get-streak-count');
-  //     console.log('update streak data:', data);
-  //     setStreak(data);
-  //   } catch (err) {
-  //     console.log('Error update streak data:', data);
+  //   // PHASE 2
+  //   if (currentTime > alarm1 && currentTime <= alarm2) {
+  //     if (currentAlarm !== alarm2) {
+  //       setCurrentAlarm(alarm2);
+  //     }
   //   }
-  // }, [streak]);
-
-  const handleCurrentTime = () => setCurrentTime(() => theCurrentTime());
-
-  // useEffect(() => { // TRACK STREAK CHANGE
-  //   // if (!alarmTime)
-  //   getAlarmTime();
-  //   getStreak();
-  // }, []);
+  //   if (currentTime > alarm2) {
+  //     if (currentAlarm !== alarm1) {
+  //       setCurrentAlarm(alarm1);
+  //     }
+  //   }
+  // }, [currentTime]);
 
   // useEffect(() => { // TRACK CURRENT LOCATION CHANGE
   //   dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
@@ -174,6 +243,12 @@ export default function Context({ children }: ContextProps) {
     return () => clearInterval(clock);
   }, [currentTime]);
 
+  useEffect(() => { // INITIAL GET ALARM DATA / ON MOUNT
+    getAlarmTime();
+    getStreak();
+    getDisarmStatus();
+  }, []);
+
   const value = useMemo(() => ({
     //   distance,
     //   setDistance,
@@ -181,27 +256,31 @@ export default function Context({ children }: ContextProps) {
     //   longitude,
     alarm1,
     alarm2,
-    currentTime,
+    tenSecAfterAlarm1,
     currentAlarm,
+    currentTime,
     streak,
     isDisarmed,
+    currentPhase,
     //   setCurrentTime,
     //   setAlarm1,
     //   setAlarm2,
     //   getAlarmTime,
     //   getStreak,
-    //   setDisarmStatus,
-    //   getDisarmStatus,
-    //   updateAlarmTime,
-    //   updateDisarmStatus,
-    //   updateStreakCount,
+    setDisarmStatus,
+    getDisarmStatus,
+    updateAlarmTime,
+    updateDisarmStatus,
+    updateStreakCount,
   }), [
     alarm1,
     alarm2,
+    tenSecAfterAlarm1,
     currentAlarm,
     currentTime,
     streak,
     isDisarmed,
+    currentPhase,
     //   distance,
     //   latitude,
     //   longitude,

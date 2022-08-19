@@ -57,8 +57,8 @@ export default function App() {
   // const hours: number[] = [1, ...range(2, 12)];
   // const minutes: number[] = ['00', ...range(1, 59).map(n => n < 10 ? '0' + n : n)];
 
-  // let clock;
-  // let interval;
+  let clock;
+  let interval;
   // let isArmed = (isDisarmed ? 'LOCKED' : 'DISARM');
 
   // const switchAlarms = () => { // runs after button is pressed.
@@ -102,22 +102,22 @@ export default function App() {
   // };
 
   // const checkAlarmClock = () => {
-  //   handleProgressBar();
-  //   isActive(alarmTime);
-  //   setAlarmMessage(() => 'Your alarm is set for ' + convert(alarmTime) + '.');
-  //   if (currentTime === convert(alarmTime)) {
-  //     setStatus(() => 'Do Better...');
-  //     console.error('Err running the pump: ', err);
-  //     updateStreakCount(0);
-  //     // getStreak();
+  // //   handleProgressBar();
+  // //   isActive(alarmTime);
+  // //   setAlarmMessage(() => 'Your alarm is set for ' + convert(alarmTime) + '.');
+  //   if (currentTime === currentAlarm) {
+  // //     setStatus(() => 'Do Better...');
+  // //     console.error('Err running the pump: ', err);
+  // //     updateStreakCount(0);
+  // //     // getStreak();
   //   }
   // };
 
   // useEffect(() => {
-  //   clock = setInterval(() => handleCurrentTime(), 1000);
+  //   // clock = setInterval(() => handleCurrentTime(), 1000);
   //   interval = setInterval(() => checkAlarmClock(), 1000);
   //   return () => {
-  //     clearInterval(clock);
+  //     // clearInterval(clock);
   //     clearInterval(interval);
   //   };
   // }, [currentTime]);
