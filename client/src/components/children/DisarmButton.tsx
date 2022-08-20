@@ -62,7 +62,7 @@ export default function DisarmButton() {
 
       {!hideDisarmBtn
         && !locked
-        && <Button variant="success" onClick={() => updateDisarmStatus(!isDisarmed)}>{isDisarmed ? 'Disarm' : 'Ayyoo!'}</Button>}
+        && <Button variant="success" onClick={() => updateDisarmStatus(!isDisarmed)}>{!isDisarmed ? 'Disarm' : 'Ayyoo!'}</Button>}
       <br />
       {/* <button type="button" onClick={() => setDisarmStatus(!isDisarmed)}>Disarm Toggle</button> */}
       {/* <button type="button" onClick={() => getDisarmStatus()}>Disarm ToggleDB</button> */}
