@@ -40,21 +40,18 @@ type ContextProps = {
 };
 
 export default function Context({ children }: ContextProps) {
-  // const {
-  //   loading,
-  //   error,
-  //   data: { latitude, longitude },
-  // } = useGeolocation();
+  const {
+    loading,
+    error,
+    data: { latitude, longitude },
+  } = useGeolocation();
 
-  // const [changeLat, getChangeLat] = useState(0);
-  // const [changeLon, getChangeLon] = useState(0);
-  // type LType = number | undefined;
-  // const [initialLat, setInitialLat] = useState<LType>(latitude);
-  // const [initialLon, setInitialLon] = useState<LType>(longitude);
-  // const [once, setOnce] = useState<boolean>(false);
-  // const [once2, setOnce2] = useState<boolean>(false);
-  // const [distance, setDistance] = useState<number>(0);
-  // const [isDisarmed, setDisarmStatus] = useState<boolean>();
+  const [changeLat, getChangeLat] = useState(0);
+  const [changeLon, getChangeLon] = useState(0);
+  type LType = number | undefined;
+  const [initialLat, setInitialLat] = useState<LType>(latitude);
+  const [initialLon, setInitialLon] = useState<LType>(longitude);
+  const [distance, setDistance] = useState<number>(0);
 
   const [alarm1, setAlarm1] = useState<string>();
   const [alarm2, setAlarm2] = useState<string>();
@@ -64,27 +61,38 @@ export default function Context({ children }: ContextProps) {
   const [streak, setStreak] = useState<number>(0);
   const [isDisarmed, setDisarmStatus] = useState<boolean>();
   const [currentPhase, setCurrentPhase] = useState<number>(0);
+  const [hideDisarmBtn, setHideDisarmBtn] = useState(true);
+  const [failed, setFailed] = useState(false);
 
   let interval;
   let clock: Timer;
 
-  // if (!once && latitude && longitude) {
-  //   setInitialLat(() => latitude);
-  //   setInitialLon(() => longitude);
-  //   setOnce(() => true);
-  // }
+  useEffect(() => {
+    if (latitude && longitude) {
+      setInitialLat(() => latitude);
+      setInitialLon(() => longitude);
+    }
+  }, []);
 
-  // const dConvert = (input) => Math.floor(((input - 0) * 100) / (.003 - 0));
+  const dConvert = (input) => Math.floor(((input - 0) * 100) / (0.003 - 0));
 
-  // let dif = (c, l, i, cb, ccb) => { // calucate the difference between geolocation reading
-  //   if (i !== l) {
-  //     if (l) {
-  //       let v = c + Math.abs(Math.abs(i) - Math.abs(l));
-  //       ccb(() => v);
-  //       cb(() => l);
-  //     }
-  //   }
-  // };
+  // calucate the difference between geolocation reading
+  const dif = (change, lonLat, init, setInitCb, setChangeCb) => {
+    if (init !== lonLat) {
+      if (lonLat) {
+        const v = change + Math.abs(Math.abs(init) - Math.abs(lonLat));
+        setChangeCb(() => v);
+        setInitCb(() => lonLat);
+      }
+    }
+  };
+
+  const handleProgressBar = () => { // enables button to be clicked again and diffuses alarm
+    if (currentPhase === 2) {
+      // if (distance < 100) setDistance(() => distance + 5); // remove after testing
+      // if (distance >= 100) setHideDisarmBtn(false);
+    }
+  };
 
   const getAlarmTime = async () => {
     try {
@@ -134,9 +142,9 @@ export default function Context({ children }: ContextProps) {
   interface TimeObj { hour: number; minute: number; tod: string }
   const updateAlarmTime = async (timeData: TimeObj) => {
     const { hour, minute, tod } = timeData;
-    let hr = Number(hour);
+    const hr = Number(hour);
     const min = Number(minute);
-    if (tod === 'PM') hr += 12;
+    // if (tod === 'PM') hr += 12;
     console.log('time data', timeData);
     try {
       await axios.patch('/update-alarm-time', { hour: hr, minute: min, tod });
@@ -152,7 +160,7 @@ export default function Context({ children }: ContextProps) {
       await axios.patch('/update-disarm-status', { data: convertedStatusData });
       await getDisarmStatus();
     } catch (err) {
-      console.log('Error update defuse data:', data);
+      console.log('Error update defuse data:', err);
     }
   };
 
@@ -162,48 +170,67 @@ export default function Context({ children }: ContextProps) {
       await axios.patch('/update-streak-count', { data: newData });
       await getStreak();
     } catch (err) {
-      console.log('Error update streak data:', data);
+      console.log('Error update streak data:', err);
     }
   };
 
-  const handleCurrentTime = () => {
+  const handleCurrentTime = async () => {
     setCurrentTime(() => theCurrentTime());
     if (alarm1) {
-      // PHASE 1
+      // __ IF IN PHASE I __
       if (currentTime <= alarm1) {
-        if (currentAlarm !== alarm1) {
+        if (hideDisarmBtn) { // show disarm button
+          setHideDisarmBtn(false);
+        }
+        if (currentAlarm !== alarm1) { // set alarm
           setCurrentAlarm(alarm1);
         }
-        if (currentPhase !== 1) {
+        if (currentPhase !== 1) { // set phase
           setCurrentPhase(1);
         }
-        if (currentTime === alarm1 && !isDisarmed) {
+        if (currentTime === alarm1 && !isDisarmed) { // Handle alarm1 Failure
           // Run Sad functions
+          setFailed(true);
+          // Get server updated streak val
+          await getStreak();
+          // Get server updated disarm stat
+          await getDisarmStatus();
         }
         // console.log('phase 1')
       }
-      // PHASE 2
+
+      // __ IF IN PHASE II __
       if (currentTime > alarm1 && currentTime <= alarm2) {
-        if (currentAlarm !== alarm2) {
+        // handleProgressBar(); // only used for a test
+        if (currentAlarm !== alarm2) { // set alarm
           setCurrentAlarm(alarm2);
         }
-        if (currentAlarm === tenSecAfterAlarm1 && isDisarmed) {
-          setDisarmStatus(false);
+        if (currentAlarm === tenSecAfterAlarm1 && isDisarmed && !failed) {
+          // Get new disarm stat bc server is toggling it off & I want to stay insync
+          await getDisarmStatus(); //  <-- TODO ?
         }
-        if (currentPhase !== 2) {
+        if (currentPhase !== 2) { // set phase
           setCurrentPhase(2);
+        }
+        if (currentTime === alarm2 && !isDisarmed) { // Handle alarm2 Failure
+          setFailed(true);
+          // Get server updated streak val
+          await getStreak();
+          // Get server updated disarm stat
+          await getDisarmStatus();
         }
         // console.log('phase 2')
       }
-      // AFTER 2ND ALARM
+
+      // __IF IN PHASE III__
       if (currentTime > alarm2) {
-        // console.log('phase 3')
         if (currentAlarm !== alarm1) {
           setCurrentAlarm(alarm1);
         }
         if (currentPhase !== 3) {
           setCurrentPhase(3);
         }
+        // console.log('phase 3')
       }
     }
   };
@@ -212,31 +239,13 @@ export default function Context({ children }: ContextProps) {
   //   setAlarm2(() => getSecondAlarm(alarm1).toLocaleTimeString());
   // }, [alarm1]);
 
-  // useEffect(() => { // KEEP TRACK OF CURRENT ALARM
-  //   // PHASE 1
-  //   if (currentTime <= alarm1) {
-  //     if (currentAlarm !== alarm1) {
-  //       setCurrentAlarm(alarm1);
-  //     }
-  //   }
-  //   // PHASE 2
-  //   if (currentTime > alarm1 && currentTime <= alarm2) {
-  //     if (currentAlarm !== alarm2) {
-  //       setCurrentAlarm(alarm2);
-  //     }
-  //   }
-  //   if (currentTime > alarm2) {
-  //     if (currentAlarm !== alarm1) {
-  //       setCurrentAlarm(alarm1);
-  //     }
-  //   }
-  // }, [currentTime]);
-
-  // useEffect(() => { // TRACK CURRENT LOCATION CHANGE
-  //   dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
-  //   dif(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
-  //   setDistance(() => dConvert(changeLat));
-  // }, [latitude]);
+  useEffect(() => { // TRACK CURRENT LOCATION CHANGE
+    if (currentPhase === 2 && distance < 100) {
+      dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
+      dif(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
+      setDistance(() => dConvert(changeLat));
+    }
+  }, [latitude]);
 
   useEffect(() => { // TRACK TIME CHANGE
     clock = setInterval(() => handleCurrentTime(), 1000);
@@ -247,11 +256,12 @@ export default function Context({ children }: ContextProps) {
     getAlarmTime();
     getStreak();
     getDisarmStatus();
+    handleCurrentTime();
   }, []);
 
   const value = useMemo(() => ({
-    //   distance,
-    //   setDistance,
+    distance,
+    setDistance,
     //   latitude,
     //   longitude,
     alarm1,
@@ -262,11 +272,14 @@ export default function Context({ children }: ContextProps) {
     streak,
     isDisarmed,
     currentPhase,
+    hideDisarmBtn,
+    failed,
     //   setCurrentTime,
     //   setAlarm1,
     //   setAlarm2,
     //   getAlarmTime,
     //   getStreak,
+    setHideDisarmBtn,
     setDisarmStatus,
     getDisarmStatus,
     updateAlarmTime,
@@ -281,8 +294,10 @@ export default function Context({ children }: ContextProps) {
     streak,
     isDisarmed,
     currentPhase,
-    //   distance,
-    //   latitude,
+    distance,
+    hideDisarmBtn,
+    failed,
+    // latitude,
     //   longitude,
     //   updateAlarmTime,
     //   updateDisarmStatus,
@@ -290,7 +305,7 @@ export default function Context({ children }: ContextProps) {
   ]);
 
   // return (!currentTime || !alarm1) ? <Loading /> : (
-  return (
+  return !currentTime ? <Loading /> : (
     <DataContext.Provider value={value}>
       {children}
     </DataContext.Provider>

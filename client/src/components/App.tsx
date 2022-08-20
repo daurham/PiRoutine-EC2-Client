@@ -10,40 +10,42 @@ import {
 // import Technology from '../fonts/Technology.ttf';
 // import useGeolocation from './utils/useGeolocation';
 import { useData } from '../Context';
-import range from './utils/range';
-import EditTime from './children/EditTime';
-import DisarmButton from './children/DisarmButton';
 import Header from './children/Header';
-import Info from './children/Info';
 import TimeDisplay from './children/TimeDisplay';
+import DisarmButton from './children/DisarmButton';
+import GeoTracker from './children/GeoTracker';
+import Info from './children/Info';
+import EditTime from './children/EditTime';
+import TEST from './children/TEST';
 import { getFirstAlarm, parseTimeData, theCurrentTime } from './utils';
 import Loading from './Loading';
+import range from './utils/range';
 
 export default function App() {
-  const {
-    //   updateAlarmTime,
-    //   updateDisarmStatus,
-    //   updateStreakCount,
-    //   latitude,
-    //   longitude,
-    currentTime,
-    //   setCurrentTime,
-    //   alarm1,
-    //   alarm2,
-    //   setAlarm1,
-    //   setAlarm2,
-    //   isDisarmed,
-    //   setDisarmStatus,
-    //   getDisarmStatus,
-    //   distance,
-    //   setDistance,
-    //   initialAlarmTime,
-    //   setInitialAlarmTime,
-    //   streak,
-    //   setStreak,
-    //   getStreak,
-    //   getAlarmTime,
-  } = useData();
+  // const {
+  //   updateAlarmTime,
+  //   updateDisarmStatus,
+  //   updateStreakCount,
+  //   latitude,
+  //   longitude,
+  // currentTime,
+  //   setCurrentTime,
+  //   alarm1,
+  //   alarm2,
+  //   setAlarm1,
+  //   setAlarm2,
+  //   isDisarmed,
+  //   setDisarmStatus,
+  //   getDisarmStatus,
+  //   distance,
+  //   setDistance,
+  //   initialAlarmTime,
+  //   setInitialAlarmTime,
+  //   streak,
+  //   setStreak,
+  //   getStreak,
+  //   getAlarmTime,
+  // } = useData();
 
   // const [status, setStatus] = useState('Stick to your goals');
   // const [alarmMessage, setAlarmMessage] = useState('');
@@ -57,8 +59,8 @@ export default function App() {
   // const hours: number[] = [1, ...range(2, 12)];
   // const minutes: number[] = ['00', ...range(1, 59).map(n => n < 10 ? '0' + n : n)];
 
-  let clock;
-  let interval;
+  // let clock;
+  // let interval;
   // let isArmed = (isDisarmed ? 'LOCKED' : 'DISARM');
 
   // const switchAlarms = () => { // runs after button is pressed.
@@ -123,14 +125,16 @@ export default function App() {
   // }, [currentTime]);
 
   // return (!currentTime || !alarmMessage) ? <Spinner /> : (
-  return (!currentTime) ? <Loading /> : (
+  return (
 
     <AppContainer>
       <Header />
       <TimeDisplay />
       <DisarmButton />
+      <GeoTracker />
       <Info />
       <EditTime />
+      {/* <TEST /> */}
     </AppContainer>
   );
 }
