@@ -250,10 +250,10 @@ export default function Context({ children }: ContextProps) {
   }, [latitude, longitude, initialLat, initialLon]);
 
   useEffect(() => {
-    if (!latitude) {
+    if (!initialLat) {
       setInitialLat(() => latitude);
     }
-    if (!longitude) {
+    if (!initialLon) {
       setInitialLon(() => longitude);
     }
   }, [latitude, longitude]);
