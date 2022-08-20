@@ -267,7 +267,7 @@ export default function Context({ children }: ContextProps) {
 
   useEffect(() => { // TRACK TIME CHANGE
     clock = setInterval(() => handleCurrentTime(), 1000);
-    if (distance < 100) setDistance(() => distance + 5);
+    // if (distance < 100) setDistance(() => distance + 5);
     // console.log('lat:', latitude);
     return () => clearInterval(clock);
   }, [currentTime]);
