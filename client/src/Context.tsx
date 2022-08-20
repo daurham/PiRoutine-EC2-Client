@@ -67,22 +67,16 @@ export default function Context({ children }: ContextProps) {
   let interval;
   let clock: Timer;
 
-  useEffect(() => {
-    if (!latitude) {
-      setInitialLat(() => latitude);
-    }
-    if (!longitude) {
-      setInitialLon(() => longitude);
-    }
-  }, []);
-
-  const dConvert = (input) => Math.floor(((input - 0) * 100) / (0.003 - 0));
+  const dConvert = (input: number) => Math.floor(((input - 0) * 100) / (0.003 - 0));
 
   // calucate the difference between geolocation reading
   const dif = (change, lonLat, init, setInitCb, setChangeCb) => {
-    if (init !== lonLat) {
+    if (init !== lonLat && init && lonLat) {
       if (lonLat) {
+        console.log('diff/change:', change);
+        console.log('diff/init:', init, lonLat);
         const v = change + Math.abs(Math.abs(init) - Math.abs(lonLat));
+        console.log('diff/v2:', v);
         setChangeCb(() => v);
         setInitCb(() => lonLat);
       }
@@ -146,7 +140,6 @@ export default function Context({ children }: ContextProps) {
     const { hour, minute, tod } = timeData;
     const hr = Number(hour);
     const min = Number(minute);
-    // if (tod === 'PM') hr += 12;
     console.log('time data', timeData);
     try {
       await axios.patch('/update-alarm-time', { hour: hr, minute: min, tod });
@@ -244,12 +237,24 @@ export default function Context({ children }: ContextProps) {
   useEffect(() => { // TRACK CURRENT LOCATION CHANGE
     console.log('lat INNER:', latitude);
     console.log('lon INNER:', longitude);
+    console.log('changeLat INNER:', changeLat);
     if (currentPhase === 2 && distance < 100) {
+      // if (initialLat && initialLon) {
       console.log('lat OUTTER:', latitude);
       console.log('lon OUTTER:', longitude);
+      console.log('changeLat OUTTER:', changeLat);
       dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
       dif(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
       setDistance(() => dConvert(changeLat));
+    }
+  }, [latitude, longitude, initialLat, initialLon]);
+
+  useEffect(() => {
+    if (!latitude) {
+      setInitialLat(() => latitude);
+    }
+    if (!longitude) {
+      setInitialLon(() => longitude);
     }
   }, [latitude, longitude]);
 
@@ -283,6 +288,8 @@ export default function Context({ children }: ContextProps) {
     failed,
     longitude,
     latitude,
+    initialLat,
+    initialLon,
     //   setCurrentTime,
     //   setAlarm1,
     //   setAlarm2,
@@ -308,6 +315,8 @@ export default function Context({ children }: ContextProps) {
     failed,
     longitude,
     latitude,
+    initialLat,
+    initialLon,
     // latitude,
     //   longitude,
     //   updateAlarmTime,

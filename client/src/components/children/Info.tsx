@@ -16,6 +16,8 @@ export default function Info() {
     longitude,
     latitude,
     distance,
+    initialLat,
+    initialLon,
   } = useData();
 
   return (
@@ -39,6 +41,10 @@ export default function Info() {
       {`LON: ${longitude}`}
       <br />
       {`LAT: ${latitude}`}
+      <br />
+      {`LONINIT: ${initialLon}`}
+      <br />
+      {`LATINIT: ${initialLat}`}
     </div>
   );
 }
