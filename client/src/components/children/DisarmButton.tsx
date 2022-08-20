@@ -54,15 +54,27 @@ export default function DisarmButton() {
       setHideDisarmBtn(true);
     }
   }, [currentPhase, distance])
+
+  const handleDisarm = () => {
+    if (!isDisarmed) {
+      updateDisarmStatus(!isDisarmed);
+    }
+  };
   return (
     <div>
       {!hideDisarmBtn
         && locked
-        && <Button variant="danger" onClick={() => console.log('shake the button & tell user to get moving')}>{'LOCKED'}</Button>}
+        && <Button variant="danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>{'LOCKED'}</Button>}
 
       {!hideDisarmBtn
         && !locked
-        && <Button variant="success" onClick={() => updateDisarmStatus(!isDisarmed)}>{!isDisarmed ? 'Disarm' : 'Ayyoo!'}</Button>}
+        && !isDisarmed
+        && <Button variant="success" size="lg" onClick={handleDisarm}>{!isDisarmed ? 'Disarm' : 'Ayyoo!'}</Button>}
+
+      {!hideDisarmBtn
+        && isDisarmed
+        && !locked
+        && <Button variant="outline-info" size="lg" disabled>Disarmed</Button>}
       <br />
       {/* <button type="button" onClick={() => setDisarmStatus(!isDisarmed)}>Disarm Toggle</button> */}
       {/* <button type="button" onClick={() => getDisarmStatus()}>Disarm ToggleDB</button> */}

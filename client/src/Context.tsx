@@ -113,7 +113,7 @@ export default function Context({ children }: ContextProps) {
   const getDisarmStatus = async () => {
     try {
       const { data } = await axios.get('/get-disarm-status');
-      console.log('disarm get data', data);
+      console.log('got disarm data', data);
       let { disarmedstatus } = data[0];
       disarmedstatus = swapBinaryAndBool(disarmedstatus);
       setDisarmStatus(() => disarmedstatus);
@@ -127,7 +127,7 @@ export default function Context({ children }: ContextProps) {
     try {
       const { data } = await axios.get('/get-streak-count');
       const { streak } = data[0];
-      console.log('streak get data', data);
+      console.log('got streak data', data);
       setStreak(() => streak);
     } catch (err) {
       console.log('err?: ', err);
@@ -169,7 +169,7 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  const handleCurrentTime = async () => {
+  const handleCurrentTime = () => {
     setCurrentTime(() => theCurrentTime());
     if (alarm1) {
       // __ IF IN PHASE I __
@@ -186,10 +186,12 @@ export default function Context({ children }: ContextProps) {
         if (currentTime === alarm1 && !isDisarmed) { // Handle alarm1 Failure
           // Run Sad functions
           setFailed(true);
-          // Get server updated streak val
-          await getStreak();
-          // Get server updated disarm stat
-          await getDisarmStatus();
+          setTimeout(async () => {
+            // Get server updated streak val
+            await getStreak();
+            // Get server updated disarm stat
+            await getDisarmStatus();
+          }, 5000);
         }
         // console.log('phase 1')
       }
@@ -200,19 +202,24 @@ export default function Context({ children }: ContextProps) {
         if (currentAlarm !== alarm2) { // set alarm
           setCurrentAlarm(alarm2);
         }
-        if (currentAlarm === tenSecAfterAlarm1 && isDisarmed && !failed) {
+        if (currentTime === tenSecAfterAlarm1 && isDisarmed && !failed) {
+          console.log('getting data when no fail')
+          setTimeout(async () => { await getDisarmStatus(); }, 5000);
           // Get new disarm stat bc server is toggling it off & I want to stay insync
-          await getDisarmStatus(); //  <-- TODO ?
+          // await getDisarmStatus(); //  <-- TODO ?
         }
         if (currentPhase !== 2) { // set phase
           setCurrentPhase(2);
         }
         if (currentTime === alarm2 && !isDisarmed) { // Handle alarm2 Failure
+          console.log('getting data when fail')
           setFailed(true);
-          // Get server updated streak val
-          await getStreak();
-          // Get server updated disarm stat
-          await getDisarmStatus();
+          setTimeout(async () => {
+            // Get server updated streak val
+            await getStreak();
+            // Get server updated disarm stat
+            await getDisarmStatus();
+          }, 5000);
         }
         // console.log('phase 2')
       }
@@ -260,6 +267,7 @@ export default function Context({ children }: ContextProps) {
 
   useEffect(() => { // TRACK TIME CHANGE
     clock = setInterval(() => handleCurrentTime(), 1000);
+    if (distance < 100) setDistance(() => distance + 5);
     // console.log('lat:', latitude);
     return () => clearInterval(clock);
   }, [currentTime]);
