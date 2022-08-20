@@ -56,6 +56,7 @@ export default function Context({ children }: ContextProps) {
   const [alarm1, setAlarm1] = useState<string>();
   const [alarm2, setAlarm2] = useState<string>();
   const [tenSecAfterAlarm1, setTenSecAfterAlarm1] = useState<string>();
+  const [tenSecAfterAlarm2, setTenSecAfterAlarm2] = useState<string>();
   const [currentAlarm, setCurrentAlarm] = useState<string | null>(null);
   const [currentTime, setCurrentTime] = useState<string>();
   const [streak, setStreak] = useState<number>(0);
@@ -97,10 +98,12 @@ export default function Context({ children }: ContextProps) {
       console.log('context data alar; h, m:', hour, minute);
       const firstAlarmTimestamp = getFirstAlarm(hour, minute);
       const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp);
-      const tenSecAfterTimestamp = addSeconds(firstAlarmTimestamp, 10);
+      const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 10);
+      const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10);
       setAlarm1(() => firstAlarmTimestamp.toLocaleTimeString());
       setAlarm2(() => secondAlarmTimestamp.toLocaleTimeString());
-      setTenSecAfterAlarm1(() => tenSecAfterTimestamp.toLocaleTimeString());
+      setTenSecAfterAlarm1(() => tenSecAfterTimestamp1.toLocaleTimeString());
+      setTenSecAfterAlarm2(() => tenSecAfterTimestamp2.toLocaleTimeString());
     } catch (err) {
       console.log('err?: ', err);
       const firstAlarmTimestamp = getFirstAlarm(6, 0);
@@ -231,6 +234,11 @@ export default function Context({ children }: ContextProps) {
         }
         if (currentPhase !== 3) {
           setCurrentPhase(3);
+        }
+        if (currentTime === tenSecAfterAlarm2) {
+          setTimeout(async() => {
+            await getStreak();
+          }, 1000);
         }
         // console.log('phase 3')
       }
