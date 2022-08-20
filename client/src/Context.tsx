@@ -68,8 +68,10 @@ export default function Context({ children }: ContextProps) {
   let clock: Timer;
 
   useEffect(() => {
-    if (latitude && longitude) {
+    if (!latitude) {
       setInitialLat(() => latitude);
+    }
+    if (!longitude) {
       setInitialLon(() => longitude);
     }
   }, []);
@@ -240,15 +242,20 @@ export default function Context({ children }: ContextProps) {
   // }, [alarm1]);
 
   useEffect(() => { // TRACK CURRENT LOCATION CHANGE
+    console.log('lat INNER:', latitude);
+    console.log('lon INNER:', longitude);
     if (currentPhase === 2 && distance < 100) {
+      console.log('lat OUTTER:', latitude);
+      console.log('lon OUTTER:', longitude);
       dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
       dif(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
       setDistance(() => dConvert(changeLat));
     }
-  }, [latitude]);
+  }, [latitude, longitude]);
 
   useEffect(() => { // TRACK TIME CHANGE
     clock = setInterval(() => handleCurrentTime(), 1000);
+    // console.log('lat:', latitude);
     return () => clearInterval(clock);
   }, [currentTime]);
 
@@ -274,6 +281,8 @@ export default function Context({ children }: ContextProps) {
     currentPhase,
     hideDisarmBtn,
     failed,
+    longitude,
+    latitude,
     //   setCurrentTime,
     //   setAlarm1,
     //   setAlarm2,
@@ -297,6 +306,8 @@ export default function Context({ children }: ContextProps) {
     distance,
     hideDisarmBtn,
     failed,
+    longitude,
+    latitude,
     // latitude,
     //   longitude,
     //   updateAlarmTime,

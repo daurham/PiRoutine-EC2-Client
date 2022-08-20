@@ -13,6 +13,9 @@ export default function Info() {
     isDisarmed,
     tenSecAfterAlarm1,
     currentPhase,
+    longitude,
+    latitude,
+    distance,
   } = useData();
 
   return (
@@ -30,6 +33,12 @@ export default function Info() {
       {`isDisarmed: ${String(isDisarmed).toUpperCase()}`}
       <br />
       {`PHASE: ${currentPhase}`}
+      <br />
+      {`DISTANCE: ${distance}`}
+      <br />
+      {`LON: ${longitude}`}
+      <br />
+      {`LAT: ${latitude}`}
     </div>
   );
 }
