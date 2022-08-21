@@ -79,10 +79,10 @@ export default function Context({ children }: ContextProps) {
   const dif = (change, lonLat, init, setInitCb, setChangeCb) => {
     if (init !== lonLat && init && lonLat) {
       if (lonLat) {
-        console.log('diff/change:', change);
-        console.log('diff/init:', init, lonLat);
+        // console.log('diff/change:', change);
+        // console.log('diff/init:', init, lonLat);
         const v = change + Math.abs(Math.abs(init) - Math.abs(lonLat));
-        console.log('diff/v2:', v);
+        // console.log('diff/v2:', v);
         setChangeCb(() => v);
         setInitCb(() => lonLat);
       }
@@ -255,14 +255,14 @@ export default function Context({ children }: ContextProps) {
   // }, [alarm1]);
 
   useEffect(() => { // TRACK CURRENT LOCATION CHANGE
-    console.log('lat INNER:', latitude);
-    console.log('lon INNER:', longitude);
-    console.log('changeLat INNER:', changeLat);
+    // console.log('lat INNER:', latitude);
+    // console.log('lon INNER:', longitude);
+    // console.log('changeLat INNER:', changeLat);
     if (currentPhase === 2 && distance < 100) {
       // if (initialLat && initialLon) {
-      console.log('lat OUTTER:', latitude);
-      console.log('lon OUTTER:', longitude);
-      console.log('changeLat OUTTER:', changeLat);
+      // console.log('lat OUTTER:', latitude);
+      // console.log('lon OUTTER:', longitude);
+      // console.log('changeLat OUTTER:', changeLat);
       dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
       dif(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
       setDistance(() => dConvert(changeLat));
