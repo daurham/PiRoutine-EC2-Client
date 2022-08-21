@@ -65,6 +65,11 @@ export default function Context({ children }: ContextProps) {
   const [hideDisarmBtn, setHideDisarmBtn] = useState(true);
   const [failed, setFailed] = useState(false);
 
+  const [isLocked, setLock] = useState(true);
+  const [inEditMode, setEditMode] = useState(false);
+  const [inputPin, setInputPin] = useState();
+  const [inputStatus, setInputStatus] = useState('Submit');
+
   let interval;
   let clock: Timer;
 
@@ -306,6 +311,14 @@ export default function Context({ children }: ContextProps) {
     latitude,
     initialLat,
     initialLon,
+    isLocked,
+    setLock,
+    inputPin,
+    setInputPin,
+    inputStatus,
+    setInputStatus,
+    inEditMode,
+    setEditMode,
     //   setCurrentTime,
     //   setAlarm1,
     //   setAlarm2,
@@ -333,6 +346,14 @@ export default function Context({ children }: ContextProps) {
     latitude,
     initialLat,
     initialLon,
+    isLocked,
+    // setLock,
+    inputPin,
+    // setInputPin,
+    inputStatus,
+    // setInputStatus,
+    inEditMode,
+    // setEditMode,
     // latitude,
     //   longitude,
     //   updateAlarmTime,

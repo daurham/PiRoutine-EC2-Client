@@ -1,5 +1,5 @@
 const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ENV = require('dotenv').config().parsed;
 
 const MODE = ENV.NODE_ENV || 'development';

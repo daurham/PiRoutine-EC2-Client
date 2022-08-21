@@ -2,12 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useData } from '../../Context';
 import { } from '../styles/DisarmButtonStyles';
+import Unlock from './Unlock';
 
 // type Props = {}
 
 export default function DisarmButton() {
-  const [locked, setLocked] = useState(false);
-  // const [failed, setFailed] = useState(false);
+  const [lockedDisarm, setLockedDisarm] = useState(false);
+  const [inEditMode, setEditMode] = useState(false);
+  // const [failedPasscode, setFailedPasscode] = useState(false); // change the button if you don't get the passcode right?
   // const [hideDisarmBtn, setHideDisarmBtn] = useState(false);
   const {
     currentPhase,
@@ -19,6 +21,8 @@ export default function DisarmButton() {
     isDisarmed,
     getDisarmStatus,
     updateDisarmStatus,
+    isLocked, // passcode kinda locked
+    // lockedDisarm is unavailible type..
   } = useData();
 
   useEffect(() => {
@@ -26,8 +30,8 @@ export default function DisarmButton() {
       if (hideDisarmBtn) {
         setHideDisarmBtn(false);
       }
-      if (locked) {
-        setLocked(false);
+      if (lockedDisarm) {
+        setLockedDisarm(false);
       }
     }
     // Unhide in phase 2 when use disarms alarm1
@@ -37,15 +41,15 @@ export default function DisarmButton() {
         if (hideDisarmBtn) {
           setHideDisarmBtn(false);
         }
-        if (!locked) {
-          setLocked(true);
+        if (!lockedDisarm) {
+          setLockedDisarm(true);
         }
       }
       // Unlock when traveled
       if (distance >= 100) {
-        if (locked) {
+        if (lockedDisarm) {
           // setHideDisarmBtn(false);
-          setLocked(false);
+          setLockedDisarm(false);
         }
       }
     }
@@ -62,23 +66,36 @@ export default function DisarmButton() {
   };
   return (
     <div>
-      {!hideDisarmBtn
-        && locked
-        && <Button variant="danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>{'LOCKED'}</Button>}
 
       {!hideDisarmBtn
-        && !locked
+        && isLocked
+        && lockedDisarm
+        && <Button variant="danger" size="lg" onClick={() => setEditMode(true)}>Locked</Button>}
+
+      {!hideDisarmBtn
+        && isLocked
+        && !lockedDisarm
         && !isDisarmed
-        && <Button variant="success" size="lg" onClick={handleDisarm}>{!isDisarmed ? 'Disarm' : 'Ayyoo!'}</Button>}
+        && <Button variant={!isDisarmed?"success":'outline-success'} size="lg" onClick={() => setEditMode(true)}>{!isDisarmed ? 'Disarm' : 'Keep goin!'}</Button>}
+
+      {inEditMode && <Unlock />}
 
       {!hideDisarmBtn
+        && lockedDisarm
+        && <Button variant="danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked</Button>}
+
+      {!hideDisarmBtn
+        && !isLocked
+        && !lockedDisarm
+        && !isDisarmed
+        && <Button variant={!isDisarmed?"success":'outline-success'} size="lg" onClick={handleDisarm}>{!isDisarmed ? 'Disarm' : 'Keep goin!'}</Button>}
+
+      {!hideDisarmBtn
+        && !isLocked
         && isDisarmed
-        && !locked
+        && !lockedDisarm
         && <Button variant="outline-info" size="lg" disabled>Disarmed</Button>}
       <br />
-      {/* <button type="button" onClick={() => setDisarmStatus(!isDisarmed)}>Disarm Toggle</button> */}
-      {/* <button type="button" onClick={() => getDisarmStatus()}>Disarm ToggleDB</button> */}
-      {/* <button type="button" onClick={() => updateDisarmStatus(!isDisarmed)}>Disarm ToggleDB_PATCH</button> */}
     </div>
   );
 }
