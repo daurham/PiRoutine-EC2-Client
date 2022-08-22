@@ -26,7 +26,8 @@ export const getFirstAlarm = (hour: number, minute: number) => new Date(
 );
 
 // Adds 7 min to initial alarm
-export const getSecondAlarm = (alarm1: Date) => addMinutes(alarm1, 7);
+export const getSecondAlarm = (alarm1: Date, minDelay = 7) => addMinutes(alarm1, minDelay);
+// export const getSecondAlarm = (alarm1: Date, minDelay = 7) => addSeconds(alarm1, minDelay);
 
 type BinaryOrBool = 1 | 0 | '1' | '0' | true | false | 'true' | 'false';
 export const swapBinaryAndBool = (val: BinaryOrBool) => {

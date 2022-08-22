@@ -22,6 +22,7 @@ export default function EditTime() {
      } = useData();
   const minuteSelections = [...range(0, 59)].map((n) => (n < 10 ? `0${n}` : n));
   // console.log('input:', inputPin);
+  
 
   const handleLock = () => { };
   return (

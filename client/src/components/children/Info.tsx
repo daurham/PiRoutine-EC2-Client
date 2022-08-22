@@ -34,6 +34,8 @@ export default function Info() {
       <br />
       {`ALARM1: ${alarm1}`}
       <br />
+      {/* {`ALARM1.1: ${tenSecAfterAlarm1}`} */}
+      {/* <br /> */}
       {`ALARM2: ${alarm2}`}
     </div>
   );

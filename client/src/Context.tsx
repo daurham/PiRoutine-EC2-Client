@@ -51,7 +51,7 @@ export default function Context({ children }: ContextProps) {
   type LType = number | undefined;
   const [initialLat, setInitialLat] = useState<LType>(latitude);
   const [initialLon, setInitialLon] = useState<LType>(longitude);
-  const [distance, setDistance] = useState<number>(0);
+  const [distance, setDistance] = useState<number>(100);
 
   const [alarm1, setAlarm1] = useState<string>();
   const [alarm2, setAlarm2] = useState<string>();
@@ -69,9 +69,11 @@ export default function Context({ children }: ContextProps) {
   const [inEditMode, setEditMode] = useState(false);
   const [inputPin, setInputPin] = useState();
   const [inputStatus, setInputStatus] = useState('Submit');
+  const [stamp, setStamp] = useState();
 
   let interval;
   let clock: Timer;
+  let temp;
 
   const dConvert = (input: number) => Math.floor(((input - 0) * 100) / (0.003 - 0));
 
@@ -100,11 +102,12 @@ export default function Context({ children }: ContextProps) {
     try {
       const { data } = await axios.get('/get-alarm-time');
       const { hour, minute } = parseTimeData(data);
-      console.log('context data alar; h, m:', hour, minute);
+      console.log('got data alarm; h, m:', hour, minute);
       const firstAlarmTimestamp = getFirstAlarm(hour, minute);
-      const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp);
-      const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 10);
+      const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp, 10); // 10 = 10min
+      const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 2);
       const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10);
+      // setStamp(firstAlarmTimestamp);
       setAlarm1(() => firstAlarmTimestamp.toLocaleTimeString());
       setAlarm2(() => secondAlarmTimestamp.toLocaleTimeString());
       setTenSecAfterAlarm1(() => tenSecAfterTimestamp1.toLocaleTimeString());
@@ -117,6 +120,8 @@ export default function Context({ children }: ContextProps) {
       setAlarm2(() => secondAlarmTimestamp.toLocaleTimeString());
     }
   };
+
+  // console.log('stamp', stamp);
 
   const getDisarmStatus = async () => {
     try {
@@ -194,12 +199,14 @@ export default function Context({ children }: ContextProps) {
         if (currentTime === alarm1 && !isDisarmed) { // Handle alarm1 Failure
           // Run Sad functions
           setFailed(true);
+          console.log('getting data when fail');
           setTimeout(async () => {
             // Get server updated streak val
+            console.log('waited 5 sec!', theCurrentTime());
             await getStreak();
             // Get server updated disarm stat
             await getDisarmStatus();
-          }, 5000);
+          });
         }
         // console.log('phase 1')
       }
@@ -211,8 +218,11 @@ export default function Context({ children }: ContextProps) {
           setCurrentAlarm(alarm2);
         }
         if (currentTime === tenSecAfterAlarm1 && isDisarmed && !failed) {
-          console.log('getting data when no fail')
-          setTimeout(async () => { await getDisarmStatus(); }, 5000);
+          console.log('getting data when no fail');
+          setTimeout(async () => {
+            console.log('waited 0 sec!', theCurrentTime());
+            await getDisarmStatus();
+          });
           // Get new disarm stat bc server is toggling it off & I want to stay insync
           // await getDisarmStatus(); //  <-- TODO ?
         }
@@ -220,14 +230,15 @@ export default function Context({ children }: ContextProps) {
           setCurrentPhase(2);
         }
         if (currentTime === alarm2 && !isDisarmed) { // Handle alarm2 Failure
-          console.log('getting data when fail')
+          console.log('getting data when fail');
           setFailed(true);
           setTimeout(async () => {
             // Get server updated streak val
+            console.log('waited 5 sec!', theCurrentTime());
             await getStreak();
             // Get server updated disarm stat
             await getDisarmStatus();
-          }, 5000);
+          }, 1000);
         }
         // console.log('phase 2')
       }
@@ -240,10 +251,10 @@ export default function Context({ children }: ContextProps) {
         if (currentPhase !== 3) {
           setCurrentPhase(3);
         }
-        if (currentTime === tenSecAfterAlarm2) {
-          setTimeout(async() => {
+        if (currentTime === tenSecAfterAlarm2 && isDisarmed) {
+          setTimeout(async () => {
             await getStreak();
-          }, 1000);
+          });
         }
         // console.log('phase 3')
       }
@@ -331,6 +342,7 @@ export default function Context({ children }: ContextProps) {
     updateDisarmStatus,
     updateStreakCount,
   }), [
+    stamp,
     alarm1,
     alarm2,
     tenSecAfterAlarm1,
