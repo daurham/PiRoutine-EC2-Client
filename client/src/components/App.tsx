@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Form, ProgressBar, Button } from 'react-bootstrap';
 import Spinner from './utils/Spinner';
 import {
-  AppContainer,
+  AppContainer, CenteringContainer,
 } from './styles/AppStyles';
 // import css from '../styles/css.css';
 // import Technology from '../fonts/Technology.ttf';
@@ -128,13 +128,15 @@ export default function App() {
   return (
 
     <AppContainer>
-      <Header />
-      <TimeDisplay />
-      <DisarmButton />
-      <GeoTracker />
-      <Info />
-      <EditTime />
-      {/* <TEST /> */}
+      <CenteringContainer>
+        <Header />
+        <TimeDisplay />
+        <DisarmButton />
+        <GeoTracker />
+        <Info />
+        <EditTime />
+        {/* <TEST /> */}
+      </CenteringContainer>
     </AppContainer>
   );
 }

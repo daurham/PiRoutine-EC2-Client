@@ -4,6 +4,7 @@ import Unlock from './Unlock';
 import { useData } from '../../Context';
 // import { } from '../styles/EditTimeStyles';
 import range from '../utils/range';
+import { EditTimeContainer, FormContainer, UnlockContainer, SelectStyle } from '../styles/EditTimeStyles';
 
 // type Props = { va: 2 };
 
@@ -14,52 +15,58 @@ export default function EditTime() {
   const {
     streak,
     updateAlarmTime,
-     updateStreakCount,
-     updateDisarmStatus,
-     inEditMode,
-     setEditMode,
-     isLocked,
-     } = useData();
+    updateStreakCount,
+    updateDisarmStatus,
+    inEditMode,
+    setEditMode,
+    isLocked,
+  } = useData();
   const minuteSelections = [...range(0, 59)].map((n) => (n < 10 ? `0${n}` : n));
   // console.log('input:', inputPin);
-  
+
 
   const handleLock = () => { };
   return (
-    <div>
-      <Button variant={inEditMode ? 'outline-info' : 'outline-secondary'} size="sm" onClick={() => setEditMode(!inEditMode)}>Edit Alarm</Button>
+    <EditTimeContainer>
+      <UnlockContainer>
+        <Button variant={inEditMode ? 'outline-info' : 'outline-secondary'} size="sm" onClick={() => setEditMode(!inEditMode)}>Edit Alarm</Button>
+      </UnlockContainer>
+      <br />
       {inEditMode
         && (
           <div>
             {
-              isLocked ? <Unlock />
+              isLocked ?
+                <UnlockContainer><br /><Unlock /></UnlockContainer>
                 : (
-                  <Form>
-                    <select onChange={(e) => setHr(e.target.value)}>
-                      {[...range(1, 12)].map((t, i) => (
-                        <option value={t} key={i}>{t}</option>
-                      ))}
-                    </select>
+                  <FormContainer>
+                    <Form>
+                      <SelectStyle onChange={(e) => setHr(e.target.value)}>
+                        {[...range(1, 12)].map((t, i) => (
+                          <option value={t} key={i}>{t}</option>
+                        ))}
+                      </SelectStyle>
 
-                    <select onChange={(e) => setMin(e.target.value)}>
-                      {minuteSelections.map((t, i) => (
-                        <option value={t} key={i}>{t}</option>
-                      ))}
-                    </select>
+                      <SelectStyle onChange={(e) => setMin(e.target.value)}>
+                        {minuteSelections.map((t, i) => (
+                          <option value={t} key={i}>{t}</option>
+                        ))}
+                      </SelectStyle>
 
-                    <select onChange={(e) => setTOD(e.target.value)}>
-                      {['AM', 'PM'].map((t, i) => (
-                        <option value={t} key={i}>{t}</option>
-                      ))}
-                    </select>
+                      <SelectStyle onChange={(e) => setTOD(e.target.value)}>
+                        {['AM', 'PM'].map((t, i) => (
+                          <option value={t} key={i}>{t}</option>
+                        ))}
+                      </SelectStyle>
 
-                    <Button onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
-                  </Form>
+                      <Button variant='info' style={{'verticalAlign': 'baseline'}} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
+                    </Form>
+                  </FormContainer>
                 )
             }
           </div>
         )
       }
-    </div>
+    </EditTimeContainer>
   );
 }

@@ -1,16 +1,14 @@
 import React from 'react';
 import { Form, ProgressBar, Button } from 'react-bootstrap';
 import { useData } from '../../Context';
+// import {  } from '../styles/GeoTrackerStyles';
 
 export default function GeoTracker() {
-  const { currentAlarm, alarm2, distance } = useData();
-  return (
+  const { currentAlarm, alarm2, alarm1, distance } = useData();
+  return currentAlarm !== alarm2 ? null : (
     <div>
-      {/* <h3>GeoTracker</h3> */}
-      {
-      (currentAlarm === alarm2)
-      && <ProgressBar now={distance} label={`${distance}%`} />
-      }
+      <ProgressBar animated variant='info' now={distance} label={`${distance}%`} />
+      <br />
     </div>
   );
 }
