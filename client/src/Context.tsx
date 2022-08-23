@@ -51,7 +51,7 @@ export default function Context({ children }: ContextProps) {
   type LType = number | undefined;
   const [initialLat, setInitialLat] = useState<LType>(latitude);
   const [initialLon, setInitialLon] = useState<LType>(longitude);
-  const [distance, setDistance] = useState<number>(100);
+  const [distance, setDistance] = useState<number>(0);
 
   const [alarm1, setAlarm1] = useState<string>();
   const [alarm2, setAlarm2] = useState<string>();
@@ -104,7 +104,7 @@ export default function Context({ children }: ContextProps) {
       const { hour, minute } = parseTimeData(data);
       console.log('got data alarm; h, m:', hour, minute);
       const firstAlarmTimestamp = getFirstAlarm(hour, minute);
-      const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp, 10); // 10 = 10min
+      const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp, 7); // arg2 = phase2 duration
       const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 2);
       const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10);
       // setStamp(firstAlarmTimestamp);
