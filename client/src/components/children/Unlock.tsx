@@ -1,6 +1,6 @@
 import React from 'react';
 import { useData } from '../../Context';
-import { Form, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { InputContainer, OutterContainer, PasscodeInput, UnlockContainer } from '../styles/UnlockStyles';
 
 export default function Unlock() {

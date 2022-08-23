@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useData } from '../../Context';
-import { InfoContainer, InfoEntry, MainInfoContainer, MetaContainer, SeeMoreStyle } from '../styles/InfoStyles';
+import { InfoContainer, InfoEntry, InnerValRed, InnerValRedU, InnerValWhite, MainInfoContainer, MetaContainer, SeeMoreStyle } from '../styles/InfoStyles';
 import Loading from '../Loading';
 
 // type Props = {}
@@ -27,23 +27,22 @@ export default function Info() {
       <MainInfoContainer>
         <InfoEntry>Streak Count: {streak || <Loading />}</InfoEntry>
 
-        <InfoEntry>Alarm: {currentAlarm ? <div style={{ display: 'inline-flex', color: 'red' }}>{currentAlarm}</div> : <Loading />}</InfoEntry>
+        <InfoEntry>Alarm: {currentAlarm ? <InnerValRed>{currentAlarm}</InnerValRed> : <Loading />}</InfoEntry>
 
         <InfoEntry>Status: {!isDisarmed ?
-          <div style={{ display: 'inline-flex', color: 'red' }}>Armed 💦</div>
-          : <div style={{ display: 'inline-flex', color: 'white' }}>Disarmed 😌</div>
+          <InnerValRed>Armed 💦</InnerValRed>
+          : <InnerValWhite>Disarmed 😌</InnerValWhite>
         }</InfoEntry>
         {seeMore &&
           <MetaContainer>
             <InfoEntry>Longest Streak: {streak}</InfoEntry>
-            <InfoEntry>Alarm 1: {alarm1 ? <div style={{ display: 'inline-flex', color: 'red' }}>{alarm1}</div> : <Loading />}</InfoEntry>
-            <InfoEntry>Alarm 2: {alarm2 ? <div style={{ display: 'inline-flex', color: 'red' }}>{alarm2}</div> : <Loading />}</InfoEntry>
+            <InfoEntry>Alarm 1: {alarm1 ? <InnerValRed>{alarm1}</InnerValRed> : <Loading />}</InfoEntry>
+            <InfoEntry>Alarm 2: {alarm2 ? <InnerValRed>{alarm2}</InnerValRed> : <Loading />}</InfoEntry>
             <InfoEntry>Current Phase: {currentPhase || <Loading />}</InfoEntry>
-            {/* <InfoEntry>Distance %: {`${distance}%` || <Loading />}</InfoEntry> */}
             <InfoEntry>Days Skipped: {<Loading />}</InfoEntry>
             <InfoEntry>Days Soaked: {<Loading />}</InfoEntry>
             <InfoEntry>Records of Data: {<Loading />}</InfoEntry>
-            <InfoEntry>Start Date: {<u style={{ display: 'inline-flex', color: 'red' }}>{'08/19/2022'}</u>}</InfoEntry>
+            <InfoEntry>Start Date: {<InnerValRedU>08/19/2022</InnerValRedU>}</InfoEntry>
           </MetaContainer>
         }
         <InfoEntry><SeeMoreStyle onClick={() => setSeeMore(!seeMore)} >{!seeMore ? 'show more' : 'show less'}</SeeMoreStyle></InfoEntry>

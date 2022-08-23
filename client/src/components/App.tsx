@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import axios from 'axios';
-import { Form, ProgressBar, Button } from 'react-bootstrap';
-import Spinner from './utils/Spinner';
 import {
   AppContainer, CenteringContainer,
 } from './styles/AppStyles';
-// import css from '../styles/css.css';
-// import Technology from '../fonts/Technology.ttf';
-// import useGeolocation from './utils/useGeolocation';
-import { useData } from '../Context';
 import Header from './children/Header';
 import TimeDisplay from './children/TimeDisplay';
 import DisarmButton from './children/DisarmButton';
@@ -17,6 +9,7 @@ import GeoTracker from './children/GeoTracker';
 import Info from './children/Info';
 import EditTime from './children/EditTime';
 import TEST from './children/TEST';
+import { useData } from '../Context';
 import { getFirstAlarm, parseTimeData, theCurrentTime } from './utils';
 import Loading from './Loading';
 import range from './utils/range';

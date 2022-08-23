@@ -78,23 +78,11 @@ export default function Context({ children }: ContextProps) {
   const dConvert = (input: number) => Math.floor(((input - 0) * 100) / (0.003 - 0));
 
   // calucate the difference between geolocation reading
-  const dif = (change, lonLat, init, setInitCb, setChangeCb) => {
+  const dif = (change: number, lonLat: number, init: number, setInitCb: Function, setChangeCb: Function) => {
     if (init !== lonLat && init && lonLat) {
-      if (lonLat) {
-        // console.log('diff/change:', change);
-        // console.log('diff/init:', init, lonLat);
-        const v = change + Math.abs(Math.abs(init) - Math.abs(lonLat));
-        // console.log('diff/v2:', v);
-        setChangeCb(() => v);
-        setInitCb(() => lonLat);
-      }
-    }
-  };
-
-  const handleProgressBar = () => { // enables button to be clicked again and diffuses alarm
-    if (currentPhase === 2) {
-      // if (distance < 100) setDistance(() => distance + 5); // remove after testing
-      // if (distance >= 100) setHideDisarmBtn(false);
+      const v = change + Math.abs(Math.abs(init) - Math.abs(lonLat));
+      setChangeCb(() => v);
+      setInitCb(() => lonLat);
     }
   };
 
@@ -132,7 +120,7 @@ export default function Context({ children }: ContextProps) {
       setDisarmStatus(() => disarmedstatus);
     } catch (err) {
       console.log('err?: ', err);
-      setDisarmStatus(() => 0);
+      setDisarmStatus(() => false);
     }
   };
 
@@ -182,11 +170,15 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  const handleCurrentTime = () => {
+  const handleCurrentTime = async () => {
     setCurrentTime(() => theCurrentTime());
-    if (alarm1) {
+    if (alarm1 && currentTime && alarm2) {
+      const alarm1TOD = alarm1.slice(-2);
+      const alarm2TOD = alarm2.slice(-2);
+      const currentTOD = currentTime.slice(-2);
+
       // __ IF IN PHASE I __
-      if (currentTime <= alarm1) {
+      if (currentTime <= alarm1 && alarm1TOD === currentTOD) {
         if (hideDisarmBtn) { // show disarm button
           setHideDisarmBtn(false);
         }
@@ -199,48 +191,27 @@ export default function Context({ children }: ContextProps) {
         if (currentTime === alarm1 && !isDisarmed) { // Handle alarm1 Failure
           // Run Sad functions
           setFailed(true);
-          console.log('getting data when fail');
-          setTimeout(async () => {
-            // Get server updated streak val
-            console.log('waited 5 sec!', theCurrentTime());
-            await getStreak();
-            // Get server updated disarm stat
-            await getDisarmStatus();
-          });
         }
-        // console.log('phase 1')
       }
 
       // __ IF IN PHASE II __
-      if (currentTime > alarm1 && currentTime <= alarm2) {
-        // handleProgressBar(); // only used for a test
+      if (
+        currentTime > alarm1 && currentTime <= alarm2
+        && (currentTOD === alarm1TOD || currentTOD === alarm2TOD)
+      ) {
         if (currentAlarm !== alarm2) { // set alarm
           setCurrentAlarm(alarm2);
         }
-        if (currentTime === tenSecAfterAlarm1 && isDisarmed && !failed) {
-          console.log('getting data when no fail');
-          setTimeout(async () => {
-            console.log('waited 0 sec!', theCurrentTime());
-            await getDisarmStatus();
-          });
-          // Get new disarm stat bc server is toggling it off & I want to stay insync
-          // await getDisarmStatus(); //  <-- TODO ?
+        if (currentTime === tenSecAfterAlarm1) {
+          await getDisarmStatus();
+          await getStreak();
         }
         if (currentPhase !== 2) { // set phase
           setCurrentPhase(2);
         }
         if (currentTime === alarm2 && !isDisarmed) { // Handle alarm2 Failure
-          console.log('getting data when fail');
           setFailed(true);
-          setTimeout(async () => {
-            // Get server updated streak val
-            console.log('waited 5 sec!', theCurrentTime());
-            await getStreak();
-            // Get server updated disarm stat
-            await getDisarmStatus();
-          }, 1000);
         }
-        // console.log('phase 2')
       }
 
       // __IF IN PHASE III__
@@ -251,12 +222,10 @@ export default function Context({ children }: ContextProps) {
         if (currentPhase !== 3) {
           setCurrentPhase(3);
         }
-        if (currentTime === tenSecAfterAlarm2 && isDisarmed) {
-          setTimeout(async () => {
-            await getStreak();
-          });
+        if (currentTime === tenSecAfterAlarm2) {
+          await getStreak();
+          await getDisarmStatus();
         }
-        // console.log('phase 3')
       }
     }
   };

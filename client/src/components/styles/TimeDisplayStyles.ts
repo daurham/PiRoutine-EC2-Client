@@ -1,17 +1,10 @@
 import styled from 'styled-components';
-
-export const OutterContainer = styled.div``;
-
-export const HrContainer = styled.div``;
+import { FlexCenteringContainer } from './GlobalStyles';
 
 export const Time = styled.h1`
-font-size: 4rem;
+font-size: 3.5rem;
 color: red;
 font-weight: bold;
 `;
 
-
-export const TimeDisplayContainer = styled.div`
-display: flex;
-justify-content: center;
-`;
+export const TimeDisplayContainer = FlexCenteringContainer;

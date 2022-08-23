@@ -87,7 +87,7 @@ export default function DisarmButton() {
       <ButtonContainer>
         {!hideDisarmBtn
           && lockedDisarm
-          && <Button variant="danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked</Button>}
+          && <Button variant="outline-danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked</Button>}
       </ButtonContainer>
 
       <ButtonContainer>
