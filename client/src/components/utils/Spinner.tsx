@@ -3,7 +3,7 @@ import styled, { keyframes } from 'styled-components';
 // Spinner Styles:
 
 export const SpinnerContainer = styled.div`
-display: flex;
+display: inline-flex;
 `;
 export const SpinnerInnerContainer = styled.div`
 display: flex;
@@ -26,10 +26,10 @@ const Spinner = styled.div`
   border-top: 2px solid light-grey;
   border-right: 2px solid light-grey;
   border-bottom: 2px solid light-grey;
-  border-left: 4px solid black;
+  border-left: 3px solid red;
   background: transparent;
-  width: 20px;
-  height: 20px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
 `;
 

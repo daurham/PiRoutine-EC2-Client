@@ -30,9 +30,16 @@ export const DisarmButton = styled.button`
   cursor: pointer;
 `;
 export const AppContainer = styled.div`
-  display: block;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
+
+
+// display: grid;
+// grid-template-rows:15vh 70vh 15vh;
+// grid-template-columns:15vw 70vw 15vw;
 `;
+
 export const ButtonContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -44,7 +51,7 @@ export const ListContainer = styled.div`
 export const List = styled.ul`
   justify-content: center;
 `;
-export const Container = styled.div`
-  display: flex;
+export const CenteringContainer = styled.div`
+  display: grid;
   justify-content: center;
 `;

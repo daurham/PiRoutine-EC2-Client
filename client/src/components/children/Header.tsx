@@ -1,8 +1,10 @@
 import React from 'react';
-import { } from '../styles/HeaderStyles';
+import { HeaderContainer, Title } from '../styles/HeaderStyles';
 
 export default function Header() {
   return (
-    <h1>PIROUTINE</h1>
+    <HeaderContainer>
+      <Title>PIROUTINE</Title>
+    </HeaderContainer>
   );
 }

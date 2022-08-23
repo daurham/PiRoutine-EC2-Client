@@ -1,6 +1,7 @@
 import React from 'react';
 import { useData } from '../../Context';
 import { Form, Button } from 'react-bootstrap';
+import { InputContainer, OutterContainer, PasscodeInput, UnlockContainer } from '../styles/UnlockStyles';
 
 export default function Unlock() {
   const {
@@ -14,9 +15,14 @@ export default function Unlock() {
     setEditMode,
   } = useData();
   return isLocked && (
-    <div>
-      <input placeholder="Passcode" onChange={(e) => { setInputPin(e.target.value); (inputStatus !== 'Submit' ? setInputStatus('Submit') : null) }} />
-      <Button variant={inputStatus === 'Submit' ? 'secondary' : 'danger'} onClick={() => (inputPin === '1946' ? setLock(false) : setInputStatus('Invalid'))}>{inputStatus}</Button>
-    </div>
+    <UnlockContainer>
+        <br />
+      <OutterContainer>
+        <InputContainer>
+          <PasscodeInput placeholder="Passcode" onChange={(e) => { setInputPin(e.target.value); (inputStatus !== 'Submit' ? setInputStatus('Submit') : null) }} />
+          <Button type='submit' variant={inputStatus === 'Submit' ? 'outline-info' : 'danger'} onClick={(e) => { e.preventDefault(); return (inputPin === '1946' ? setLock(false) : setInputStatus('Invalid'))}}>{inputStatus}</Button>
+        </InputContainer>
+      </OutterContainer>
+    </UnlockContainer>
   );
 }

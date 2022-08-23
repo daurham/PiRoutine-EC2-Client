@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { useData } from '../../Context';
-import { } from '../styles/DisarmButtonStyles';
+import { ButtonContainer, DisarmButtonContainer } from '../styles/DisarmButtonStyles';
 import Unlock from './Unlock';
 
 // type Props = {}
@@ -64,38 +64,48 @@ export default function DisarmButton() {
       updateDisarmStatus(!isDisarmed);
     }
   };
-  return (
-    <div>
+  return hideDisarmBtn ? null : (
+    <DisarmButtonContainer>
+      <ButtonContainer>
+        {/* TODO: remove duplicates */}
+        {!hideDisarmBtn
+          && isLocked
+          && lockedDisarm
+          && <Button variant="outline-danger" size="lg" onClick={() => setEditMode(true)}>Locked</Button>}
+      </ButtonContainer>
 
-      {!hideDisarmBtn
-        && isLocked
-        && lockedDisarm
-        && <Button variant="danger" size="lg" onClick={() => setEditMode(true)}>Locked</Button>}
+      <ButtonContainer>
+        {!hideDisarmBtn
+          && isLocked
+          && !lockedDisarm
+          && !isDisarmed
+          && <Button variant="outline-secondary" size="lg" onClick={() => setEditMode(true)}>Disarm</Button>}
+      </ButtonContainer>
 
-      {!hideDisarmBtn
-        && isLocked
-        && !lockedDisarm
-        && !isDisarmed
-        && <Button variant={!isDisarmed?"success":'outline-success'} size="lg" onClick={() => setEditMode(true)}>{!isDisarmed ? 'Disarm' : 'Keep goin!'}</Button>}
+      {inEditMode && <div><br /><Unlock /></div>}
 
-      {inEditMode && <Unlock />}
+      <ButtonContainer>
+        {!hideDisarmBtn
+          && lockedDisarm
+          && <Button variant="danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked</Button>}
+      </ButtonContainer>
 
-      {!hideDisarmBtn
-        && lockedDisarm
-        && <Button variant="danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked</Button>}
+      <ButtonContainer>
+        {!hideDisarmBtn
+          && !isLocked
+          && !lockedDisarm
+          && !isDisarmed
+          && <Button variant="secondary" size="lg" onClick={handleDisarm}>Disarm</Button>}
+      </ButtonContainer>
 
-      {!hideDisarmBtn
-        && !isLocked
-        && !lockedDisarm
-        && !isDisarmed
-        && <Button variant={!isDisarmed?"success":'outline-success'} size="lg" onClick={handleDisarm}>{!isDisarmed ? 'Disarm' : 'Keep goin!'}</Button>}
-
-      {!hideDisarmBtn
-        && !isLocked
-        && isDisarmed
-        && !lockedDisarm
-        && <Button variant="outline-info" size="lg" disabled>Disarmed</Button>}
-      <br />
-    </div>
+      <ButtonContainer>
+        {!hideDisarmBtn
+          && !isLocked
+          && isDisarmed
+          && !lockedDisarm
+          && <Button variant="outline-info" size="lg" disabled>Disarmed</Button>}
+      </ButtonContainer>
+        <br />
+    </DisarmButtonContainer>
   );
 }
