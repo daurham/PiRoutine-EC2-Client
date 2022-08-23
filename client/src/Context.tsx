@@ -13,6 +13,7 @@ import {
   addMinutes,
   addSeconds,
   getFirstAlarm,
+  getPhase,
   getSecondAlarm,
   parseTimeData,
   swapBinaryAndBool,
@@ -172,13 +173,20 @@ export default function Context({ children }: ContextProps) {
 
   const handleCurrentTime = async () => {
     setCurrentTime(() => theCurrentTime());
+
     if (alarm1 && currentTime && alarm2) {
+      let phase = getPhase(alarm1, alarm2, currentTime);
+      console.log('phase: ', phase)
+      if (!currentPhase || currentPhase !== phase) {
+        setCurrentPhase(phase);
+      }
+
       const alarm1TOD = alarm1.slice(-2);
       const alarm2TOD = alarm2.slice(-2);
       const currentTOD = currentTime.slice(-2);
 
       // __ IF IN PHASE I __
-      if (currentTime <= alarm1 && alarm1TOD === currentTOD) {
+      if (currentPhase === 1) {
         if (hideDisarmBtn) { // show disarm button
           setHideDisarmBtn(false);
         }
@@ -195,10 +203,7 @@ export default function Context({ children }: ContextProps) {
       }
 
       // __ IF IN PHASE II __
-      if (
-        currentTime > alarm1 && currentTime <= alarm2
-        && (currentTOD === alarm1TOD || currentTOD === alarm2TOD)
-      ) {
+      if (currentPhase === 2) {
         if (currentAlarm !== alarm2) { // set alarm
           setCurrentAlarm(alarm2);
         }
@@ -215,12 +220,9 @@ export default function Context({ children }: ContextProps) {
       }
 
       // __IF IN PHASE III__
-      if (currentTime > alarm2) {
+      if (currentPhase === 3) {
         if (currentAlarm !== alarm1) {
           setCurrentAlarm(alarm1);
-        }
-        if (currentPhase !== 3) {
-          setCurrentPhase(3);
         }
         if (currentTime === tenSecAfterAlarm2) {
           await getStreak();
