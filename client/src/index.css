@@ -1,3 +1,4 @@
+/* STORED LOCALLY FOR FURTHER STYLE TESTING
 @font-face {
   font-family: 'FFFFORWA';
   src: local('FFFFORWA'), url(./assets/font/FFFFORWA.TTF) format('truetype');
@@ -21,7 +22,7 @@
 @font-face {
   font-family: 'edunline';
   src: local('edunline'), url(./assets/font/edunline.ttf) format('truetype');
-}
+} */
 @font-face {
   font-family: 'Technology';
   src: local('Technology'), url(./assets/font/Technology.ttf) format('truetype');
@@ -29,21 +30,11 @@
 
 .time {
   font-family: Technology;
-  /* font-family: edunline; */
-  /* font-family: edundot; */
-  /* font-family: editundo; */
-  /* font-family: TickingTimebombBB; */
-  /* font-family: FFFFORWA; */
-  /* font-family: ChessType; */
   color: red;
 }
 
 .alarm {
-  /* font-family: editundo; */
   font-family: Technology;
-  /* font-family: TickingTimebombBB; */
-  /* font-family: FFFFORWA; */
-  /* font-family: ChessType; */
 }
 
 /* .title {} */
