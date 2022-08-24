@@ -37,7 +37,10 @@ export function useData() {
 }
 
 type ContextProps = {
-  children: JSX.Element;
+  children: JSX.Element
+  // GlobalStyleComponent
+  // DefaultTheme;
+  // <{}, DefaultTheme>
 };
 
 export default function Context({ children }: ContextProps) {
@@ -73,7 +76,7 @@ export default function Context({ children }: ContextProps) {
   const [stamp, setStamp] = useState();
 
   let interval;
-  let clock: Timer;
+  let clock: any;
   let temp;
 
   const dConvert = (input: number) => Math.floor(((input - 0) * 100) / (0.003 - 0));
@@ -104,6 +107,7 @@ export default function Context({ children }: ContextProps) {
       const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10);
       // setStamp(firstAlarmTimestamp);
       setAlarm1(() => firstAlarmTimestamp.toLocaleTimeString());
+      // console.log('alarm1 is made: ');
       setAlarm2(() => secondAlarmTimestamp.toLocaleTimeString());
       setTenSecAfterAlarm1(() => tenSecAfterTimestamp1.toLocaleTimeString());
       setTenSecAfterAlarm2(() => tenSecAfterTimestamp2.toLocaleTimeString());
@@ -227,19 +231,8 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  // useEffect(() => { // KEEP ALARM2 UP TO DATE
-  //   setAlarm2(() => getSecondAlarm(alarm1).toLocaleTimeString());
-  // }, [alarm1]);
-
   useEffect(() => { // TRACK CURRENT LOCATION CHANGE
-    // console.log('lat INNER:', latitude);
-    // console.log('lon INNER:', longitude);
-    // console.log('changeLat INNER:', changeLat);
     if (currentPhase === 2 && distance < 100) {
-      // if (initialLat && initialLon) {
-      // console.log('lat OUTTER:', latitude);
-      // console.log('lon OUTTER:', longitude);
-      // console.log('changeLat OUTTER:', changeLat);
       dif(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
       dif(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
       setDistance(() => dConvert(changeLat));
@@ -256,8 +249,9 @@ export default function Context({ children }: ContextProps) {
   }, [latitude, longitude]);
 
   useEffect(() => { // TRACK TIME CHANGE
+    if (alarm1 && !currentAlarm) setCurrentAlarm(alarm1);
     clock = setInterval(() => handleCurrentTime(), 1000);
-    // if (distance < 100) setDistance(() => distance + 5);
+    // if (distance < 100) setDistance(() => distance + 5); // TESTING
     // console.log('lat:', latitude);
     return () => clearInterval(clock);
   }, [currentTime]);

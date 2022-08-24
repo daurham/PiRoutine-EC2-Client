@@ -8,10 +8,10 @@ export const parseTimeData = (timeObj: TimeObj[]): TimeObj => {
 };
 
 export const theCurrentTime = (): string => new Date().toLocaleTimeString();
-export const addMinutes = (date: Date, minutes: number) => new Date(
+export const addMinutes = (date: Date, minutes: number): Date => new Date(
   date.getTime() + (minutes * 60000),
 );
-export const addSeconds = (date: Date, seconds: number) => new Date(
+export const addSeconds = (date: Date, seconds: number): Date => new Date(
   date.getTime() + (seconds * 1000),
 );
 export const today = new Date();
@@ -30,7 +30,7 @@ export const getSecondAlarm = (alarm1: Date, minDelay = 7) => addMinutes(alarm1,
 // export const getSecondAlarm = (alarm1: Date, minDelay = 7) => addSeconds(alarm1, minDelay);
 
 type BinaryOrBool = 1 | 0 | '1' | '0' | true | false | 'true' | 'false';
-export const swapBinaryAndBool = (val: BinaryOrBool) => {
+export const swapBinaryAndBool = (val: BinaryOrBool): BinaryOrBool | undefined => {
   if (val === true) return 1;
   if (val === false) return 0;
   if (val === 'true') return 1;
@@ -42,9 +42,13 @@ export const swapBinaryAndBool = (val: BinaryOrBool) => {
   return undefined;
 };
 
-export const getHour = (time: string) => Number(time.slice(0, time.indexOf(':')));
+export const getHour = (time: string): number => Number(time.slice(0, time.indexOf(':')));
 
-export const getPhase = (alarm1: string, alarm2: string, currentTime: string) => {
+/**
+ * GET THE TRUE RANGE OF PHASES
+ * time1 < time2 was unreliable... Until now.
+ */
+export const getPhase = (alarm1: string, alarm2: string, currentTime: string): number => {
   // get TOD
   const alarm1TOD = alarm1.slice(-2);
   const alarm2TOD = alarm2.slice(-2);
@@ -54,18 +58,36 @@ export const getPhase = (alarm1: string, alarm2: string, currentTime: string) =>
   const alarm2Hour = getHour(alarm2);
   const currentHour = getHour(currentTime);
   // get total Hrs
-  // console.log('1, 2, ct:', alarm1Hour, alarm2Hour, currentHour)
   let alarm1TotalHours = alarm1Hour;
-  alarm1TotalHours += (alarm1TOD === 'AM' || (alarm1TOD === 'AM' && Number(alarm1Hour)) === 12 ? 0 : 12);
-  let alarm2TotalHours = alarm2Hour;
-  alarm2TotalHours += (alarm2TOD === 'AM' || (alarm2TOD === 'AM' && Number(alarm2Hour)) === 12 ? 0 : 12);
-  let currentTotalHours = currentHour;
-  currentTotalHours += (currentTOD === 'AM' || (currentTOD === 'AM' && Number(currentHour)) === 12 ? 0 : 12);
+  if (alarm1TotalHours === 12 && alarm1TOD === 'AM') alarm1TotalHours = 0;
 
-  // console.log('1, 2, ct:', alarm1TotalHours, alarm2TotalHours, currentTotalHours)
+  alarm1TotalHours += (
+    alarm1TOD === 'AM'
+      || (alarm1TOD === 'PM' && alarm1Hour === 12) ? 0 : 12
+  );
+  let alarm2TotalHours = alarm2Hour;
+  if (alarm2TotalHours === 12 && alarm2TOD === 'AM') alarm2TotalHours = 0;
+
+  alarm2TotalHours += (
+    alarm2TOD === 'AM'
+      || (alarm2TOD === 'PM' && alarm2Hour === 12) ? 0 : 12
+  );
+  let currentTotalHours = currentHour;
+  if (currentTotalHours === 12 && currentTOD === 'AM') currentTotalHours = 0;
+
+  currentTotalHours += (
+    currentTOD === 'AM'
+      || (currentTOD === 'PM' && currentHour === 12) ? 0 : 12
+  );
+
+  // console.log(alarm1TotalHours, currentTotalHours); // TESTING
+
+  // Handle 12AM edgecase
+  if (alarm1TotalHours === 0 && currentTotalHours === 23) return 1;
   // Handle polar ranges
   if (currentTotalHours < alarm1TotalHours) return 1;
   if (currentTotalHours > alarm2TotalHours) return 3;
+
   // Hanlde shared TOD ranges
   if (
     currentTotalHours === alarm1TotalHours
@@ -77,6 +99,6 @@ export const getPhase = (alarm1: string, alarm2: string, currentTime: string) =>
     if (currentTime > alarm1 && currentTime <= alarm2) return 2;
     //  Phase 3
     if (currentTime > alarm2) return 3;
-  };
+  }
   return 1; // default
 };

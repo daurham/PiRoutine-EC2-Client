@@ -9,7 +9,7 @@ export default function TimeDisplay() {
 
   return (
     <TimeDisplayContainer>
-      <Time>{currentTime}</Time>
+      <Time className="time">{currentTime}</Time>
     </TimeDisplayContainer>
   );
 }

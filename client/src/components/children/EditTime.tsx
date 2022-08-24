@@ -4,7 +4,7 @@ import Unlock from './Unlock';
 import { useData } from '../../Context';
 // import { } from '../styles/EditTimeStyles';
 import range from '../utils/range';
-import { EditTimeContainer, FormContainer, UnlockContainer, SelectStyle } from '../styles/EditTimeStyles';
+import { EditTimeContainer, FormContainer, UnlockContainer, SelectStyle, OptionStyle } from '../styles/EditTimeStyles';
 
 // type Props = { va: 2 };
 
@@ -36,30 +36,30 @@ export default function EditTime() {
         && (
           <div>
             {
-              isLocked ?
-                <UnlockContainer><br /><Unlock /></UnlockContainer>
+              isLocked
+                ? <UnlockContainer><br /><Unlock /></UnlockContainer>
                 : (
                   <FormContainer>
                     <Form>
                       <SelectStyle onChange={(e) => setHr(e.target.value)}>
                         {[...range(1, 12)].map((t, i) => (
-                          <option value={t} key={i}>{t}</option>
+                          <OptionStyle style={{ color: 'white', background: 'transparent' }} value={t} key={i}>{t}</OptionStyle>
                         ))}
                       </SelectStyle>
 
                       <SelectStyle onChange={(e) => setMin(e.target.value)}>
                         {minuteSelections.map((t, i) => (
-                          <option value={t} key={i}>{t}</option>
+                          <OptionStyle value={t} key={i}>{t}</OptionStyle>
                         ))}
                       </SelectStyle>
 
                       <SelectStyle onChange={(e) => setTOD(e.target.value)}>
                         {['AM', 'PM'].map((t, i) => (
-                          <option value={t} key={i}>{t}</option>
+                          <OptionStyle value={t} key={i}>{t}</OptionStyle>
                         ))}
                       </SelectStyle>
 
-                      <Button variant='info' style={{'verticalAlign': 'baseline'}} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
+                      <Button variant="info" style={{ 'vertical-align': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
                     </Form>
                   </FormContainer>
                 )

@@ -8,10 +8,12 @@ justify-content: center;
 
 export const PasscodeInput = styled.input`
 width: 30%;
+background: transparent;
 color: white;
-background: black;
 `;
 
-export const InputContainer = FlexCenteringContainer;
+export const InputContainer = styled.form`
+display: flex;
+justify-content: center;`;
 
 export const UnlockContainer = FlexCenteringContainer;

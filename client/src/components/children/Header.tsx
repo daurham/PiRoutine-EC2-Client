@@ -4,7 +4,7 @@ import { HeaderContainer, Title } from '../styles/HeaderStyles';
 export default function Header() {
   return (
     <HeaderContainer>
-      <Title>PIROUTINE</Title>
+      <Title className="title">PIROUTINE</Title>
     </HeaderContainer>
   );
 }

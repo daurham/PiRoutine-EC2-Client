@@ -1,7 +1,12 @@
 import React from 'react';
-import { useData } from '../../Context';
 import { Button } from 'react-bootstrap';
-import { InputContainer, OutterContainer, PasscodeInput, UnlockContainer } from '../styles/UnlockStyles';
+import { useData } from '../../Context';
+import {
+  InputContainer,
+  OutterContainer,
+  PasscodeInput,
+  UnlockContainer,
+} from '../styles/UnlockStyles';
 
 export default function Unlock() {
   const {
@@ -14,13 +19,13 @@ export default function Unlock() {
     inEditMode,
     setEditMode,
   } = useData();
-  return isLocked && (
+  return !isLocked ? null : (
     <UnlockContainer>
-        <br />
+      <br />
       <OutterContainer>
         <InputContainer>
           <PasscodeInput placeholder="Passcode" onChange={(e) => { setInputPin(e.target.value); (inputStatus !== 'Submit' ? setInputStatus('Submit') : null) }} />
-          <Button type='submit' variant={inputStatus === 'Submit' ? 'outline-info' : 'danger'} onClick={(e) => { e.preventDefault(); return (inputPin === '1946' ? setLock(false) : setInputStatus('Invalid'))}}>{inputStatus}</Button>
+          <Button type="submit" variant={inputStatus === 'Submit' ? 'outline-info' : 'danger'} onClick={(e) => { e.preventDefault(); (inputPin === '1946' ? setLock(false) : setInputStatus('Invalid')) }}>{inputStatus}</Button>
         </InputContainer>
       </OutterContainer>
     </UnlockContainer>
