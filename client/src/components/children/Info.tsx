@@ -39,9 +39,9 @@ export default function Info() {
             <InfoEntry>Alarm 1: {alarm1 ? <InnerValRed>{alarm1}</InnerValRed> : <Loading />}</InfoEntry>
             <InfoEntry>Alarm 2: {alarm2 ? <InnerValRed>{alarm2}</InnerValRed> : <Loading />}</InfoEntry>
             <InfoEntry>Current Phase: {currentPhase || <Loading />}</InfoEntry>
-            <InfoEntry>Days Skipped: {<Loading />}</InfoEntry>
-            <InfoEntry>Days Soaked: {<Loading />}</InfoEntry>
-            <InfoEntry>Records of Data: {<Loading />}</InfoEntry>
+            <InfoEntry>Days Skipped: <Loading />Coming Soon<Loading /></InfoEntry>
+            <InfoEntry>Days Soaked: <Loading /> Coming Soon <Loading /></InfoEntry>
+            <InfoEntry>Records of Data: <Loading />Coming Soon<Loading /></InfoEntry>
             <InfoEntry>Start Date: {<InnerValRedU>08/19/2022</InnerValRedU>}</InfoEntry>
           </MetaContainer>
         }
