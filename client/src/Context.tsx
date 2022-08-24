@@ -79,7 +79,13 @@ export default function Context({ children }: ContextProps) {
   const dConvert = (input: number) => Math.floor(((input - 0) * 100) / (0.003 - 0));
 
   // calucate the difference between geolocation reading
-  const dif = (change: number, lonLat: number, init: number, setInitCb: Function, setChangeCb: Function) => {
+  const dif = (
+    change: number,
+    lonLat: number,
+    init: number,
+    setInitCb: Function,
+    setChangeCb: Function,
+  ) => {
     if (init !== lonLat && init && lonLat) {
       const v = change + Math.abs(Math.abs(init) - Math.abs(lonLat));
       setChangeCb(() => v);
@@ -91,7 +97,7 @@ export default function Context({ children }: ContextProps) {
     try {
       const { data } = await axios.get('/get-alarm-time');
       const { hour, minute } = parseTimeData(data);
-      console.log('got data alarm; h, m:', hour, minute);
+      // console.log('got data alarm; h, m:', hour, minute);
       const firstAlarmTimestamp = getFirstAlarm(hour, minute);
       const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp, 7); // arg2 = phase2 duration
       const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 2);
@@ -115,7 +121,7 @@ export default function Context({ children }: ContextProps) {
   const getDisarmStatus = async () => {
     try {
       const { data } = await axios.get('/get-disarm-status');
-      console.log('got disarm data', data);
+      // console.log('got disarm data', data);
       let { disarmedstatus } = data[0];
       disarmedstatus = swapBinaryAndBool(disarmedstatus);
       setDisarmStatus(() => disarmedstatus);
@@ -129,7 +135,7 @@ export default function Context({ children }: ContextProps) {
     try {
       const { data } = await axios.get('/get-streak-count');
       const { streak } = data[0];
-      console.log('got streak data', data);
+      // console.log('got streak data', data);
       setStreak(() => streak);
     } catch (err) {
       console.log('err?: ', err);
@@ -142,7 +148,7 @@ export default function Context({ children }: ContextProps) {
     const { hour, minute, tod } = timeData;
     const hr = Number(hour);
     const min = Number(minute);
-    console.log('time data', timeData);
+    // console.log('time data', timeData);
     try {
       await axios.patch('/update-alarm-time', { hour: hr, minute: min, tod });
       await getAlarmTime();
@@ -162,7 +168,7 @@ export default function Context({ children }: ContextProps) {
   };
 
   const updateStreakCount = async (newData: number) => {
-    console.log('sending streak data:', newData);
+    // console.log('sending streak data:', newData);
     try {
       await axios.patch('/update-streak-count', { data: newData });
       await getStreak();
@@ -175,15 +181,10 @@ export default function Context({ children }: ContextProps) {
     setCurrentTime(() => theCurrentTime());
 
     if (alarm1 && currentTime && alarm2) {
-      let phase = getPhase(alarm1, alarm2, currentTime);
-      console.log('phase: ', phase)
+      const phase = getPhase(alarm1, alarm2, currentTime);
       if (!currentPhase || currentPhase !== phase) {
         setCurrentPhase(phase);
       }
-
-      const alarm1TOD = alarm1.slice(-2);
-      const alarm2TOD = alarm2.slice(-2);
-      const currentTOD = currentTime.slice(-2);
 
       // __ IF IN PHASE I __
       if (currentPhase === 1) {
@@ -192,9 +193,6 @@ export default function Context({ children }: ContextProps) {
         }
         if (currentAlarm !== alarm1) { // set alarm
           setCurrentAlarm(alarm1);
-        }
-        if (currentPhase !== 1) { // set phase
-          setCurrentPhase(1);
         }
         if (currentTime === alarm1 && !isDisarmed) { // Handle alarm1 Failure
           // Run Sad functions
@@ -210,9 +208,6 @@ export default function Context({ children }: ContextProps) {
         if (currentTime === tenSecAfterAlarm1) {
           await getDisarmStatus();
           await getStreak();
-        }
-        if (currentPhase !== 2) { // set phase
-          setCurrentPhase(2);
         }
         if (currentTime === alarm2 && !isDisarmed) { // Handle alarm2 Failure
           setFailed(true);
