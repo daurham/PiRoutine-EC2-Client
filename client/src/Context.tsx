@@ -69,11 +69,20 @@ export default function Context({ children }: ContextProps) {
   const [hideDisarmBtn, setHideDisarmBtn] = useState(true);
   const [failed, setFailed] = useState(false);
 
-  const [isLocked, setLock] = useState(true);
+  const [notSignedIn, setLock] = useState(true);
   const [inEditMode, setEditMode] = useState(false);
   const [inputPin, setInputPin] = useState();
   const [inputStatus, setInputStatus] = useState('Submit');
   const [stamp, setStamp] = useState();
+  const [maxStreak, setMaxStreak] = useState();
+
+  // MetaData
+  const [skippedCount, setSkippedCount] = useState();
+  const [soakedCount, setSoakedCount] = useState();
+  const [disarmRecords, setDisarmRecords] = useState();
+
+  const [disarmTime1, setDisarmTime1] = useState('N/A');
+  const [disarmTime2, setDisarmTime2] = useState('N/A');
 
   let interval;
   let clock: any;
@@ -128,22 +137,23 @@ export default function Context({ children }: ContextProps) {
       // console.log('got disarm data', data);
       let { disarmedstatus } = data[0];
       disarmedstatus = swapBinaryAndBool(disarmedstatus);
-      setDisarmStatus(() => disarmedstatus);
+      setDisarmStatus(disarmedstatus);
     } catch (err) {
       console.log('err?: ', err);
-      setDisarmStatus(() => false);
+      setDisarmStatus(false);
     }
   };
 
   const getStreak = async () => {
     try {
       const { data } = await axios.get('/get-streak-count');
-      const { streak } = data[0];
+      const { streak, maxstreak } = data[0];
       // console.log('got streak data', data);
-      setStreak(() => streak);
+      setStreak(streak);
+      setMaxStreak(maxstreak);
     } catch (err) {
       console.log('err?: ', err);
-      setStreak(() => 0);
+      setStreak(0);
     }
   };
 
@@ -181,9 +191,70 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
+  const getSkippedCount = async () => {
+    try {
+      const skippedData = await axios.get('/get-skipped-count');
+      const { skipped } = skippedData.data[0];
+      setSkippedCount(skipped);
+      // console.log('Skipped: ', skipped);
+    } catch (err) {
+      console.error('Error getting skipped data: ', err);
+    }
+  }
+
+  const getSoaked = async () => {
+    try {
+      const soakedData = await axios.get('/get-soaked-count');
+      const { soaked } = soakedData.data[0];
+      setSoakedCount(soaked);
+      // console.log('Soaked: ', soaked);
+    } catch (err) {
+      console.error('Error getting soaked data: ', err);
+    }
+  }
+
+  const getDisarmRecords = async () => {
+    try {
+      const disarmData = await axios.get('/get-disarm-records');
+      const records = disarmData.data;
+      console.log('Disarm Records: ', !!records);
+      setDisarmRecords(records);
+    } catch (err) {
+      console.error('Error getting disarm Records: ', err);
+    }
+  }
+
+
+  const getMetaData = (): void => {
+    getSkippedCount();
+    getSoaked();
+    getDisarmRecords();
+  };
+
+
+  const postDailyRecord = async () => {
+    try {
+      const data = {
+        alarm1,
+        alarm2,
+        disarmTime1,
+        disarmTime2,
+        date_: new Date().toLocaleDateString(),
+        success: swapBinaryAndBool(!!failed),
+        username: 'daurham',
+      };
+      await axios.post('/post-disarm-record', data);
+      getDisarmRecords();
+    } catch (err) {
+      console.log('Error update streak data:', err);
+    }
+  };
+
+
   const handleCurrentTime = async () => {
     setCurrentTime(() => theCurrentTime());
 
+    // Set Phase
     if (alarm1 && currentTime && alarm2) {
       const phase = getPhase(alarm1, alarm2, currentTime);
       if (!currentPhase || currentPhase !== phase) {
@@ -192,13 +263,15 @@ export default function Context({ children }: ContextProps) {
 
       // __ IF IN PHASE I __
       if (currentPhase === 1) {
-        if (hideDisarmBtn) { // show disarm button
-          setHideDisarmBtn(false);
-        }
-        if (currentAlarm !== alarm1) { // set alarm
-          setCurrentAlarm(alarm1);
-        }
-        if (currentTime === alarm1 && !isDisarmed) { // Handle alarm1 Failure
+
+        // show disarm button
+        if (hideDisarmBtn) setHideDisarmBtn(false);
+
+        // set alarm
+        if (currentAlarm !== alarm1) setCurrentAlarm(alarm1);
+
+        // Handle alarm1 Failure
+        if (currentTime === alarm1 && !isDisarmed) { 
           // Run Sad functions
           setFailed(true);
         }
@@ -206,26 +279,32 @@ export default function Context({ children }: ContextProps) {
 
       // __ IF IN PHASE II __
       if (currentPhase === 2) {
-        if (currentAlarm !== alarm2) { // set alarm
-          setCurrentAlarm(alarm2);
-        }
+        // Set Alarm
+        if (currentAlarm !== alarm2) setCurrentAlarm(alarm2);
+
         if (currentTime === tenSecAfterAlarm1) {
           await getDisarmStatus();
           await getStreak();
         }
-        if (currentTime === alarm2 && !isDisarmed) { // Handle alarm2 Failure
-          setFailed(true);
-        }
+
+        // Handle alarm2 Failure
+        if (currentTime === alarm2 && !isDisarmed) setFailed(true);
       }
 
       // __IF IN PHASE III__
       if (currentPhase === 3) {
-        if (currentAlarm !== alarm1) {
-          setCurrentAlarm(alarm1);
-        }
+        if (currentAlarm !== alarm1) setCurrentAlarm(alarm1);
+
         if (currentTime === tenSecAfterAlarm2) {
           await getStreak();
           await getDisarmStatus();
+          postDailyRecord();
+          // After 5 sec, reset values
+          setTimeout(() => {
+            setDisarmTime1('N/A');
+            setDisarmTime2('N/A');
+            setFailed(false);
+          }, 5000);
         }
       }
     }
@@ -282,7 +361,7 @@ export default function Context({ children }: ContextProps) {
     latitude,
     initialLat,
     initialLon,
-    isLocked,
+    notSignedIn,
     setLock,
     inputPin,
     setInputPin,
@@ -290,11 +369,18 @@ export default function Context({ children }: ContextProps) {
     setInputStatus,
     inEditMode,
     setEditMode,
+    maxStreak,
+    skippedCount,
+    soakedCount,
+    disarmRecords,
     //   setCurrentTime,
     //   setAlarm1,
     //   setAlarm2,
     //   getAlarmTime,
+    getMetaData,
     //   getStreak,
+    setDisarmTime1,
+    setDisarmTime2,
     setHideDisarmBtn,
     setDisarmStatus,
     getDisarmStatus,
@@ -304,6 +390,9 @@ export default function Context({ children }: ContextProps) {
   }), [
     stamp,
     alarm1,
+    soakedCount,
+    skippedCount,
+    maxStreak,
     alarm2,
     tenSecAfterAlarm1,
     currentAlarm,
@@ -318,7 +407,8 @@ export default function Context({ children }: ContextProps) {
     latitude,
     initialLat,
     initialLon,
-    isLocked,
+    notSignedIn,
+    disarmRecords,
     // setLock,
     inputPin,
     // setInputPin,

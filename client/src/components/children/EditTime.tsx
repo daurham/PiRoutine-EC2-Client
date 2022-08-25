@@ -19,13 +19,13 @@ export default function EditTime() {
     updateDisarmStatus,
     inEditMode,
     setEditMode,
-    isLocked,
+    notSignedIn,
   } = useData();
   const minuteSelections = [...range(0, 59)].map((n) => (n < 10 ? `0${n}` : n));
   // console.log('input:', inputPin);
 
 
-  const handleLock = () => { };
+  // const handleLock = () => { };
   return (
     <EditTimeContainer>
       <UnlockContainer>
@@ -36,7 +36,7 @@ export default function EditTime() {
         && (
           <div>
             {
-              isLocked
+              notSignedIn
                 ? <UnlockContainer><br /><Unlock /></UnlockContainer>
                 : (
                   <FormContainer>
@@ -59,7 +59,7 @@ export default function EditTime() {
                         ))}
                       </SelectStyle>
 
-                      <Button variant="info" style={{ 'vertical-align': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
+                      <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
                     </Form>
                   </FormContainer>
                 )

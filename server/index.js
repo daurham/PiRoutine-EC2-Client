@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const { get, update } = require('./controller');
+const { get, update, post } = require('./controller');
 
 const app = express();
 
@@ -22,5 +22,18 @@ app.patch('/update-disarm-status', update.disarmStatus);
 // STREAK COUNT
 app.get('/get-streak-count', get.streakCount);
 app.patch('/update-streak-count', update.streakCount);
+
+// USER INFO
+app.get('/get-user-info', get.userInfo);
+
+// SKIPPED COUNT
+app.get('/get-skipped-count', get.skippedCount);
+
+// SOAKED COUNT 
+app.get('/get-soaked-count', get.soakedCount);
+
+// DISARM RECORDS
+app.get('/get-disarm-records', get.disarmRecords);
+app.post('/post-disarm-record', post.disarmRecord);
 
 app.listen(PORT, () => console.log(`Listening and running: http://localhost:${PORT}`));

@@ -64,20 +64,20 @@ export default function App() {
   //   setCurrentTime(() => theCurrentTime());
   // };
 
-  // const statusGenerator = () => { // randomly returns a positive phrase
-  // const phrases = [
-  //   'Make them proud',
-  //   'Keep it up',
-  //   'Keep proving you\'ve had enough',
-  //   'Keep crushing it!',
-  //   'Captain the fuck out this day!',
-  //   'Stick to your goals',
-  //   'Trust your wiser self',
-  //   'Keep going cap',
-  // ];
-  //   const random = Math.floor(Math.random() * (phrases.length));
-  //   return phrases[random];
-  // };
+  const statusGenerator = () => { // randomly returns a positive phrase
+    const phrases = [
+      'Make them proud',
+      'Keep it up',
+      'Keep proving you\'ve had enough',
+      'Keep crushing it!',
+      // 'Crush the fuck out this day!',
+      'Stick to your goals',
+      'Trust your wiser self',
+      'Keep going',
+    ];
+    const random = Math.floor(Math.random() * (phrases.length));
+    return phrases[random];
+  };
 
   // const handleUpdateAlarm = (e) => {
   //   // let finalInputHour = inputHr;
@@ -126,7 +126,7 @@ export default function App() {
         <TimeDisplay />
         <DisarmButton />
         <GeoTracker />
-        <Info />
+        <Info phrase={statusGenerator()} />
         <EditTime />
         {/* <TEST /> */}
       </CenteringContainer>

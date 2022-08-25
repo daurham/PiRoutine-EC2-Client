@@ -7,7 +7,7 @@ import Unlock from './Unlock';
 // type Props = {}
 
 export default function DisarmButton() {
-  const [lockedDisarm, setLockedDisarm] = useState(false);
+  const [isLocked, setIsLocked] = useState(false); // Locked outside of phase 1, when havent traveled 
   const [inEditMode, setEditMode] = useState(false);
   // const [failedPasscode, setFailedPasscode] = useState(false); // change the button if you don't get the passcode right?
   // const [hideDisarmBtn, setHideDisarmBtn] = useState(false);
@@ -20,92 +20,97 @@ export default function DisarmButton() {
     failed,
     isDisarmed,
     getDisarmStatus,
+    setDisarmTime1,
+    currentTime,
     updateDisarmStatus,
-    isLocked, // passcode kinda locked
-    // lockedDisarm is unavailible type..
+    notSignedIn,
   } = useData();
+
+  const collectDisarmData = () => {
+    if (currentPhase === 1) {
+      setDisarmTime1(currentTime);
+    }
+    if (currentPhase === 2) {
+      setDisarmTime1(currentTime);
+    }
+  };
+
+  
+  const handleDisarm = () => {
+    if (!isDisarmed) {
+      updateDisarmStatus(!isDisarmed);
+      collectDisarmData();
+    }
+  };
+
 
   useEffect(() => {
     if (currentPhase === 1) {
-      if (hideDisarmBtn) {
-        setHideDisarmBtn(false);
-      }
-      if (lockedDisarm) {
-        setLockedDisarm(false);
-      }
+      if (hideDisarmBtn) setHideDisarmBtn(false);
+      if (isLocked) setIsLocked(false);
     }
+
     // Unhide in phase 2 when use disarms alarm1
     if (currentPhase === 2 && !failed) {
       // lock if user hasnt traveled
       if (distance < 100) {
-        if (hideDisarmBtn) {
-          setHideDisarmBtn(false);
-        }
-        if (!lockedDisarm) {
-          setLockedDisarm(true);
-        }
+        if (hideDisarmBtn) setHideDisarmBtn(false);
+
+        if (!isLocked) setIsLocked(true);
       }
+
       // Unlock when traveled
       if (distance >= 100) {
-        if (lockedDisarm) {
-          // setHideDisarmBtn(false);
-          setLockedDisarm(false);
-        }
+        if (isLocked) setIsLocked(false);
       }
     }
+
     // Hide after my alarms
     if (currentPhase === 3 && !hideDisarmBtn) {
       setHideDisarmBtn(true);
     }
   }, [currentPhase, distance])
 
-  const handleDisarm = () => {
-    if (!isDisarmed) {
-      updateDisarmStatus(!isDisarmed);
-    }
-  };
+
+  if (failed) return null;
+
   return hideDisarmBtn ? null : (
     <DisarmButtonContainer>
       <ButtonContainer>
-        {/* TODO: remove duplicates */}
-        {!hideDisarmBtn
+        {/* For spectators outside disarming hours */}
+        {notSignedIn
           && isLocked
-          && lockedDisarm
-          && <Button variant="outline-danger" size="lg" onClick={() => setEditMode(true)}>Locked</Button>}
-      </ButtonContainer>
+          && <Button variant="outline-danger" size="lg" onClick={() => setEditMode(!inEditMode)}>{!inEditMode ? 'Locked' : 'Locked 🕐'}</Button>}
 
-      <ButtonContainer>
-        {!hideDisarmBtn
-          && isLocked
-          && !lockedDisarm
+        {/* For anyone not logged in during disarming hours */}
+        {notSignedIn
+          && !isLocked
           && !isDisarmed
-          && <Button variant="outline-secondary" size="lg" onClick={() => setEditMode(true)}>Disarm</Button>}
+          && <Button variant={!inEditMode ? 'outline-secondary' : 'outline-danger'} size="lg" onClick={() => setEditMode(!inEditMode)}>{!inEditMode ? 'Disarm' : 'Locked 🔒'}</Button>}
       </ButtonContainer>
+      {/* NOT SIGNED IN ABOVE */}
 
       {inEditMode && <div><br /><Unlock /></div>}
 
+      {/* SIGNED IN BELOW */}
       <ButtonContainer>
-        {!hideDisarmBtn
-          && lockedDisarm
-          && <Button variant="outline-danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked</Button>}
-      </ButtonContainer>
-
-      <ButtonContainer>
-        {!hideDisarmBtn
+        {/* During run: need to travel more: locked */}
+        {isLocked
+          && currentPhase === 2
+          && <Button variant="outline-danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked 🔒</Button>}
+        {/* During run: travel complete: unlocked */}
+        {!notSignedIn
           && !isLocked
-          && !lockedDisarm
           && !isDisarmed
           && <Button variant="secondary" size="lg" onClick={handleDisarm}>Disarm</Button>}
-      </ButtonContainer>
-
-      <ButtonContainer>
-        {!hideDisarmBtn
-          && !isLocked
+        {/* During disarm hours: disarmed */}
+        {!notSignedIn
           && isDisarmed
-          && !lockedDisarm
+          && !isLocked
           && <Button variant="outline-info" size="lg" disabled>Disarmed</Button>}
+
       </ButtonContainer>
-        <br />
+      <br />
     </DisarmButtonContainer>
   );
 }

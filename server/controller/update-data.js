@@ -1,6 +1,7 @@
 const axios = require('axios');
+require('dotenv').config();
 
-const URL = 'http://70.188.209.178:3000';
+const URL = process.env.URL;
 
 // PATCH
 module.exports = {
@@ -33,6 +34,17 @@ module.exports = {
       res.sendStatus(203);
     } catch (err) {
       console.log('Issue updating streak data: ');
+      res.sendStatus(203);
+    }
+  },
+
+  skippedCount: async (req, res) => {
+    try {
+      console.log(req.body);
+      await axios.patch(`${URL}/update-skipped-count`, req.body);
+      res.sendStatus(203);
+    } catch (err) {
+      console.log('Issue updating skipped data: ', err);
       res.sendStatus(203);
     }
   },

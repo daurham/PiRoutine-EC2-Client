@@ -6,7 +6,7 @@ display: block;
 justify-content: center;
 `;
 
-export const PasscodeInput = styled.input`
+export const PasswordInput = styled.input`
 width: 30%;
 background: transparent;
 color: white;
