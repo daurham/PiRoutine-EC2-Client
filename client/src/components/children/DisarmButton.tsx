@@ -7,19 +7,16 @@ import Unlock from './Unlock';
 // type Props = {}
 
 export default function DisarmButton() {
-  const [isLocked, setIsLocked] = useState(false); // Locked outside of phase 1, when havent traveled 
+  const [isLocked, setIsLocked] = useState(false);
   const [inEditMode, setEditMode] = useState(false);
-  // const [failedPasscode, setFailedPasscode] = useState(false); // change the button if you don't get the passcode right?
-  // const [hideDisarmBtn, setHideDisarmBtn] = useState(false);
+
   const {
     currentPhase,
     hideDisarmBtn,
-    setDisarmStatus,
     setHideDisarmBtn,
     distance,
     failed,
     isDisarmed,
-    getDisarmStatus,
     setDisarmTime1,
     currentTime,
     updateDisarmStatus,
@@ -35,14 +32,12 @@ export default function DisarmButton() {
     }
   };
 
-  
   const handleDisarm = () => {
     if (!isDisarmed) {
       updateDisarmStatus(!isDisarmed);
       collectDisarmData();
     }
   };
-
 
   useEffect(() => {
     if (currentPhase === 1) {
@@ -70,7 +65,6 @@ export default function DisarmButton() {
       setHideDisarmBtn(true);
     }
   }, [currentPhase, distance])
-
 
   if (failed) return null;
 

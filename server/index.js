@@ -29,7 +29,7 @@ app.get('/get-user-info', get.userInfo);
 // SKIPPED COUNT
 app.get('/get-skipped-count', get.skippedCount);
 
-// SOAKED COUNT 
+// SOAKED COUNT
 app.get('/get-soaked-count', get.soakedCount);
 
 // DISARM RECORDS

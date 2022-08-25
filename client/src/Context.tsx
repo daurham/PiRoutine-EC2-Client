@@ -84,9 +84,7 @@ export default function Context({ children }: ContextProps) {
   const [disarmTime1, setDisarmTime1] = useState('N/A');
   const [disarmTime2, setDisarmTime2] = useState('N/A');
 
-  let interval;
   let clock: any;
-  let temp;
 
   const dConvert = (input: number) => Math.floor(((input - 0) * 100) / (0.003 - 0));
 
@@ -105,7 +103,7 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  const getAlarmTime = async () => {
+  const getAlarmTime = async (): void => {
     try {
       const { data } = await axios.get('/get-alarm-time');
       const { hour, minute } = parseTimeData(data);
@@ -129,9 +127,7 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  // console.log('stamp', stamp);
-
-  const getDisarmStatus = async () => {
+  const getDisarmStatus = async (): void => {
     try {
       const { data } = await axios.get('/get-disarm-status');
       // console.log('got disarm data', data);
@@ -144,7 +140,7 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  const getStreak = async () => {
+  const getStreak = async (): void => {
     try {
       const { data } = await axios.get('/get-streak-count');
       const { streak, maxstreak } = data[0];
@@ -158,7 +154,7 @@ export default function Context({ children }: ContextProps) {
   };
 
   interface TimeObj { hour: number; minute: number; tod: string }
-  const updateAlarmTime = async (timeData: TimeObj) => {
+  const updateAlarmTime = async (timeData: TimeObj): void => {
     const { hour, minute, tod } = timeData;
     const hr = Number(hour);
     const min = Number(minute);
@@ -171,7 +167,7 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  const updateDisarmStatus = async (statusData: boolean) => {
+  const updateDisarmStatus = async (statusData: boolean): void => {
     const convertedStatusData = swapBinaryAndBool(statusData);
     try {
       await axios.patch('/update-disarm-status', { data: convertedStatusData });
@@ -181,7 +177,7 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  const updateStreakCount = async (newData: number) => {
+  const updateStreakCount = async (newData: number): void => {
     // console.log('sending streak data:', newData);
     try {
       await axios.patch('/update-streak-count', { data: newData });
@@ -191,7 +187,7 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  const getSkippedCount = async () => {
+  const getSkippedCount = async (): void => {
     try {
       const skippedData = await axios.get('/get-skipped-count');
       const { skipped } = skippedData.data[0];
@@ -200,9 +196,9 @@ export default function Context({ children }: ContextProps) {
     } catch (err) {
       console.error('Error getting skipped data: ', err);
     }
-  }
+  };
 
-  const getSoaked = async () => {
+  const getSoaked = async (): void => {
     try {
       const soakedData = await axios.get('/get-soaked-count');
       const { soaked } = soakedData.data[0];
@@ -211,26 +207,23 @@ export default function Context({ children }: ContextProps) {
     } catch (err) {
       console.error('Error getting soaked data: ', err);
     }
-  }
+  };
 
-  const getDisarmRecords = async () => {
+  const getDisarmRecords = async (): void => {
     try {
       const disarmData = await axios.get('/get-disarm-records');
       const records = disarmData.data;
-      console.log('Disarm Records: ', !!records);
       setDisarmRecords(records);
     } catch (err) {
       console.error('Error getting disarm Records: ', err);
     }
-  }
-
+  };
 
   const getMetaData = (): void => {
     getSkippedCount();
     getSoaked();
     getDisarmRecords();
   };
-
 
   const postDailyRecord = async () => {
     try {
@@ -271,7 +264,7 @@ export default function Context({ children }: ContextProps) {
         if (currentAlarm !== alarm1) setCurrentAlarm(alarm1);
 
         // Handle alarm1 Failure
-        if (currentTime === alarm1 && !isDisarmed) { 
+        if (currentTime === alarm1 && !isDisarmed) {
           // Run Sad functions
           setFailed(true);
         }

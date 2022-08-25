@@ -43,7 +43,7 @@ export default function Info({ phrase }: Props) {
     getMetaData();
   }, []);
 
-  console.log(disarmRecords);
+  // console.log(disarmRecords);
 
   return (
     <InfoContainer>
@@ -66,7 +66,7 @@ export default function Info({ phrase }: Props) {
               <InfoEntry>Current Phase: {currentPhase || <Loading />}</InfoEntry>
               <InfoEntry>Days Skipped: {skippedCount !== undefined ? skippedCount : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
               <InfoEntry>Days Soaked: {soakedCount !== undefined ? soakedCount : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
-              <InfoEntry>Records: {disarmRecords ? <div style={{ display: 'inline-flex' }} onClick={() => console.log(disarmRecords)}>{'Tables Coming Soon'}<Loading /></div> : <Loading />}</InfoEntry>
+              <InfoEntry>Records: {disarmRecords ? <InfoEntry as={'u'} style={{ cursor: 'pointer' }} onClick={() => console.log('Soon, Ill show tables of daily data Ive been recording. Meanwhile, heres a petty log:', disarmRecords)}>{'Tables Coming Soon'}<Loading /></InfoEntry> : <Loading />}</InfoEntry>
               <InfoEntry>Start Date: {<InnerValRedU>08/19/2022</InnerValRedU>}</InfoEntry>
             </MetaContainer>
           )}
