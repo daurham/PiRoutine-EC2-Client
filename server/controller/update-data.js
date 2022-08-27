@@ -1,7 +1,7 @@
 const axios = require('axios');
 require('dotenv').config();
 
-const URL = process.env.URL;
+const { URL } = process.env;
 
 // PATCH
 module.exports = {

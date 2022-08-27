@@ -23,14 +23,14 @@ app.patch('/update-disarm-status', update.disarmStatus);
 app.get('/get-streak-count', get.streakCount);
 app.patch('/update-streak-count', update.streakCount);
 
-// USER INFO
-app.get('/get-user-info', get.userInfo);
-
 // SKIPPED COUNT
 app.get('/get-skipped-count', get.skippedCount);
 
 // SOAKED COUNT
 app.get('/get-soaked-count', get.soakedCount);
+
+// USER INFO
+app.get('/get-user-info', get.userInfo);
 
 // DISARM RECORDS
 app.get('/get-disarm-records', get.disarmRecords);

@@ -89,7 +89,8 @@ export default function DisarmButton() {
       {/* SIGNED IN BELOW */}
       <ButtonContainer>
         {/* During run: need to travel more: locked */}
-        {isLocked
+        {!notSignedIn
+          && isLocked
           && currentPhase === 2
           && <Button variant="outline-danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked 🔒</Button>}
         {/* During run: travel complete: unlocked */}
