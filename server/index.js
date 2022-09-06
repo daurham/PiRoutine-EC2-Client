@@ -25,6 +25,7 @@ app.patch('/update-streak-count', update.streakCount);
 
 // SKIPPED COUNT
 app.get('/get-skipped-count', get.skippedCount);
+app.post('/post-skip', post.skipTomorrow);
 
 // SOAKED COUNT
 app.get('/get-soaked-count', get.soakedCount);

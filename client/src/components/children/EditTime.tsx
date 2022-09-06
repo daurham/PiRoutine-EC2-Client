@@ -5,6 +5,7 @@ import { useData } from '../../Context';
 // import { } from '../styles/EditTimeStyles';
 import range from '../utils/range';
 import { EditTimeContainer, FormContainer, UnlockContainer, SelectStyle, OptionStyle } from '../styles/EditTimeStyles';
+import axios from 'axios';
 
 // type Props = { va: 2 };
 
@@ -22,7 +23,9 @@ export default function EditTime() {
     notSignedIn,
   } = useData();
   const minuteSelections = [...range(0, 59)].map((n) => (n < 10 ? `0${n}` : n));
-
+  const skipNextDay = async () => {
+    axios.post('/post-skip', { date: new Date().toLocaleDateString() });
+  }
   return (
     <EditTimeContainer>
       <UnlockContainer>
@@ -36,29 +39,33 @@ export default function EditTime() {
               notSignedIn
                 ? <UnlockContainer><br /><Unlock /></UnlockContainer>
                 : (
-                  <FormContainer>
-                    <Form>
-                      <SelectStyle onChange={(e) => setHr(e.target.value)}>
-                        {[...range(1, 12)].map((t, i) => (
-                          <OptionStyle style={{ color: 'white', background: 'transparent' }} value={t} key={i}>{t}</OptionStyle>
-                        ))}
-                      </SelectStyle>
+                  <>
+                    <FormContainer>
+                      <Form>
+                        <SelectStyle onChange={(e) => setHr(e.target.value)}>
+                          {[...range(1, 12)].map((t, i) => (
+                            <OptionStyle style={{ color: 'white', background: 'transparent' }} value={t} key={i}>{t}</OptionStyle>
+                          ))}
+                        </SelectStyle>
 
-                      <SelectStyle onChange={(e) => setMin(e.target.value)}>
-                        {minuteSelections.map((t, i) => (
-                          <OptionStyle value={t} key={i}>{t}</OptionStyle>
-                        ))}
-                      </SelectStyle>
+                        <SelectStyle onChange={(e) => setMin(e.target.value)}>
+                          {minuteSelections.map((t, i) => (
+                            <OptionStyle value={t} key={i}>{t}</OptionStyle>
+                          ))}
+                        </SelectStyle>
 
-                      <SelectStyle onChange={(e) => setTOD(e.target.value)}>
-                        {['AM', 'PM'].map((t, i) => (
-                          <OptionStyle value={t} key={i}>{t}</OptionStyle>
-                        ))}
-                      </SelectStyle>
+                        <SelectStyle onChange={(e) => setTOD(e.target.value)}>
+                          {['AM', 'PM'].map((t, i) => (
+                            <OptionStyle value={t} key={i}>{t}</OptionStyle>
+                          ))}
+                        </SelectStyle>
 
-                      <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
-                    </Form>
-                  </FormContainer>
+                        <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
+                      </Form>
+                    </FormContainer>
+                        <br />
+                    <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={skipNextDay}>SKIP</Button>
+                  </>
                 )
             }
           </div>

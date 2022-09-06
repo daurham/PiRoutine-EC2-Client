@@ -67,7 +67,7 @@ export default function Info({ phrase }: Props) {
               <InfoEntry>Days Skipped: {skippedCount !== undefined ? skippedCount : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
               <InfoEntry>Days Soaked: {soakedCount !== undefined ? soakedCount : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
               <InfoEntry>Records: {disarmRecords ? <InfoEntry as={'u'} style={{ cursor: 'pointer' }} onClick={() => console.log('Soon, Ill show tables of daily data Ive been recording. Meanwhile, heres a petty log:', disarmRecords)}>{'Tables Coming Soon'}<Loading /></InfoEntry> : <Loading />}</InfoEntry>
-              <InfoEntry>Start Date: {<InnerValRedU>08/19/2022</InnerValRedU>}</InfoEntry>
+              <InfoEntry>Start Date: {<InnerValRedU>08/20/2022</InnerValRedU>}</InfoEntry>
             </MetaContainer>
           )}
         <InfoEntry><SeeMoreStyle onClick={() => setSeeMore(!seeMore)}>{!seeMore ? 'show more' : 'show less'}</SeeMoreStyle></InfoEntry>

@@ -291,7 +291,7 @@ export default function Context({ children }: ContextProps) {
         if (currentTime === tenSecAfterAlarm2) {
           await getStreak();
           await getDisarmStatus();
-          postDailyRecord();
+          // postDailyRecord();
           // After 5 sec, reset values
           setTimeout(() => {
             setDisarmTime1('N/A');
@@ -309,6 +309,7 @@ export default function Context({ children }: ContextProps) {
       dif(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
       setDistance(() => dConvert(changeLat));
     }
+    if (distance > 100) setDistance(100);
   }, [latitude, longitude, initialLat, initialLon]);
 
   useEffect(() => {
@@ -323,7 +324,7 @@ export default function Context({ children }: ContextProps) {
   useEffect(() => { // TRACK TIME CHANGE
     if (alarm1 && !currentAlarm) setCurrentAlarm(alarm1);
     clock = setInterval(() => handleCurrentTime(), 1000);
-    // if (distance < 100) setDistance(() => distance + 5); // TESTING
+    if (distance < 100) setDistance(() => distance + 5); // TESTING
     // console.log('lat:', latitude);
     return () => clearInterval(clock);
   }, [currentTime]);
