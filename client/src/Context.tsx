@@ -73,7 +73,7 @@ export default function Context({ children }: ContextProps) {
   const [inEditMode, setEditMode] = useState(false);
   const [inputPin, setInputPin] = useState();
   const [inputStatus, setInputStatus] = useState('Submit');
-  const [stamp, setStamp] = useState();
+  const [skipDate, setSkipDate] = useState<boolean>();
   const [maxStreak, setMaxStreak] = useState();
 
   // MetaData
@@ -187,12 +187,17 @@ export default function Context({ children }: ContextProps) {
     }
   };
 
-  const getSkippedCount = async (): void => {
+  const getSkipData = async (): void => {
     try {
-      const skippedData = await axios.get('/get-skipped-count');
-      const { skipped } = skippedData.data[0];
+      const skippedData = await axios.get('/get-skipped-data');
+      const { skipped, skipdate } = skippedData.data[0];
+      console.log('Skipped Data: ', skippedData.data[0]);
       setSkippedCount(skipped);
-      // console.log('Skipped: ', skipped);
+      if (skipdate === new Date().toLocaleDateString()) {
+        setSkipDate(true);
+      } else {
+        setSkipDate(false);
+      }
     } catch (err) {
       console.error('Error getting skipped data: ', err);
     }
@@ -220,7 +225,7 @@ export default function Context({ children }: ContextProps) {
   };
 
   const getMetaData = (): void => {
-    getSkippedCount();
+    getSkipData();
     getSoaked();
     getDisarmRecords();
   };
@@ -324,7 +329,7 @@ export default function Context({ children }: ContextProps) {
   useEffect(() => { // TRACK TIME CHANGE
     if (alarm1 && !currentAlarm) setCurrentAlarm(alarm1);
     clock = setInterval(() => handleCurrentTime(), 1000);
-    if (distance < 100) setDistance(() => distance + 5); // TESTING
+    // if (distance < 100) setDistance(() => distance + 5); // TESTING
     // console.log('lat:', latitude);
     return () => clearInterval(clock);
   }, [currentTime]);
@@ -365,6 +370,7 @@ export default function Context({ children }: ContextProps) {
     setEditMode,
     maxStreak,
     skippedCount,
+    skipDate,
     soakedCount,
     disarmRecords,
     //   setCurrentTime,
@@ -372,6 +378,7 @@ export default function Context({ children }: ContextProps) {
     //   setAlarm2,
     //   getAlarmTime,
     getMetaData,
+    getSkipData,
     //   getStreak,
     setDisarmTime1,
     setDisarmTime2,
@@ -382,7 +389,7 @@ export default function Context({ children }: ContextProps) {
     updateDisarmStatus,
     updateStreakCount,
   }), [
-    stamp,
+    skipDate,
     alarm1,
     soakedCount,
     skippedCount,

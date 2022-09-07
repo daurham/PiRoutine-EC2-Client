@@ -38,7 +38,7 @@ module.exports = {
     }
   },
 
-  skippedCount: async (req, res) => {
+  skippedData: async (req, res) => {
     try {
       console.log(req.body);
       await axios.patch(`${URL}/update-skipped-count`, req.body);
@@ -46,6 +46,18 @@ module.exports = {
     } catch (err) {
       console.log('Issue updating skipped data: ', err);
       res.sendStatus(203);
+    }
+  },
+
+  skipTomorrow: async (req, res) => {
+    try {
+      console.log('skipping: ', req.body.date);
+      // console.log('sending: ', req.body);
+      await axios.patch(`${URL}/update-skipped-date`, req.body);
+      res.sendStatus(201);
+    } catch (err) {
+      console.log('Issue skipping tomorrow: ');
+      res.sendStatus(500);
     }
   },
 };

@@ -59,9 +59,9 @@ module.exports = {
     }
   },
 
-  skippedCount: async (req, res) => {
+  skippedData: async (req, res) => {
     try {
-      const { data } = await axios.get(`${URL}/get-skipped-count/?table=skippedcount`);
+      const { data } = await axios.get(`${URL}/get-skipped-data/?table=skippedcount`);
       res.status(200).send(data);
     } catch (err) {
       console.log('Issue getting skippedCount data: ', err);

@@ -21,11 +21,26 @@ export default function EditTime() {
     inEditMode,
     setEditMode,
     notSignedIn,
+    getSkipData,
   } = useData();
   const minuteSelections = [...range(0, 59)].map((n) => (n < 10 ? `0${n}` : n));
+
+  const getTomorrow = () => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return tomorrow.toLocaleDateString();
+  };
+
   const skipNextDay = async () => {
-    axios.post('/post-skip', { date: new Date().toLocaleDateString() });
+    await axios.patch('/update-skipped-date', { data: getTomorrow() });
+    getSkipData();
   }
+
+  const skipToday = async () => {
+    await axios.patch('/update-skipped-date', { data: new Date().toLocaleDateString() });
+    getSkipData();
+  }
+
   return (
     <EditTimeContainer>
       <UnlockContainer>
@@ -63,8 +78,9 @@ export default function EditTime() {
                         <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
                       </Form>
                     </FormContainer>
-                        <br />
-                    <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={skipNextDay}>SKIP</Button>
+                    <br />
+                    <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={skipToday}>Skip Today</Button> {' '}
+                    <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={skipNextDay}>Skip Tomorrow</Button>
                   </>
                 )
             }

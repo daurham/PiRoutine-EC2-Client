@@ -31,6 +31,7 @@ export default function Info({ phrase }: Props) {
     initialLat,
     initialLon,
     skippedCount,
+    skipDate,
     setSkipped,
     setSoaked,
     soakedCount,
@@ -43,7 +44,7 @@ export default function Info({ phrase }: Props) {
     getMetaData();
   }, []);
 
-  // console.log(disarmRecords);
+  // console.log('skipDate:', skipDate);
 
   return (
     <InfoContainer>
@@ -64,6 +65,7 @@ export default function Info({ phrase }: Props) {
               <InfoEntry>Alarm 2: {alarm2 ? <InnerValRed className="alarm">{alarm2}</InnerValRed> : <Loading />}</InfoEntry>
               <InfoEntry>Longest Streak: {maxStreak !== undefined ? maxStreak : <Loading />}</InfoEntry>
               <InfoEntry>Current Phase: {currentPhase || <Loading />}</InfoEntry>
+              <InfoEntry>Skipping Today: {skipDate !== undefined ? String(skipDate) : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
               <InfoEntry>Days Skipped: {skippedCount !== undefined ? skippedCount : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
               <InfoEntry>Days Soaked: {soakedCount !== undefined ? soakedCount : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
               <InfoEntry>Records: {disarmRecords ? <InfoEntry as={'u'} style={{ cursor: 'pointer' }} onClick={() => console.log('Soon, Ill show tables of daily data Ive been recording. Meanwhile, heres a petty log:', disarmRecords)}>{'Tables Coming Soon'}<Loading /></InfoEntry> : <Loading />}</InfoEntry>
