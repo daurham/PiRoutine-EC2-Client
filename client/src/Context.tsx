@@ -73,7 +73,7 @@ export default function Context({ children }: ContextProps) {
   const [inEditMode, setEditMode] = useState(false);
   const [inputPin, setInputPin] = useState();
   const [inputStatus, setInputStatus] = useState('Submit');
-  const [skipDate, setSkipDate] = useState<boolean>();
+  const [skipDate, setSkipDate] = useState();
   const [maxStreak, setMaxStreak] = useState();
 
   // MetaData
@@ -191,13 +191,9 @@ export default function Context({ children }: ContextProps) {
     try {
       const skippedData = await axios.get('/get-skipped-data');
       const { skipped, skipdate } = skippedData.data[0];
-      console.log('Skipped Data: ', skippedData.data[0]);
+      // console.log('Skipped Data: ', skippedData.data[0]);
       setSkippedCount(skipped);
-      if (skipdate === new Date().toLocaleDateString()) {
-        setSkipDate(true);
-      } else {
-        setSkipDate(false);
-      }
+      setSkipDate(skipdate);
     } catch (err) {
       console.error('Error getting skipped data: ', err);
     }
@@ -261,7 +257,6 @@ export default function Context({ children }: ContextProps) {
 
       // __ IF IN PHASE I __
       if (currentPhase === 1) {
-
         // show disarm button
         if (hideDisarmBtn) setHideDisarmBtn(false);
 

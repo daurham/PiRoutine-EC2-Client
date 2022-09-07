@@ -51,7 +51,7 @@ module.exports = {
 
   skipTomorrow: async (req, res) => {
     try {
-      console.log('skipping: ', req.body.date);
+      console.log('skipping: ', req.body.data);
       // console.log('sending: ', req.body);
       await axios.patch(`${URL}/update-skipped-date`, req.body);
       res.sendStatus(201);

@@ -34,12 +34,17 @@ export default function EditTime() {
   const skipNextDay = async () => {
     await axios.patch('/update-skipped-date', { data: getTomorrow() });
     getSkipData();
-  }
+  };
 
   const skipToday = async () => {
     await axios.patch('/update-skipped-date', { data: new Date().toLocaleDateString() });
     getSkipData();
-  }
+  };
+
+  const removeSkip = async () => {
+    await axios.patch('/update-skipped-date', { data: 'None 💪🏼' });
+    getSkipData();
+  };
 
   return (
     <EditTimeContainer>
@@ -75,18 +80,20 @@ export default function EditTime() {
                           ))}
                         </SelectStyle>
 
-                        <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }) }}>Submit</Button>
+                        <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmTime({ hour, minute, tod }); }}>Submit</Button>
                       </Form>
                     </FormContainer>
                     <br />
-                    <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={skipToday}>Skip Today</Button> {' '}
-                    <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={skipNextDay}>Skip Tomorrow</Button>
+                    <Button variant="outline-danger" style={{ 'verticalAlign': 'baseline' }} onClick={skipToday}>Skip Today</Button>
+                    {' '}
+                    <Button variant="outline-danger" style={{ 'verticalAlign': 'baseline' }} onClick={skipNextDay}>Skip Tomorrow</Button>
+                    {' '}
+                    <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={removeSkip}>Remove Skip</Button>
                   </>
                 )
             }
           </div>
-        )
-      }
+        )}
     </EditTimeContainer>
   );
 }
