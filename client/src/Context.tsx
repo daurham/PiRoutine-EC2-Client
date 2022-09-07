@@ -110,7 +110,7 @@ export default function Context({ children }: ContextProps) {
       // console.log('got data alarm; h, m:', hour, minute);
       const firstAlarmTimestamp = getFirstAlarm(hour, minute);
       const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp, 7); // arg2 = phase2 duration
-      const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 2);
+      const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 10);
       const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10);
       // setStamp(firstAlarmTimestamp);
       setAlarm1(() => firstAlarmTimestamp.toLocaleTimeString());
@@ -243,7 +243,6 @@ export default function Context({ children }: ContextProps) {
       console.log('Error update streak data:', err);
     }
   };
-
 
   const handleCurrentTime = async () => {
     setCurrentTime(() => theCurrentTime());
