@@ -7,7 +7,7 @@ export default function GeoTracker() {
   const { currentAlarm, alarm2, alarm1, distance } = useData();
   return currentAlarm !== alarm2 ? null : (
     <div>
-      <ProgressBar animated variant='info' now={distance} label={`${distance}%`} />
+      <ProgressBar animated variant="info" now={distance} label={`${distance}%`} />
       <br />
     </div>
   );
