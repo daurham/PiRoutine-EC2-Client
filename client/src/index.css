@@ -1,28 +1,3 @@
-/* STORED LOCALLY FOR FURTHER STYLE TESTING
-@font-face {
-  font-family: 'FFFFORWA';
-  src: local('FFFFORWA'), url(./assets/font/FFFFORWA.TTF) format('truetype');
-}
-@font-face {
-  font-family: 'ChessType';
-  src: local('ChessType'), url(./assets/font/ChessType.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'TickingTimebombBB';
-  src: local('TickingTimebombBB'), url(./assets/font/TickingTimebombBB.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'editundo';
-  src: local('editundo'), url(./assets/font/editundo.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'edundot';
-  src: local('edundot'), url(./assets/font/edundot.ttf) format('truetype');
-}
-@font-face {
-  font-family: 'edunline';
-  src: local('edunline'), url(./assets/font/edunline.ttf) format('truetype');
-} */
 @font-face {
   font-family: 'Technology';
   src: local('Technology'), url(./assets/font/Technology.ttf) format('truetype');
@@ -36,5 +11,3 @@
 .alarm {
   font-family: Technology;
 }
-
-/* .title {} */

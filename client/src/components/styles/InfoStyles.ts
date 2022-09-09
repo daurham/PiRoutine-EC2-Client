@@ -4,6 +4,11 @@ export const InfoEntry = styled.li`
 list-style: none;
 text-align: center;
 `;
+export const InfoRecEntry = styled.li`
+list-style: none;
+text-align: center;
+color: #ffc107;
+`;
 
 export const InnerValRed = styled.div`
 display: inline-flex;
