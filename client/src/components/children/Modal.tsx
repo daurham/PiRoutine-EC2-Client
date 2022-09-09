@@ -1,9 +1,9 @@
-import React from 'react'
+import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import TableEntry from './TableEntry';
-import { TableFont, TableFontSm } from '../styles/ModalStyles';
+import { TableFont } from '../styles/ModalStyles';
 import { swapBinaryAndBool } from '../utils';
 
 type RecordData = {
@@ -15,13 +15,13 @@ type RecordData = {
   success: 0 | 1;
   username: string;
   id: number;
-}
+};
 
 type Props = {
   show: boolean;
   handleClose: Function;
   disarmRecords: RecordData[];
-}
+};
 
 function RecordsModal({ show, handleClose, disarmRecords }: Props) {
   // console.log('disarmRecords', disarmRecords);
@@ -36,14 +36,14 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
           <Modal.Title>Routine Records</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Table size='sm'>
+          <Table size="sm">
             <thead>
               <tr>
-                <TableFont as={'th'}>Date</TableFont>
-                <TableFont as={'th'}>Disarm 1</TableFont>
-                <TableFont as={'th'}>Alarm 1</TableFont>
-                <TableFont as={'th'}>Disarm 2</TableFont>
-                <TableFont as={'th'}>Alarm 2</TableFont>
+                <TableFont as="th">Date</TableFont>
+                <TableFont as="th">Disarm 1</TableFont>
+                <TableFont as="th">Alarm 1</TableFont>
+                <TableFont as="th">Disarm 2</TableFont>
+                <TableFont as="th">Alarm 2</TableFont>
                 {/* <TableFont as={'th'}>Success?</TableFont> */}
               </tr>
             </thead>
@@ -60,22 +60,19 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
                   alarm2={rec.alarm2}
                   disarmedTime1={rec.disarmedtime1}
                   disarmedTime2={rec.disarmedtime2}
-                  success={String(swapBinaryAndBool(rec.success))}
-                  username={rec.username}
-                  id={rec.id}
                 />
               </tbody>
             ))}
           </Table>
         </Modal.Body>
         <Modal.Footer>
-          <Button size='sm' variant="warning" onClick={handleClose}>
+          <Button size="sm" variant="warning" onClick={handleClose}>
             Close
           </Button>
         </Modal.Footer>
       </Modal>
     </div>
-  )
+  );
 }
 
 export default RecordsModal;

@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { TableFont, TableFontSm } from '../styles/ModalStyles';
 
 type Props = {
@@ -7,12 +7,9 @@ type Props = {
   alarm2: string;
   disarmedTime1: string;
   disarmedTime2: string;
-  success: string;
-  username: string;
-  id: number;
   classN: string;
   failed: string | boolean;
-}
+};
 
 function TableEntry({
   date_,
@@ -20,24 +17,25 @@ function TableEntry({
   alarm2,
   disarmedTime1,
   disarmedTime2,
-  success,
   classN,
   failed,
-  id,
 }: Props) {
-  const editedDate = date_.slice(0, -4) + date_.slice(-2);
   const lowerCaseTOD = (time: string) => time.slice(0, -3) + time.slice(-2).toLowerCase();
-  
+  const editedDate = date_.slice(0, -4) + date_.slice(-2);
+  const editedDisTime1 = disarmedTime1 ? lowerCaseTOD(disarmedTime1) : '-';
+  const editedDisTime2 = disarmedTime2 ? lowerCaseTOD(disarmedTime2) : '-';
+  const editedAlarm1 = lowerCaseTOD(alarm1);
+  const editedAlarm2 = lowerCaseTOD(alarm2);
+
   return (
     <tr className={classN}>
-      <TableFontSm as={'td'} className={failed}>{editedDate}</TableFontSm>
-      <TableFontSm as={'td'} className={failed}>{lowerCaseTOD(disarmedTime1)}</TableFontSm>
-      <TableFontSm as={'td'} className={failed}>{lowerCaseTOD(alarm1)}</TableFontSm>
-      <TableFontSm as={'td'} className={failed}>{lowerCaseTOD(disarmedTime2)}</TableFontSm>
-      <TableFontSm as={'td'} className={failed}>{lowerCaseTOD(alarm2)}</TableFontSm>
-      {/* <TableFontSm as={'td'} className={failed}>{success.toUpperCase()}</TableFontSm> */}
+      <TableFontSm as="td" className={failed}>{editedDate}</TableFontSm>
+      <TableFontSm as="td" className={failed}>{editedDisTime1}</TableFontSm>
+      <TableFontSm as="td" className={failed}>{editedAlarm1}</TableFontSm>
+      <TableFontSm as="td" className={failed}>{editedDisTime2}</TableFontSm>
+      <TableFontSm as="td" className={failed}>{editedAlarm2}</TableFontSm>
     </tr>
-  )
+  );
 }
 
-export default TableEntry
+export default TableEntry;
