@@ -1,5 +1,5 @@
 import React from 'react'
-import { TableFont } from '../styles/ModalStyles';
+import { TableFont, TableFontSm } from '../styles/ModalStyles';
 
 type Props = {
   date_: string;
@@ -25,14 +25,17 @@ function TableEntry({
   failed,
   id,
 }: Props) {
+  const editedDate = date_.slice(0, -4) + date_.slice(-2);
+  const lowerCaseTOD = (time: string) => time.slice(0, -3) + time.slice(-2).toLowerCase();
+  
   return (
     <tr className={classN}>
-      <TableFont as={'td'}>{date_}</TableFont>
-      <TableFont as={'td'}>{disarmedTime1}</TableFont>
-      <TableFont as={'td'}>{alarm1}</TableFont>
-      <TableFont as={'td'}>{disarmedTime2}</TableFont>
-      <TableFont as={'td'}>{alarm2}</TableFont>
-      <TableFont as={'td'} className={failed}>{success}</TableFont>
+      <TableFontSm as={'td'} className={failed}>{editedDate}</TableFontSm>
+      <TableFontSm as={'td'} className={failed}>{lowerCaseTOD(disarmedTime1)}</TableFontSm>
+      <TableFontSm as={'td'} className={failed}>{lowerCaseTOD(alarm1)}</TableFontSm>
+      <TableFontSm as={'td'} className={failed}>{lowerCaseTOD(disarmedTime2)}</TableFontSm>
+      <TableFontSm as={'td'} className={failed}>{lowerCaseTOD(alarm2)}</TableFontSm>
+      {/* <TableFontSm as={'td'} className={failed}>{success.toUpperCase()}</TableFontSm> */}
     </tr>
   )
 }

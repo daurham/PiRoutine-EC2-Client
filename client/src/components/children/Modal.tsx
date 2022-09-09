@@ -3,9 +3,8 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import TableEntry from './TableEntry';
-import { TableFont } from '../styles/ModalStyles';
-import { swapBinaryAndBool, theCurrentTime } from '../utils';
-import {Time} from '../styles/TimeDisplayStyles';
+import { TableFont, TableFontSm } from '../styles/ModalStyles';
+import { swapBinaryAndBool } from '../utils';
 
 type RecordData = {
   date_: string;
@@ -45,7 +44,7 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
                 <TableFont as={'th'}>Alarm 1</TableFont>
                 <TableFont as={'th'}>Disarm 2</TableFont>
                 <TableFont as={'th'}>Alarm 2</TableFont>
-                <TableFont as={'th'}>Win?</TableFont>
+                {/* <TableFont as={'th'}>Success?</TableFont> */}
               </tr>
             </thead>
             {[...disarmRecords].reverse().map((rec, i) => (
@@ -54,7 +53,7 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
               >
                 <TableEntry
                   classN={!(i % 2) ? 'oddtable' : 'eventable'}
-                  failed={!(swapBinaryAndBool(rec.success) ? 'failed' : 'succeeded')}
+                  failed={(!swapBinaryAndBool(rec.success) ? 'failed' : 'succeeded')}
                   key={i}
                   date_={rec.date_}
                   alarm1={rec.alarm1}
