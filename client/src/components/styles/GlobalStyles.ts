@@ -4,6 +4,7 @@ export const GlobalStyle = createGlobalStyle`
   body {
     background-color: black;
   }
+
   * {
     color: white;
   }
@@ -19,14 +20,22 @@ export const GlobalStyle = createGlobalStyle`
 
   .modal-title {
     justify-content: spaced-between;
-
   }
+
+  .modal-footer {
+    justify-content: center;
+  }
+  
   .oddtable {
     background-color: #091012;
   }
 
   .failed {
     color: red;
+  }
+
+  .edit-alarm {
+    display: block;
   }
 `;
 

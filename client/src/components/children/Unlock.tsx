@@ -1,6 +1,7 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { Button } from 'react-bootstrap';
+import axios from 'axios';
+import Modal from 'react-bootstrap/Modal';
+import { Button, ModalBody } from 'react-bootstrap';
 import { useData } from '../../Context';
 import {
   InputContainer,
@@ -9,16 +10,18 @@ import {
   UnlockContainer,
 } from '../styles/UnlockStyles';
 
-export default function Unlock() {
+type Props = {
+  handleClose: Function;
+  show: boolean;
+};
+
+export default function Unlock({ handleClose, show }: Props) {
   const {
-    notSignedIn,
     setLock,
     inputPin,
     setInputPin,
     inputStatus,
     setInputStatus,
-    inEditMode,
-    setEditMode,
   } = useData();
 
   const [password, setPassword] = useState<string>();
@@ -34,20 +37,31 @@ export default function Unlock() {
       setPassword(() => '1234');
     }
   };
-  
-  useEffect(()=> {
+
+  useEffect(() => {
     getUserPassword();
   }, []);
 
-  return !notSignedIn ? null : (
-    <UnlockContainer>
-      <br />
-      <OutterContainer>
-        <InputContainer>
-          <PasswordInput placeholder="Passcode" inputMode="numeric" pattern="[0-9]*" type="password" onChange={(e) => { setInputPin(e.target.value); (inputStatus !== 'Submit' ? setInputStatus('Submit') : null) }} />
-          <Button type="submit" variant={inputStatus === 'Submit' ? 'outline-info' : 'danger'} onClick={(e) => { e.preventDefault(); (inputPin === password ? setLock(false) : setInputStatus('Invalid')) }}>{inputStatus}</Button>
-        </InputContainer>
-      </OutterContainer>
-    </UnlockContainer>
+  return (
+    <Modal
+      show={show}
+      onHide={handleClose}
+      size="sm"
+      centered
+    >
+      <Modal.Header closeButton>
+        <Modal.Title>
+          🔒 Unlock
+        </Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <OutterContainer>
+          <InputContainer>
+            <PasswordInput placeholder="Passcode" inputMode="numeric" pattern="[0-9]*" type="password" onChange={(e) => { setInputPin(e.target.value); (inputStatus !== 'Submit' ? setInputStatus('Submit') : null) }} />
+            <Button type="submit" variant={inputStatus === 'Submit' ? 'outline-info' : 'danger'} onClick={(e) => { e.preventDefault(); (inputPin === password ? setLock(false) : setInputStatus('Invalid')) }}>{inputStatus}</Button>
+          </InputContainer>
+        </OutterContainer>
+      </Modal.Body>
+    </Modal>
   );
 }

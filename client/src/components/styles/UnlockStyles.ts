@@ -7,13 +7,14 @@ justify-content: center;
 `;
 
 export const PasswordInput = styled.input`
-width: 30%;
+width: 50%;
 background: transparent;
 color: white;
 `;
 
 export const InputContainer = styled.form`
 display: flex;
-justify-content: center;`;
+justify-content: center;
+`;
 
 export const UnlockContainer = FlexCenteringContainer;

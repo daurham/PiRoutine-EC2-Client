@@ -7,8 +7,10 @@ import TimeDisplay from './children/TimeDisplay';
 import DisarmButton from './children/DisarmButton';
 import GeoTracker from './children/GeoTracker';
 import Info from './children/Info';
-import EditTime from './children/EditTime';
+import EditTime from './children/EditAlarm';
+import { Button } from 'react-bootstrap';
 import TEST from './children/TEST';
+import { UnlockContainer } from './styles/EditTimeStyles';
 import { useData } from '../Context';
 import { getFirstAlarm, parseTimeData, theCurrentTime } from './utils';
 import Loading from './Loading';
@@ -51,7 +53,8 @@ export default function App() {
   // const [inputTod, setInputTod] = useState('AM');
   // const hours: number[] = [1, ...range(2, 12)];
   // const minutes: number[] = ['00', ...range(1, 59).map(n => n < 10 ? '0' + n : n)];
-
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [motivation, setMotivation] = useState<string>();
   // let clock;
   // let interval;
   // let isArmed = (isDisarmed ? 'LOCKED' : 'DISARM');
@@ -76,7 +79,7 @@ export default function App() {
       'Keep going',
     ];
     const random = Math.floor(Math.random() * (phrases.length));
-    return phrases[random];
+    setMotivation(phrases[random]);
   };
 
   // const handleUpdateAlarm = (e) => {
@@ -126,8 +129,11 @@ export default function App() {
         <TimeDisplay />
         <DisarmButton />
         <GeoTracker />
-        <Info phrase={statusGenerator()} />
-        <EditTime />
+        <Info phrase={motivation} getPhrase={statusGenerator} />
+        <UnlockContainer>
+          <Button variant={showModal ? 'outline-info' : 'outline-secondary'} size="sm" onClick={() => setShowModal(!showModal)}>Edit Alarm</Button>
+        </UnlockContainer>
+        <EditTime showModal={showModal} setShowModal={setShowModal} />
         {/* <TEST /> */}
       </CenteringContainer>
     </AppContainer>

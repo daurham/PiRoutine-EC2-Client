@@ -17,9 +17,10 @@ type RecordData = {
   id: number;
 };
 
+// type ModalProps.centered? = boolean | undefined;
 type Props = {
   show: boolean;
-  handleClose: Function;
+  handleClose: React.MouseEventHandler<HTMLButtonElement> | undefined; 
   disarmRecords: RecordData[];
 };
 
@@ -44,7 +45,6 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
                 <TableFont as="th">Alarm 1</TableFont>
                 <TableFont as="th">Disarm 2</TableFont>
                 <TableFont as="th">Alarm 2</TableFont>
-                {/* <TableFont as={'th'}>Success?</TableFont> */}
               </tr>
             </thead>
             {[...disarmRecords].reverse().map((rec, i) => (

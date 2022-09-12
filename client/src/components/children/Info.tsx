@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useData } from '../../Context';
-import RecordsModal from './Modal';
+import RecordsModal from './RecordsModal';
 import {
   InfoContainer,
   InfoEntry,
@@ -16,9 +16,12 @@ import {
 } from '../styles/InfoStyles';
 import Loading from '../Loading';
 
-type Props = { phrase: string }
+type Props = {
+  phrase: string | undefined;
+  getPhrase: Function;
+}
 
-export default function Info({ phrase }: Props) {
+export default function Info({ phrase, getPhrase }: Props) {
   const {
     streak,
     currentAlarm,
@@ -46,19 +49,18 @@ export default function Info({ phrase }: Props) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
+    getPhrase();
     getMetaData();
   }, []);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // console.log('disarmRecords:', disarmRecords);
-
   return (
     <>
       <InfoContainer>
         <MainInfoContainer>
-          {currentPhase === 3 && !failed && <InfoEntry>{phrase.toUpperCase()}</InfoEntry>}
+          {currentPhase === 3 && !failed && phrase && <InfoEntry>{phrase.toUpperCase()}</InfoEntry>}
           <br />
           <InfoEntry>Streak Count: {streak !== undefined ? streak : <Loading />}</InfoEntry>
           <InfoEntry>Alarm: {currentAlarm ? <InnerValRed className="alarm">{currentAlarm}</InnerValRed> : <Loading />}</InfoEntry>
@@ -78,7 +80,7 @@ export default function Info({ phrase }: Props) {
                 <InfoEntry>Days Skipped: {skippedCount !== undefined ? skippedCount : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
                 <InfoEntry>Days Soaked: {soakedCount !== undefined ? soakedCount : (<div style={{ display: 'inline-flex' }}><Loading />Coming Soon<Loading /></div>)}</InfoEntry>
                 <InfoEntry>Records: {disarmRecords ? <InfoRecEntry as={'u'} style={{ cursor: 'pointer' }} onClick={handleShow}>Show Records</InfoRecEntry> : <Loading />}</InfoEntry>
-                <InfoEntry>Start Date: {<InnerValRedU>08/20/2022</InnerValRedU>}</InfoEntry>
+                <InfoEntry>Start Date: {<InnerValRed>08/20/2022</InnerValRed>}</InfoEntry>
               </MetaContainer>
             )}
           <InfoEntry><SeeMoreStyle onClick={() => setSeeMore(!seeMore)}>{!seeMore ? 'show more' : 'show less'}</SeeMoreStyle></InfoEntry>

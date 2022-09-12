@@ -6,4 +6,5 @@ justify-content: center;
 `;
 
 export const Title = styled.h1`
+margin-top: 5%;
 `;
