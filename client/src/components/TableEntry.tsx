@@ -1,14 +1,14 @@
 import React from 'react';
-import { TableFont, TableFontSm } from '../styles/ModalStyles';
+import { TableFontSm } from './styles/ModalStyles';
 
 type Props = {
-  date_: string;
-  alarm1: string;
-  alarm2: string;
-  disarmedTime1: string;
-  disarmedTime2: string;
+  date_: string | undefined;
+  alarm1: string | undefined;
+  alarm2: string | undefined;
+  disarmedTime1: string | undefined;
+  disarmedTime2: string | undefined;
   classN: string;
-  failed: string | boolean;
+  failed: string;
 };
 
 function TableEntry({
@@ -21,11 +21,11 @@ function TableEntry({
   failed,
 }: Props) {
   const lowerCaseTOD = (time: string) => time.slice(0, -3) + time.slice(-2).toLowerCase();
-  const editedDate = date_.slice(0, -4) + date_.slice(-2);
+  const editedDate = date_ ? (date_.slice(0, -4) + date_.slice(-2)) : '-';
   const editedDisTime1 = disarmedTime1 ? lowerCaseTOD(disarmedTime1) : '-';
   const editedDisTime2 = disarmedTime2 ? lowerCaseTOD(disarmedTime2) : '-';
-  const editedAlarm1 = lowerCaseTOD(alarm1);
-  const editedAlarm2 = lowerCaseTOD(alarm2);
+  const editedAlarm1 = lowerCaseTOD(alarm1 ? alarm1 : 'null');
+  const editedAlarm2 = lowerCaseTOD(alarm2 ? alarm2 : 'null');
 
   return (
     <tr className={classN}>

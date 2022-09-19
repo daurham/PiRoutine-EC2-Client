@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from 'react';
 
+interface Coordinates {
+  latitude?: number;
+  longitude?: number;
+};
+
 export default function useGeolocation(options?: PositionOptions | undefined) {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState();
-  const [data, setData] = useState({});
+  const [error, setError] = useState<GeolocationPositionError>();
+  const [data, setData] = useState<Coordinates>({});
 
   useEffect(() => {
-    const successHandler = (e) => {
+    const successHandler = (location: GeolocationPosition) => {
       setLoading(false);
-      setError(null);
-      setData(e.coords);
+      setError(null!);
+      setData(location.coords);
     };
-    const errorHandler = (e) => {
-      setError(e);
+    const errorHandler = (error: GeolocationPositionError) => {
+      setError(error);
       setLoading(false);
     };
     navigator.geolocation.getCurrentPosition(

@@ -39,6 +39,7 @@ module.exports = {
     filename: 'bundle.js',
   },
   mode: MODE,
+  devtool: 'source-map',
 
   // plugins: [
   //   new HtmlWebpackPlugin({

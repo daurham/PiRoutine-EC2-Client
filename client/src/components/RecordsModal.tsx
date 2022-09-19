@@ -3,40 +3,33 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import TableEntry from './TableEntry';
-import { TableFont } from '../styles/ModalStyles';
-import { swapBinaryAndBool } from '../utils';
+import { TableFont } from './styles/ModalStyles';
+import { swapBinaryAndBool } from './utils';
+import { DisarmRecordsObj } from './../../../types';
 
-type RecordData = {
-  date_: string;
-  alarm1: string;
-  alarm2: string;
-  disarmedtime1: string;
-  disarmedtime2: string;
-  success: 0 | 1;
-  username: string;
-  id: number;
-};
-
-// type ModalProps.centered? = boolean | undefined;
 type Props = {
   show: boolean;
-  handleClose: React.MouseEventHandler<HTMLButtonElement> | undefined; 
-  disarmRecords: RecordData[];
+  handleClose: () => void
+  disarmRecords: DisarmRecordsObj[];
 };
 
 function RecordsModal({ show, handleClose, disarmRecords }: Props) {
-  // console.log('disarmRecords', disarmRecords);
+
   return (
     <div>
       <Modal
         show={show}
         onHide={handleClose}
         centered
+        scrollable={true}
       >
         <Modal.Header closeButton>
           <Modal.Title>Routine Records</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{
+          maxHeight: '40vh',
+          overflowY: 'auto'
+        }}>
           <Table size="sm">
             <thead>
               <tr>
