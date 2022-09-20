@@ -3,7 +3,7 @@ import { ProgressBar } from 'react-bootstrap';
 import useGeolocation from './utils/useGeolocation';
 
 type Props = {
-  distance: number | undefined;
+  distance: number;
   setDistance: (arg0: number | (() => number)) => void;
   currentPhase: number;
   currentTime: string;
@@ -33,7 +33,7 @@ export default function GeoProgressBar({
 
   const convertToDistance = (input: number): number => {
     const result = Math.floor(((input - 0) * 100) / (0.003 - 0));
-    // console.log('resutl: ', result);
+    // console.log('result: ', result);
     return result;
   };
 
@@ -53,15 +53,13 @@ export default function GeoProgressBar({
   };
 
   useEffect(() => { // TRACK CURRENT LOCATION CHANGE
-    if (distance !== undefined) {
-      if (currentPhase === 2 && distance < 100 && latitude && longitude) {
-        calculateDifference(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
-        calculateDifference(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
-        setDistance(() => convertToDistance(changeLat)); // Comment out for Testing
-      }
-      if (distance > 100) setDistance(100);
+    if (currentPhase === 2 && distance < 100 && latitude && longitude) {
+      calculateDifference(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
+      calculateDifference(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
+      setDistance(() => convertToDistance(changeLat)); // Comment out for Testing
     }
-  }, [latitude, longitude, initialLat, initialLon, distance]);
+    if (distance > 100) setDistance(100);
+  }, [latitude, longitude, initialLat, initialLon]);
 
   useEffect(() => {
     if (!initialLat) {
