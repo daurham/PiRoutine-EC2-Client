@@ -5,23 +5,20 @@ import EditModal from './EditModal';
 import { TimeObj } from '../../../types';
 
 type Props = {
-  showModal: boolean;
-  setShowModal: (arg0: boolean) => void;
   skipDate: string | undefined;
-  getSkipData: () => Promise<void>;
   notSignedIn: boolean;
+  getSkipData: () => Promise<void>;
   updateAlarmData: (args0: TimeObj) => Promise<void>;
   launchUnlockModal: () => void;
 };
 
 export default function EditButton({
   skipDate,
-  getSkipData,
   notSignedIn,
+  getSkipData,
   updateAlarmData,
   launchUnlockModal,
 }: Props) {
-
   const [showEdit, setShowEdit] = useState(false);
   const closeEditModal = () => setShowEdit(false);
   const showEditModal = () => setShowEdit(true);
@@ -29,7 +26,7 @@ export default function EditButton({
   return (
     <UnlockContainer>
       <Button
-        variant='outline-secondary'
+        variant="outline-secondary"
         size="sm"
         onClick={notSignedIn ? launchUnlockModal : showEditModal}
       >

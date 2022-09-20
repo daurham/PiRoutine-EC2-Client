@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import RecordsModal from './RecordsModal';
 import {
   InfoContainer,
@@ -16,9 +16,6 @@ import { DisarmRecordsObj } from '../../../types';
 
 type Props = {
   motivation: string | undefined;
-  setMotivation: (arg0: string) => void;
-  statusGenerator: (arg0: (arg0: string) => void, arg1: boolean) => void;
-  getMetaData: () => void;
   hasFailed: boolean;
   currentPhase: 1 | 2 | 3;
   currentAlarm: string | undefined;
@@ -31,13 +28,10 @@ type Props = {
   skippedCount: number | undefined;
   soakedCount: number | undefined;
   disarmRecords: DisarmRecordsObj[];
-}
+};
 
 export default function Info({
   motivation,
-  setMotivation,
-  statusGenerator,
-  getMetaData,
   hasFailed,
   currentPhase,
   streak,
@@ -54,60 +48,77 @@ export default function Info({
   const [seeMore, setSeeMore] = useState(false);
   const [show, setShow] = useState(false);
 
-  useEffect(() => {
-    statusGenerator(setMotivation, hasFailed);
-    getMetaData();
-  }, []);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
   return (
     <>
       <InfoContainer>
         <MainInfoContainer>
-          {currentPhase === 3 && !hasFailed && motivation && <InfoEntry>{motivation.toUpperCase()}</InfoEntry>}
-          <br />
+          {currentPhase === 3 && !hasFailed
+            && motivation
+            && (
+              <>
+                <InfoEntry>
+                  {motivation.toUpperCase()}
+                </InfoEntry>
+                <br />
+              </>
+            )}
           <InfoEntry>
-            Streak Count: {streak !== undefined || <Loading />}
+            {'Streak Count: '}
+            {streak !== undefined ? streak : <Loading />}
           </InfoEntry>
           <InfoEntry>
-            Alarm: {currentAlarm ? <InnerValRed className="alarm">{currentAlarm}</InnerValRed> : <Loading />}
+            {'Alarm: '}
+            {currentAlarm ? <InnerValRed className="alarm">{currentAlarm}</InnerValRed> : <Loading />}
           </InfoEntry>
 
           <InfoEntry>
-            Status: {!isDisarmed ?
-              <InnerValRed>Armed 💦</InnerValRed>
+            {'Status: '}
+            {!isDisarmed
+              ? <InnerValRed>Armed 💦</InnerValRed>
               : <InnerValWhite>Disarmed 😌</InnerValWhite>}
           </InfoEntry>
           {seeMore
             && (
               <MetaContainer>
                 <InfoEntry>
-                  Alarm 1: {alarm1 ? <InnerValRed className="alarm">{alarm1}</InnerValRed> : <Loading />}
+                  {'Alarm 1: '}
+                  {alarm1 ? <InnerValRed className="alarm">{alarm1}</InnerValRed> : <Loading />}
                 </InfoEntry>
                 <InfoEntry>
-                  Alarm 2: {alarm2 ? <InnerValRed className="alarm">{alarm2}</InnerValRed> : <Loading />}
+                  {'Alarm 2: '}
+                  {alarm2 ? <InnerValRed className="alarm">{alarm2}</InnerValRed> : <Loading />}
                 </InfoEntry>
                 <InfoEntry>
-                  Longest Streak: {maxStreak !== undefined ? maxStreak : <Loading />}
+                  {'Longest Streak: '}
+                  {maxStreak !== undefined ? maxStreak : <Loading />}
                 </InfoEntry>
                 <InfoEntry>
-                  Current Phase: {currentPhase || <Loading />}
+                  {'Current Phase: '}
+                  {currentPhase || <Loading />}
                 </InfoEntry>
                 <InfoEntry>
-                  Skipping: {skipDate ? <InnerValRed>{skipDate}</InnerValRed> : <Loading />}
+                  {'Skipping: '}
+                  {skipDate ? <InnerValRed>{skipDate}</InnerValRed> : <Loading />}
                 </InfoEntry>
                 <InfoEntry>
-                  Days Skipped: {skippedCount !== undefined ? skippedCount : <Loading />}
+                  {'Days Skipped: '}
+                  {skippedCount !== undefined ? skippedCount : <Loading />}
                 </InfoEntry>
                 <InfoEntry>
-                  Days Soaked: {soakedCount !== undefined ? soakedCount : <Loading />}
+                  {'Days Soaked: '}
+                  {soakedCount !== undefined ? soakedCount : <Loading />}
                 </InfoEntry>
                 <InfoEntry>
-                  Records: {disarmRecords ? <InfoRecEntry as={'u'} style={{ cursor: 'pointer' }} onClick={handleShow}>Show Records</InfoRecEntry> : <Loading />}
+                  {'Records: '}
+                  {disarmRecords
+                    ? <InfoRecEntry as="u" style={{ cursor: 'pointer' }} onClick={handleShow}>Show Records</InfoRecEntry>
+                    : <Loading />}
                 </InfoEntry>
                 <InfoEntry>
-                  Start Date: {<InnerValRed>08/20/2022</InnerValRed>}
+                  {'Start Date: '}
+                  <InnerValRed>08/20/2022</InnerValRed>
                 </InfoEntry>
               </MetaContainer>
             )}
@@ -115,7 +126,8 @@ export default function Info({
         </MainInfoContainer>
         <br />
       </InfoContainer>
-      {disarmRecords && <RecordsModal show={show} handleClose={handleClose} disarmRecords={disarmRecords} />}
+      {disarmRecords
+        && <RecordsModal show={show} handleClose={handleClose} disarmRecords={disarmRecords} />}
     </>
   );
 }

@@ -27,11 +27,11 @@ export default function UnlockModal({
   setInputStatus,
   setLock,
 }: Props) {
-
   const [password, setPassword] = useState<string>();
 
   useEffect(() => {
-    getUserPassword(setPassword);
+    getUserPassword(setPassword)
+      .catch((err) => console.warn(err));
   }, []);
 
   return (
@@ -40,11 +40,11 @@ export default function UnlockModal({
       onHide={handleClose}
       size="sm"
       centered
-      scrollable={true}
+      scrollable
     >
       <Modal.Header closeButton>
         <Modal.Title>
-          Unlock 🔒 
+          Unlock 🔒
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
@@ -55,9 +55,10 @@ export default function UnlockModal({
               inputMode="numeric"
               pattern="[0-9]*"
               type="password"
+              autoFocus
               onChange={(e) => {
                 setInputPin(e.target.value);
-                (inputStatus !== 'Submit' ? setInputStatus('Submit') : null)
+                if (inputStatus !== 'Submit') setInputStatus('Submit');
               }}
             />
             <Button
@@ -65,10 +66,13 @@ export default function UnlockModal({
               variant={inputStatus === 'Submit' ? 'outline-info' : 'danger'}
               onClick={(e) => {
                 e.preventDefault();
-                (inputPin === password
-                  ? setLock(false)
-                  : setInputStatus('Invalid'))
-              }}>
+                if (inputPin === password) {
+                  setLock(false);
+                } else {
+                  setInputStatus('Invalid');
+                }
+              }}
+            >
               {inputStatus}
             </Button>
           </InputContainer>

@@ -24,8 +24,8 @@ function TableEntry({
   const editedDate = date_ ? (date_.slice(0, -4) + date_.slice(-2)) : '-';
   const editedDisTime1 = disarmedTime1 ? lowerCaseTOD(disarmedTime1) : '-';
   const editedDisTime2 = disarmedTime2 ? lowerCaseTOD(disarmedTime2) : '-';
-  const editedAlarm1 = lowerCaseTOD(alarm1 ? alarm1 : 'null');
-  const editedAlarm2 = lowerCaseTOD(alarm2 ? alarm2 : 'null');
+  const editedAlarm1 = lowerCaseTOD(alarm1 || 'null');
+  const editedAlarm2 = lowerCaseTOD(alarm2 || 'null');
 
   return (
     <tr className={classN}>

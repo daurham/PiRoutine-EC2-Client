@@ -6,25 +6,19 @@ import { ButtonContainer, DisarmButtonContainer } from './styles/DisarmButtonSty
 type Props = {
   currentPhase: 1 | 2 | 3 | undefined;
   hideDisarmBtn: boolean | undefined;
+  currentTime: string;
   setDisarmData: (arg0: DisarmDataObj | ((arg0: DisarmDataObj) => DisarmDataObj)) => void;
   distance: number | undefined;
   hasFailed: boolean | undefined;
   isDisarmed: boolean | undefined;
-  currentTime: string | undefined;
   updateDisarmData: (arg0: boolean) => Promise<void>;
   notSignedIn: boolean | undefined;
-  showModal: boolean;
-  setShowModal: (arg0: boolean) => void;
-  inputStatus: string;
-  inputPin: string;
-  setInputPin: (arg0: string) => void;
-  setInputStatus: (arg0: string) => void;
-  setLock: (arg0: boolean) => void;
   launchUnlockModal: () => void;
-}
+};
 
 export default function DisarmButton({
   currentPhase,
+  currentTime,
   hideDisarmBtn,
   setDisarmData,
   distance,
@@ -36,73 +30,83 @@ export default function DisarmButton({
 }: Props) {
   const [isLocked, setIsLocked] = useState(false);
   const [variant, setVariant] = useState<string>('outline-danger');
-  const [btnStatus, setBtnStatus] = useState<string>();
-  const [clickEvent, setClickEvent] = useState<any>();
-
+  const [btnStatus, setBtnStatus] = useState<string>('Disarm');
   const handleDisarm = () => {
     if (!isDisarmed) {
-      updateDisarmData(!isDisarmed);
+      updateDisarmData(!isDisarmed)
+        .catch(console.warn);
     }
   };
 
   useEffect(() => {
-    // reguardless of visiblity, lock if not signed in.
-    if (notSignedIn) setIsLocked(true);
-    // And unlock is signed in
-    if (!notSignedIn) setIsLocked(false);
+    // Lock if disarmed. (Prevents extra clicks)
+    if (isDisarmed && !notSignedIn && !isLocked) setIsLocked(true);
 
     if (currentPhase === 1) {
-      setBtnStatus('Disarm');
       // If hidden, unhide
-      if (hideDisarmBtn) setDisarmData((prevState) => ({ ...prevState, hideDisarmBtn: false }));
-      // if (isLocked) setIsLocked(false);
+      if (hideDisarmBtn) setDisarmData((prevS) => ({ ...prevS, hideDisarmBtn: false }));
+
       if (notSignedIn) {
-        setBtnStatus('Locked 🕐');
-        setVariant('outline-danger');
+        if (isDisarmed && btnStatus !== 'Disarmed') setBtnStatus('Disarmed');
+        if (!isDisarmed && btnStatus !== 'Disarm') setBtnStatus('Disarm');
+        if (variant !== 'outline-danger') setVariant('outline-danger');
       } else {
-        setBtnStatus('Disarm');
-        setVariant('outline-secondary');
+        // Unlock if signedIn & armed & locked
+        if (!isDisarmed && isLocked) setIsLocked(false);
+        if (isDisarmed && btnStatus !== 'Disarmed') setBtnStatus('Disarmed');
+        if (!isDisarmed && btnStatus !== 'Disarm') setBtnStatus('Disarm');
+        if (variant !== 'outline-secondary') setVariant('outline-secondary');
       }
     }
-    
-    // Unhide in phase 2 when use disarms alarm1
-    if (currentPhase === 2 && !hasFailed && distance) {
-      // lock if user hasnt fully traveled
+
+    if (currentPhase === 2 && typeof distance === 'number') {
       if (distance < 100) {
-        // Unhide
-        if (hideDisarmBtn) setDisarmData((prevState) => ({ ...prevState, hideDisarmBtn: false }));
-        // set Btn status
-        // if (btnStatus !== 'Locked🏃') setBtnStatus('Locked🏃');
-        // lock
-        if (!isLocked) setIsLocked(true);
-      }
-      if (notSignedIn) {
-        setBtnStatus('Locked ❗');
-        setVariant('outline-danger');
-      } else {
-        setBtnStatus('Locked 🏃');
-        setVariant('outline-secondary');
+        // While NOT Signed In
+
+        if (notSignedIn) {
+          if (isDisarmed && btnStatus !== 'Disarmed') setBtnStatus('Disarmed');
+          if (!isDisarmed && btnStatus !== 'Locked ❗') setBtnStatus('Locked ❗');
+          if (variant !== 'outline-danger') setVariant('outline-danger');
+        } else {
+          // While Signed In
+
+          // Lock if logged in & running
+          if (!isLocked) setIsLocked(true);
+          if (isDisarmed && btnStatus !== 'Disarmed') setBtnStatus('Disarmed');
+          if (!isDisarmed && btnStatus !== 'Locked 🏃') setBtnStatus('Locked 🏃');
+
+          // Change the DisarmButton Variant based on distance, if logged in & not disarmed.
+          if (!isDisarmed && distance <= 30) {
+            if (variant !== 'outline-danger') setVariant('outline-danger');
+          }
+          if (!isDisarmed && distance > 30 && distance <= 75) {
+            if (variant !== 'outline-warning') setVariant('outline-warning');
+          }
+          if (!isDisarmed && distance > 75 && distance < 100) {
+            if (variant !== 'outline-secondary') setVariant('outline-secondary');
+          }
+        }
       }
 
-      // Unlock when traveled
+      // When Finished Traveling
       if (distance >= 100) {
-        if (!isDisarmed) {
-          // unlock
-          if (isLocked && !notSignedIn) setIsLocked(false);
-          // set Btn status
-          if (btnStatus !== 'Disarm') setBtnStatus('Disarm');
+        // When Disarmed
+
+        if (isDisarmed) {
+          if (btnStatus !== 'Disarmed') setBtnStatus('Disarmed');
         } else {
-          // Hide
-          if (!hideDisarmBtn) setDisarmData((prevState) => ({ ...prevState, hideDisarmBtn: true }));
+          if (isLocked) setIsLocked(false);
+          if (btnStatus !== 'Disarm') setBtnStatus('Disarm');
+          if (variant !== 'outline-light') setVariant('outline-light');
         }
       }
     }
 
     if (currentPhase === 3 && !hideDisarmBtn) {
       // Hide after my alarms
-      setDisarmData((prevState) => ({ ...prevState, hideDisarmBtn: true }));
+      if (!hideDisarmBtn) setDisarmData((prevS) => ({ ...prevS, hideDisarmBtn: true }));
     }
-  }, [notSignedIn, currentPhase, isDisarmed, distance]);
+  }, [currentTime]);
 
   if (hideDisarmBtn) return null;
   if (hasFailed) return null;
@@ -113,7 +117,7 @@ export default function DisarmButton({
         <Button
           size="lg"
           variant={variant}
-          disabled={notSignedIn ? true : false}
+          disabled={isLocked}
           onClick={notSignedIn ? launchUnlockModal : handleDisarm}
         >
           {btnStatus}
@@ -123,38 +127,3 @@ export default function DisarmButton({
     </DisarmButtonContainer>
   );
 }
-        /* For spectators outside disarming hours
-{notSignedIn
-&& isLocked
-&& <Button variant="outline-danger" size="lg" onClick={() => setEditMode(!inEditMode)}>{!inEditMode ? 'Locked' : 'Locked 🕐'}</Button>}
-
-// For anyone not logged in during disarming hours 
-{notSignedIn
-&& !isLocked
-&& !isDisarmed
-&& <Button variant={!inEditMode ? 'outline-secondary' : 'outline-danger'} size="lg" onClick={() => setEditMode(!inEditMode)}>{!inEditMode ? 'Disarm' : 'Locked 🔒'}</Button>}
-</ButtonContainer>
-NOT SIGNED IN ABOVE 
-
-{inEditMode && <UnlockModal
-dependancies={unlockDeps}
-/>}
-
-SIGNED IN BELOW 
-<ButtonContainer>
-During run: need to travel more: locked
-{!notSignedIn
-&& isLocked
-&& currentPhase === 2
-&& <Button variant="outline-danger" size="lg" onClick={() => console.log('shake the button & tell user to get moving')}>Locked 🔒</Button>}
-During run: travel complete: unlocked
-{!notSignedIn
-&& !isLocked
-&& !isDisarmed
-&& <Button variant="secondary" size="lg" onClick={handleDisarm}>Disarm</Button>}
-During disarm hours: disarmed
-{!notSignedIn
-&& isDisarmed
-&& !isLocked
-&& <Button variant="outline-info" size="lg" disabled>Disarmed</Button>} */
-

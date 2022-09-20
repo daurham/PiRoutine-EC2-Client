@@ -8,7 +8,8 @@ import Spinner, {
 
 type Props = {
   big?: boolean;
-}
+};
+
 export default function Loading({ big }: Props) {
   return big ? (
     <BigSpinnerContainer>

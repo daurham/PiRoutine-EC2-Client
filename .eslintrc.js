@@ -9,7 +9,7 @@ module.exports = {
   ],
   rules: {
     'no-console': 'off',
-    'no-shadow': 'warn',
+    // 'no-shadow': 'warn',
     'no-extend-native': 'off',
   },
   overrides: [ // Typescript configs:
@@ -28,6 +28,9 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/rule-name': 'off',
+        'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
+        'no-underscore-dangle': 'off',
+        // 'no-underscore-dangle': ['error', { allow: ['password_'] }],
       },
       parserOptions: {
         project: './tsconfig.json', // Specify it only for TypeScript files

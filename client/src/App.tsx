@@ -28,7 +28,7 @@ import {
   SkipDataObj,
   StreakDataObj,
   DisarmRecordsData,
-  TimeObj
+  TimeObj,
 } from '../../types';
 
 export default function App() {
@@ -43,12 +43,11 @@ export default function App() {
   const [hasFailed, setFailed] = useState<boolean>(false);
   // GeoProgressBar
   const [distance, setDistance] = useState<number | undefined>();
-  // 
+  //
   const [notSignedIn, setLock] = useState<boolean>(true);
   const [inputPin, setInputPin] = useState<string>('');
   const [inputStatus, setInputStatus] = useState<string>('Submit');
-  // 
-  const [showModal, setShowModal] = useState<boolean>(false);
+  //
   const [motivation, setMotivation] = useState<string>('');
   const [showUnlockModal, setShowUnlockModal] = useState<boolean>(false);
 
@@ -56,8 +55,10 @@ export default function App() {
     alarm1,
     alarm2,
     currentAlarm,
-    tenSecAfterAlarm1,
-    tenSecAfterAlarm2,
+    threeSecAfterAlarm1,
+    threeSecAfterAlarm2,
+    // tenSecAfterAlarm1,
+    // tenSecAfterAlarm2,
   } = alarmData;
 
   const {
@@ -75,7 +76,7 @@ export default function App() {
     skippedCount,
   } = skipData;
 
-  let clock: any;
+  // let clock: NodeJS.Timer;
 
   const closeUnlockModal = () => setShowUnlockModal(false);
   const launchUnlockModal = () => setShowUnlockModal(true);
@@ -88,14 +89,21 @@ export default function App() {
   const getDisarmRecordsData = () => getDisarmRecords({ setDisarmRecords });
   const getSkipData = () => getSkipDateAndCount({ setSkipData });
   const getMetaData = () => {
-    getSkipData();
-    getSoakedData();
-    getDisarmRecordsData();
+    getSkipData()
+      .catch(console.warn);
+    getSoakedData()
+      .catch(console.warn);
+    getDisarmRecordsData()
+      .catch(console.warn);
   };
 
-  const updateAlarmData = (newTime: TimeObj) => updateAlarmTime({ timeData: newTime, getAlarmData });
-  const updateDisarmData = (newStatus: boolean) => updateDisarmStatus({ disarmData: newStatus, getDisarmData })
+  const updateAlarmData = (newTime: TimeObj): Promise<void> => updateAlarmTime(
+    { timeData: newTime, getAlarmData },
+  );
 
+  const updateDisarmData = (newStatus: boolean): Promise<void> => updateDisarmStatus(
+    { disarmData: newStatus, getDisarmData },
+  );
 
   const handleCurrentTime = async () => {
     setCurrentTime(() => theCurrentTime());
@@ -110,10 +118,10 @@ export default function App() {
       // __ IF IN PHASE I __
       if (currentPhase === 1) {
         // Show disarm button
-        if (hideDisarmBtn) setDisarmData((prevState) => ({ ...prevState, hideDisarmBtn: false }));
+        if (hideDisarmBtn) setDisarmData((prevS) => ({ ...prevS, hideDisarmBtn: false }));
 
         // Set current alarm
-        if (currentAlarm !== alarm1) setAlarmData((prevState) => ({ ...prevState, currentAlarm: alarm1 }));
+        if (currentAlarm !== alarm1) setAlarmData((prevS) => ({ ...prevS, currentAlarm: alarm1 }));
 
         // Handle alarm1 Failure
         if (currentTime === alarm1 && !isDisarmed) setFailed(true);
@@ -122,30 +130,33 @@ export default function App() {
       // __ IF IN PHASE II __
       if (currentPhase === 2) {
         // Set Alarm
-        if (currentAlarm !== alarm2) setAlarmData((prevState) => ({ ...prevState, currentAlarm: alarm2 }));
-        
-        // Set Disatnce
-        if (currentPhase === 2 && distance === undefined) setDistance(0);
-        
+        if (currentAlarm !== alarm2) setAlarmData((prevS) => ({ ...prevS, currentAlarm: alarm2 }));
+
+        // Set Distance once logged in & ready to run
+        if (currentPhase === 2 && distance === undefined) {
+          setDistance(0);
+        }
+
         // Refresh disarm status & streak data
-        if (currentTime === tenSecAfterAlarm1) {
+        if (currentTime === threeSecAfterAlarm1) {
           await getDisarmData();
           await getStreakData();
         }
-        
+
         // Handle alarm2 Failure
         if (currentTime === alarm2 && !isDisarmed) setFailed(true);
       }
 
       // __IF IN PHASE III__
       if (currentPhase === 3) {
-        if (currentAlarm !== alarm1) setAlarmData((prevState) => ({ ...prevState, currentAlarm: alarm1 }));
+        if (currentAlarm !== alarm1) setAlarmData((prevS) => ({ ...prevS, currentAlarm: alarm1 }));
 
-        if (currentTime === tenSecAfterAlarm2) {
+        if (currentTime === threeSecAfterAlarm2) {
           await getStreakData();
           await getDisarmData();
           setTimeout(() => {
-            getDisarmRecordsData();
+            getDisarmRecordsData()
+              .catch(console.warn);
             setFailed(false);
           }, 5000);
         }
@@ -154,29 +165,30 @@ export default function App() {
   };
 
   useEffect(() => { // TRACK TIME CHANGE
-    if (alarm1 && !currentAlarm) setAlarmData((prevState) => ({ ...prevState, currentAlarm: alarm1 }));
-    clock = setInterval(() => handleCurrentTime(), 1000);
+    if (alarm1 && !currentAlarm) setAlarmData((prevS) => ({ ...prevS, currentAlarm: alarm1 }));
+    const clock: NodeJS.Timer = setInterval(() => handleCurrentTime(), 1000);
     return () => clearInterval(clock);
   }, [currentTime]);
 
   useEffect(() => { // INITIAL GET DATA ON MOUNT
-    getAlarmData();
-    getStreakData();
-    getDisarmData();
-    getMetaData()
-    handleCurrentTime();
+    getAlarmData()
+      .catch(console.warn);
+    getStreakData()
+      .catch(console.warn);
+    getDisarmData()
+      .catch(console.warn);
+    handleCurrentTime()
+      .catch(console.warn);
+    getMetaData();
+    statusGenerator(setMotivation, hasFailed);
   }, []);
-  
 
-  return !currentTime || !currentPhase ? <Loading big={true} /> : (
-    // return !currentTime ? <Loading big={true} /> : (
+  return !currentTime || !currentPhase ? <Loading big /> : (
     <AppContainer>
       <CenteringContainer>
         <Header />
         <TimeDisplay currentTime={currentTime} />
         <DisarmButton
-          showModal={showModal}
-          setShowModal={setShowModal}
           currentPhase={currentPhase}
           hideDisarmBtn={hideDisarmBtn}
           setDisarmData={setDisarmData}
@@ -186,56 +198,56 @@ export default function App() {
           currentTime={currentTime}
           updateDisarmData={updateDisarmData}
           notSignedIn={notSignedIn}
-          inputStatus={inputStatus}
-          setInputStatus={setInputStatus}
-          inputPin={inputPin}
-          setInputPin={setInputPin}
-          setLock={setLock}
           launchUnlockModal={launchUnlockModal}
         />
-        {currentAlarm === alarm2 && typeof distance === 'number' && currentAlarm && <GeoProgressBar
-        // {<GeoProgressBar
-          distance={distance}
-          setDistance={setDistance}
-          currentPhase={currentPhase}
-          currentTime={currentTime}
-        />}
-        {disarmRecords.length > 0 && <Info
-          motivation={motivation}
-          setMotivation={setMotivation}
-          statusGenerator={statusGenerator}
-          getMetaData={getMetaData}
-          hasFailed={hasFailed}
-          currentPhase={currentPhase}
-          streak={streak}
-          currentAlarm={currentAlarm}
-          isDisarmed={isDisarmed}
-          alarm1={alarm1}
-          alarm2={alarm2}
-          skipDate={skipDate}
-          maxStreak={maxStreak}
-          skippedCount={skippedCount}
-          disarmRecords={disarmRecords}
-          soakedCount={soakedCount}
-        />}
+        {currentAlarm === alarm2 && typeof distance === 'number' && currentAlarm && (
+          <GeoProgressBar
+            distance={distance}
+            setDistance={setDistance}
+            currentPhase={currentPhase}
+            currentTime={currentTime}
+            isDisarmed={isDisarmed}
+            notSignedIn={notSignedIn}
+          />
+        )}
+        {disarmRecords.length > 0 && (
+          <Info
+            motivation={motivation}
+            // setMotivation={setMotivation}
+            // statusGenerator={statusGenerator}
+            // getMetaData={getMetaData}
+            hasFailed={hasFailed}
+            currentPhase={currentPhase}
+            streak={streak}
+            currentAlarm={currentAlarm}
+            isDisarmed={isDisarmed}
+            alarm1={alarm1}
+            alarm2={alarm2}
+            skipDate={skipDate}
+            maxStreak={maxStreak}
+            skippedCount={skippedCount}
+            disarmRecords={disarmRecords}
+            soakedCount={soakedCount}
+          />
+        )}
         <EditButton
-          showModal={showModal}
-          setShowModal={setShowModal}
           skipDate={skipDate}
           getSkipData={getSkipData}
           notSignedIn={notSignedIn}
           updateAlarmData={updateAlarmData}
           launchUnlockModal={launchUnlockModal}
         />
-        {notSignedIn && <UnlockModal
-          handleClose={closeUnlockModal}
-          inputPin={inputPin}
-          inputStatus={inputStatus}
-          setInputPin={setInputPin}
-          setInputStatus={setInputStatus}
-          setLock={setLock}
-          show={showUnlockModal}
-        />}
+        {notSignedIn && (
+          <UnlockModal
+            handleClose={closeUnlockModal}
+            inputPin={inputPin}
+            inputStatus={inputStatus}
+            setInputPin={setInputPin}
+            setInputStatus={setInputStatus}
+            setLock={setLock}
+            show={showUnlockModal}
+          />
+        )}
       </CenteringContainer>
     </AppContainer>
   );

@@ -5,8 +5,9 @@ import {
   getSecondAlarm,
   addSeconds,
   swapBinaryAndBool,
-} from "../utils";
+} from '../utils';
 import {
+  AlarmTimeRes,
   GetAlarmTimeParams,
   GetDisarmDataParams,
   GetDisarmRecordsDataParams,
@@ -19,27 +20,37 @@ import {
   StreakDataObj,
   SkipDataObj,
   DisarmRecordsData,
+  DisarmRes,
+  StreakRes,
+  SkipRes,
+  SoakedRes,
+  RecordsRes,
+  UserRes,
 } from '../../../../types';
 
 export const getAlarmTime = async ({
   setAlarmData,
-}: GetAlarmTimeParams) => {
+}: GetAlarmTimeParams): Promise<void> => {
   try {
-    const { data } = await axios.get('/get-alarm-time');
+    const { data } = await axios.get<AlarmTimeRes>('/get-alarm-time');
     const { hour, minute } = parseTimeData(data);
     const firstAlarmTimestamp = getFirstAlarm(hour, minute);
     const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp, 7); // arg2 = phase2 duration
-    const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 10);
-    const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10);
+    const threeSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 3);
+    const threeSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 3);
+    // const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 10);
+    // const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10);
     const state: TempAlarmState = {
       alarm1: firstAlarmTimestamp.toLocaleTimeString(),
       alarm2: secondAlarmTimestamp.toLocaleTimeString(),
-      tenSecAfterAlarm1: tenSecAfterTimestamp1.toLocaleTimeString(),
-      tenSecAfterAlarm2: tenSecAfterTimestamp2.toLocaleTimeString(),
+      threeSecAfterAlarm1: threeSecAfterTimestamp1.toLocaleTimeString(),
+      threeSecAfterAlarm2: threeSecAfterTimestamp2.toLocaleTimeString(),
+      // tenSecAfterAlarm1: tenSecAfterTimestamp1.toLocaleTimeString(),
+      // tenSecAfterAlarm2: tenSecAfterTimestamp2.toLocaleTimeString(),
     };
     setAlarmData((prevState: AlarmStateObj): AlarmStateObj => ({ ...prevState, ...state }));
   } catch (err) {
-    console.log('err?: ', err);
+    console.info('err?: ', err);
     const firstAlarmTimestamp = getFirstAlarm(6, 0);
     const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp);
     const state = {
@@ -52,74 +63,76 @@ export const getAlarmTime = async ({
 
 export const getDisarmStatus = async ({
   setDisarmData,
-}: GetDisarmDataParams) => {
+}: GetDisarmDataParams): Promise<void> => {
   try {
-    const { data } = await axios.get('/get-disarm-status');
+    const { data } = await axios.get<DisarmRes>('/get-disarm-status');
+    console.info('getDisarmStatus - data:', data);
     let { disarmedstatus } = data[0];
     disarmedstatus = swapBinaryAndBool(disarmedstatus);
     setDisarmData((prevState: DisarmDataObj) => ({ ...prevState, isDisarmed: disarmedstatus }));
   } catch (err) {
-    console.log('err?: ', err);
+    console.error('err?: ', err);
     setDisarmData((prevState: DisarmDataObj) => ({ ...prevState, isDisarmed: false }));
   }
 };
 
 export const getStreakCount = async ({
   setStreakData,
-}: GetStreakDataParams) => {
+}: GetStreakDataParams): Promise<void> => {
   try {
-    const { data } = await axios.get('/get-streak-count');
+    const { data } = await axios.get<StreakRes>('/get-streak-count');
     const { streak, maxstreak } = data[0];
-    setStreakData((prevState: StreakDataObj) => ({ ...prevState, streak, maxStreak: maxstreak }))
+    setStreakData((prevState: StreakDataObj) => ({ ...prevState, streak, maxStreak: maxstreak }));
   } catch (err) {
+    setStreakData((prevState: StreakDataObj) => ({ ...prevState, streak: 0 }));
     console.error('Error GETTING streak data: ', err);
-    setStreakData((prevState: StreakDataObj) => ({ ...prevState, streak: 0 }))
   }
 };
 
 export const getSkipDateAndCount = async ({
   setSkipData,
-}: GetSkipDataParams) => {
+}: GetSkipDataParams): Promise<void> => {
   try {
-    const skippedData = await axios.get('/get-skipped-data');
+    const skippedData = await axios.get<SkipRes>('/get-skipped-data');
     const { skipped, skipdate } = skippedData.data[0];
-    setSkipData((prevState: SkipDataObj) => ({ ...prevState, skippedCount: skipped, skipDate: skipdate }))
+    setSkipData((prevState: SkipDataObj) => (
+      { ...prevState, skippedCount: skipped, skipDate: skipdate }));
   } catch (err) {
-    console.error('Error GETTING skipped data: ', err);
+    console.warn('Error GETTING skipped data: ', err);
   }
 };
 
 export const getSoakedCount = async ({
   setSoakedData,
-}: GetSoakedDataParams) => {
+}: GetSoakedDataParams): Promise<void> => {
   try {
-    const soakedData = await axios.get('/get-soaked-count');
-    const { soaked } = soakedData.data[0];
+    const { data } = await axios.get<SoakedRes>('/get-soaked-count');
+    const { soaked } = data[0];
     setSoakedData(soaked);
   } catch (err) {
-    console.error('Error GETTING soaked data: ', err);
+    console.warn('Error GETTING soaked data: ', err);
   }
 };
 
 export const getDisarmRecords = async ({
   setDisarmRecords,
-}: GetDisarmRecordsDataParams) => {
+}: GetDisarmRecordsDataParams): Promise<void> => {
   try {
-    const disarmData = await axios.get('/get-disarm-records');
-    const records: DisarmRecordsData = disarmData.data;
-    setDisarmRecords(records);
+    const { data } = await axios.get<DisarmRecordsData>('/get-disarm-records');
+    setDisarmRecords(data);
   } catch (err) {
-    console.error('Error getting disarm records: ', err);
+    console.warn('Error getting disarm records: ', err);
   }
 };
 
-export const getUserPassword = async (setPassword: (arg0: string) => void) => {
+export const getUserPassword = async (setPassword: (arg0: string) => void): Promise<void> => {
   try {
-    const { data } = await axios.get('/get-user-info');
+    const { data } = await axios.get<UserRes>('/get-user-info');
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const { password_ } = data[0];
     setPassword(password_);
   } catch (err) {
-    console.error('Error getting User Info: ', err);
     setPassword('1234');
+    console.warn('Error getting User Info: ', err);
   }
 };

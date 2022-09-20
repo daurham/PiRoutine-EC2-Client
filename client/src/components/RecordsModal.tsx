@@ -2,10 +2,13 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import { v4 as uuidv4 } from 'uuid';
 import TableEntry from './TableEntry';
 import { TableFont } from './styles/ModalStyles';
 import { swapBinaryAndBool } from './utils';
-import { DisarmRecordsObj } from './../../../types';
+import { DisarmRecordsObj } from '../../../types';
+
+const uuid = (): string => uuidv4();
 
 type Props = {
   show: boolean;
@@ -14,22 +17,22 @@ type Props = {
 };
 
 function RecordsModal({ show, handleClose, disarmRecords }: Props) {
-
   return (
     <div>
       <Modal
         show={show}
         onHide={handleClose}
         centered
-        scrollable={true}
+        scrollable
       >
         <Modal.Header closeButton>
           <Modal.Title>Routine Records</Modal.Title>
         </Modal.Header>
         <Modal.Body style={{
           maxHeight: '40vh',
-          overflowY: 'auto'
-        }}>
+          overflowY: 'auto',
+        }}
+        >
           <Table size="sm">
             <thead>
               <tr>
@@ -43,11 +46,12 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
             {[...disarmRecords].reverse().map((rec, i) => (
               <tbody
                 key={i}
+                // key={uuid()}
               >
                 <TableEntry
                   classN={!(i % 2) ? 'oddtable' : 'eventable'}
                   failed={(!swapBinaryAndBool(rec.success) ? 'failed' : 'succeeded')}
-                  key={i}
+                  key={uuid()}
                   date_={rec.date_}
                   alarm1={rec.alarm1}
                   alarm2={rec.alarm2}

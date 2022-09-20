@@ -1,51 +1,52 @@
 import axios from 'axios';
 import { getTomorrow, swapBinaryAndBool } from '../utils';
-import { 
-  GetSkipDataParams,
+import {
   UpdateAlarmDataParams,
   UpdateDisarmDataParams,
- } from '../../../../types';
+} from '../../../../types';
 
 export const updateAlarmTime = async ({
   timeData,
   getAlarmData,
-}: UpdateAlarmDataParams) => {
+}: UpdateAlarmDataParams): Promise<void> => {
   const { hour, minute, tod } = timeData;
   const hr = Number(hour);
   const min = Number(minute);
-  console.log('time data', timeData);
   try {
     await axios.patch('/update-alarm-time', { hour: hr, minute: min, tod });
-    await getAlarmData();
+    getAlarmData();
   } catch (err) {
-    console.log('Error UPDATING alarm data:', err);
+    console.error('Error UPDATING alarm data:', err);
   }
 };
 
 export const updateDisarmStatus = async ({
   disarmData,
   getDisarmData,
-}: UpdateDisarmDataParams) => {
+}: UpdateDisarmDataParams): Promise<void> => {
   const convertedStatusData = swapBinaryAndBool(disarmData);
   try {
     await axios.patch('/update-disarm-status', { data: convertedStatusData });
-    await getDisarmData();
+    getDisarmData();
   } catch (err) {
-    console.log('Error UPDATING defuse data:', err);
+    console.error('Error UPDATING disarm data:', err);
   }
 };
 
 export const skipNextDay = async (getSkipData: () => Promise<void>): Promise<void> => {
   await axios.patch('/update-skipped-date', { data: getTomorrow() });
-  getSkipData();
+  getSkipData()
+    .catch(console.error);
 };
 
-export const skipToday = async (getSkipData: () => Promise<void>): Promise<void>=> {
+export const skipToday = async (getSkipData: () => Promise<void>): Promise<void> => {
   await axios.patch('/update-skipped-date', { data: new Date().toLocaleDateString() });
-  getSkipData();
+  getSkipData()
+    .catch(console.error);
 };
 
 export const removeSkip = async (getSkipData: () => Promise<void>): Promise<void> => {
   await axios.patch('/update-skipped-date', { data: 'None 💪🏼' });
-  getSkipData();
+  getSkipData()
+    .catch(console.error);
 };

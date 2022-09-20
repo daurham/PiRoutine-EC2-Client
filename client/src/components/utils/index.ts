@@ -2,15 +2,14 @@
  * Utils contains a list of various utility functions.
  */
 
-export const range = (start: number, end:number, step = 1): number[] => {
+export const range = (start: number, end: number, step = 1): number[] => {
   let result = [start];
   if (start === end) { return [end]; }
   if (start < end) { result = [...result, ...range(start + step, end)]; }
   return result;
 };
 
-
-export const statusGenerator = (setMotivation: (arg0: string) => void, failed: boolean) => { // randomly returns a positive phrase
+export const statusGenerator = (setMotivation: (arg0: string) => void, failed: boolean) => {
   const goodPhrases = [
     'Make them proud',
     'Keep it up',
@@ -39,13 +38,22 @@ export const statusGenerator = (setMotivation: (arg0: string) => void, failed: b
   }
 };
 
-interface TimeObj { hour: number; minute: number; }
-export const parseTimeData = (timeObj: TimeObj[]): TimeObj => {
+interface TimeObj { hour: number; minute: number; tod?: 'AM' | 'PM'}
+type AlarmTimeRes = [
+  {
+    id: number;
+    hour: number;
+    minute: number;
+    tod: 'AM' | 'PM';
+  },
+];
+export const parseTimeData = (timeObj: AlarmTimeRes): TimeObj => {
   const { hour, minute } = timeObj[0];
   return { hour, minute };
 };
 
 export const theCurrentTime = (): string => new Date().toLocaleTimeString();
+
 export const addMinutes = (date: Date, minutes: number): Date => new Date(
   date.getTime() + (minutes * 60000),
 );
@@ -65,10 +73,9 @@ export const getFirstAlarm = (hour: number, minute: number) => new Date(
 
 // Adds 7 min to initial alarm
 export const getSecondAlarm = (alarm1: Date, minDelay = 7) => addMinutes(alarm1, minDelay);
-// export const getSecondAlarm = (alarm1: Date, minDelay = 7) => addSeconds(alarm1, minDelay);
 
 type BinaryOrBool = 1 | 0 | '1' | '0' | true | false | 'true' | 'false' | undefined;
-export const swapBinaryAndBool = (val: BinaryOrBool): BinaryOrBool | undefined => {
+export const swapBinaryAndBool = (val: BinaryOrBool): BinaryOrBool => {
   if (val === true) return 1;
   if (val === false) return 0;
   if (val === 'true') return 1;
@@ -117,8 +124,6 @@ export const getPhase = (alarm1: string, alarm2: string, currentTime: string): 1
     currentTOD === 'AM'
       || (currentTOD === 'PM' && currentHour === 12) ? 0 : 12
   );
-
-  // console.log(alarm1TotalHours, currentTotalHours); // TESTING
 
   // Handle 12AM edgecase
   if (alarm1TotalHours === 0 && currentTotalHours === 23) return 1;

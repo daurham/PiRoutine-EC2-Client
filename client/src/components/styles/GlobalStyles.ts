@@ -8,7 +8,7 @@ export const GlobalStyle = createGlobalStyle`
   * {
     color: white;
   }
-  
+
   .modal-content {
     background-color: black;
     border-color: #00c1f5;
@@ -25,7 +25,7 @@ export const GlobalStyle = createGlobalStyle`
   .modal-footer {
     justify-content: center;
   }
-  
+
   .oddtable {
     background-color: #091012;
   }
@@ -37,10 +37,13 @@ export const GlobalStyle = createGlobalStyle`
   .edit-alarm {
     display: block;
   }
+
+  .base-btn {
+    vertical-align: baseline;
+  }
 `;
 
 export const FlexCenteringContainer = styled.div`
 display: flex;
 justify-content: center;
 `;
-

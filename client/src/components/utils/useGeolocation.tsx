@@ -3,21 +3,21 @@ import React, { useState, useEffect } from 'react';
 interface Coordinates {
   latitude?: number;
   longitude?: number;
-};
+}
 
 export default function useGeolocation(options?: PositionOptions | undefined) {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<GeolocationPositionError>();
+  const [error, setError] = useState<GeolocationPositionError | undefined>();
   const [data, setData] = useState<Coordinates>({});
 
   useEffect(() => {
-    const successHandler = (location: GeolocationPosition) => {
+    const successHandler = (location: GeolocationPosition): void => {
       setLoading(false);
       setError(null!);
       setData(location.coords);
     };
-    const errorHandler = (error: GeolocationPositionError) => {
-      setError(error);
+    const errorHandler = (err: GeolocationPositionError): void => {
+      setError(err);
       setLoading(false);
     };
     navigator.geolocation.getCurrentPosition(
@@ -34,4 +34,4 @@ export default function useGeolocation(options?: PositionOptions | undefined) {
   }, [options]);
 
   return { loading, error, data };
-};
+}

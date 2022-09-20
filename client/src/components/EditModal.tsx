@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
+// import { v4 as uuidv4 } from 'uuid';
 import { range } from './utils';
-import { FormContainer, UnlockContainer, SelectStyle, OptionStyle } from './styles/EditTimeStyles';
-import { TimeObj } from '../../../types';
 import { skipToday, skipNextDay, removeSkip } from './requests/updateData';
+import {
+  FormContainer,
+  UnlockContainer,
+  SelectStyle,
+  OptionStyle,
+} from './styles/EditTimeStyles';
+import { TimeObj } from '../../../types';
+// import useCountRenders from './utils/useCountRenders';
+
+// const uuid = (): string => uuidv4(); // Can't use until I get it to stop rerendering.
 
 type Props = {
   showModal: boolean;
@@ -23,8 +32,7 @@ export default function EditModal({
 }: Props) {
   const [hour, setHr] = useState<HTMLSelectElement | string>('1');
   const [minute, setMin] = useState<HTMLSelectElement | string>('0');
-  const [tod, setTOD] = useState<string>('AM');
-
+  const [tod, setTOD] = useState<'AM' | 'PM'>('AM');
   const minuteSelections = [...range(0, 59)].map((n) => (n < 10 ? `0${n}` : n));
 
   return (
@@ -57,7 +65,7 @@ export default function EditModal({
               ))}
             </SelectStyle>
 
-            <Button variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={(e) => { e.preventDefault(); updateAlarmData({ hour, minute, tod }); }}>Submit</Button>
+            <Button variant="info" className="base-btn" onClick={(e) => { updateAlarmData({ hour, minute, tod }); }}>Submit</Button>
           </Form>
         </FormContainer>
       </Modal.Body>
@@ -65,14 +73,14 @@ export default function EditModal({
         className="edit-alarm"
       >
         <UnlockContainer>
-          <h6>{`Skipping: ${skipDate}`}</h6>
+          <h6>{`Skipping: ${skipDate || '-'}`}</h6>
         </UnlockContainer>
         <UnlockContainer>
-          <Button size="sm" variant="outline-danger" style={{ 'verticalAlign': 'baseline' }} onClick={() => skipToday(getSkipData)}>Skip Today</Button>
+          <Button size="sm" variant="outline-danger" className="base-btn" onClick={() => skipToday(getSkipData)}>Skip Today</Button>
           {' '}
-          <Button size="sm" variant="outline-danger" style={{ 'verticalAlign': 'baseline' }} onClick={() => skipNextDay(getSkipData)}>Skip Tomorrow</Button>
+          <Button size="sm" variant="outline-danger" className="base-btn" onClick={() => skipNextDay(getSkipData)}>Skip Tomorrow</Button>
           {' '}
-          <Button size="sm" variant="info" style={{ 'verticalAlign': 'baseline' }} onClick={() => removeSkip(getSkipData)}>Remove Skip</Button>
+          <Button size="sm" variant="info" className="base-btn" onClick={() => removeSkip(getSkipData)}>Remove Skip</Button>
         </UnlockContainer>
       </Modal.Footer>
     </Modal>
