@@ -28,13 +28,13 @@ export default function GeoProgressBar({
 
   const [changeLat, getChangeLat] = useState<number>(0);
   const [changeLon, getChangeLon] = useState<number>(0);
-  const [initialLat, setInitialLat] = useState<LType>(latitude);
-  const [initialLon, setInitialLon] = useState<LType>(longitude);
+  const [initialLat, setInitialLat] = useState(latitude);
+  const [initialLon, setInitialLon] = useState(longitude);
   const [testVal, setTestVal] = useState<number>(0);
 
   const convertToDistance = (input: number): number => {
     const result = Math.floor(((input - 0) * 100) / (0.003 - 0));
-    setTestVal((n) => n + result);
+    setTestVal(result);
     console.log(input, result);
     return result;
   };
@@ -47,9 +47,9 @@ export default function GeoProgressBar({
     setInitCb: (arg0: () => number) => void,
     setChangeCb: (arg0: () => number) => void,
   ) => {
-    console.log('cal b')
+    console.log('cal b');
     if (initL !== lonLat && initL !== undefined && lonLat !== undefined && change !== undefined) {
-      console.log('cal a')
+      console.log('cal a');
       const v = change + Math.abs(Math.abs(initL) - Math.abs(lonLat));
       setChangeCb(() => v);
       setInitCb(() => lonLat);
@@ -57,12 +57,12 @@ export default function GeoProgressBar({
   };
 
   useEffect(() => { // TRACK CURRENT LOCATION CHANGE
-    console.log('UE b')
+    console.log('UE b');
     if (currentPhase === 2 && distance < 100 && latitude && longitude) {
-      console.log('UE a')
+      console.log('UE a');
       calculateDifference(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
       calculateDifference(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
-      setDistance((n) => n + convertToDistance(changeLat)); // Comment out for Testing
+      setDistance(convertToDistance(changeLat)); // Comment out for Testing
     }
     if (distance > 100) setDistance(100);
   }, [latitude, longitude, initialLat, initialLon, distance]);
