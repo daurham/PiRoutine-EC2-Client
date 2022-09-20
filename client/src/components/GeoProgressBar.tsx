@@ -35,6 +35,7 @@ export default function GeoProgressBar({
   const convertToDistance = (input: number): number => {
     const result = Math.floor(((input - 0) * 100) / (0.003 - 0));
     setTestVal((n) => n + result);
+    console.log(input, result);
     return result;
   };
 
@@ -46,7 +47,7 @@ export default function GeoProgressBar({
     setInitCb: (arg0: () => number) => void,
     setChangeCb: (arg0: () => number) => void,
   ) => {
-    if (initL !== lonLat && initL && lonLat && change) {
+    if (initL !== lonLat && initL !== undefined && lonLat !== undefined && change !== undefined) {
       const v = change + Math.abs(Math.abs(initL) - Math.abs(lonLat));
       setChangeCb(() => v);
       setInitCb(() => lonLat);
@@ -57,10 +58,10 @@ export default function GeoProgressBar({
     if (currentPhase === 2 && distance < 100 && latitude && longitude) {
       calculateDifference(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
       calculateDifference(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
-      setDistance(() => convertToDistance(changeLat)); // Comment out for Testing
+      setDistance((n) => n + Math.ceil(convertToDistance(changeLat))); // Comment out for Testing
     }
     if (distance > 100) setDistance(100);
-  }, [latitude, longitude, initialLat, initialLon]);
+  }, [latitude, longitude, initialLat, initialLon, distance]);
 
   useEffect(() => {
     if (!initialLat) {
@@ -71,9 +72,9 @@ export default function GeoProgressBar({
     }
   }, [latitude, longitude]);
 
-  // useEffect(() => {
-  // if (distance || distance === 0) setDistance(distance + 5); // TESTING
-  // }, [currentTime]);
+  useEffect(() => {
+    // if (distance || distance === 0) setDistance(distance + 5); // TESTING
+  }, [currentTime, testVal]);
 
   if (isDisarmed) return null;
 
@@ -84,8 +85,8 @@ export default function GeoProgressBar({
       <h1>{`Distance: ${distance}`}</h1>
       <h1>{`Lat: ${latitude || 0}`}</h1>
       <h1>{`Lon: ${longitude || 0}`}</h1>
-      <h3>{`Lon: ${changeLat}`}</h3>
-      <h3>{`Lon: ${changeLon}`}</h3>
+      <h3>{`cLat: ${changeLat}`}</h3>
+      <h3>{`cLon: ${changeLon}`}</h3>
       <br />
     </div>
   );
