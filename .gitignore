@@ -82,6 +82,7 @@ typings/
 .nuxt
 bundle.js
 bundle.js.map
+.map
 
 # Gatsby files
 .cache/
