@@ -30,10 +30,11 @@ export default function GeoProgressBar({
   const [changeLon, getChangeLon] = useState<number>(0);
   const [initialLat, setInitialLat] = useState<LType>(latitude);
   const [initialLon, setInitialLon] = useState<LType>(longitude);
+  const [testVal, setTestVal] = useState<number>(0);
 
   const convertToDistance = (input: number): number => {
     const result = Math.floor(((input - 0) * 100) / (0.003 - 0));
-    // console.log('result: ', result);
+    setTestVal((n) => n + result);
     return result;
   };
 
@@ -79,9 +80,12 @@ export default function GeoProgressBar({
   return (
     <div>
       <ProgressBar animated variant="info" now={distance} label={`${distance || 0}%`} />
-      <h1>{`test below:`}</h1>
-      <h1>{`Lat: ${latitude}`}</h1>
-      <h1>{`Lon: ${longitude}`}</h1>
+      <h1>{`test below: ${testVal}`}</h1>
+      <h1>{`Distance: ${distance}`}</h1>
+      <h1>{`Lat: ${latitude || 0}`}</h1>
+      <h1>{`Lon: ${longitude || 0}`}</h1>
+      <h3>{`Lon: ${changeLat}`}</h3>
+      <h3>{`Lon: ${changeLon}`}</h3>
       <br />
     </div>
   );
