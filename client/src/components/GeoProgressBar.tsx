@@ -79,6 +79,8 @@ export default function GeoProgressBar({
   return (
     <div>
       <ProgressBar animated variant="info" now={distance} label={`${distance || 0}%`} />
+      <h1>{`Lat: ${latitude}`}</h1>
+      <h1>{`Lon: ${longitude}`}</h1>
       <br />
     </div>
   );
