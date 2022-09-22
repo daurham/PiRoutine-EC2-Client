@@ -24,7 +24,6 @@ import {
   StreakRes,
   SkipRes,
   SoakedRes,
-  RecordsRes,
   UserRes,
 } from '../../../../types';
 
@@ -35,18 +34,18 @@ export const getAlarmTime = async ({
     const { data } = await axios.get<AlarmTimeRes>('/get-alarm-time');
     const { hour, minute } = parseTimeData(data);
     const firstAlarmTimestamp = getFirstAlarm(hour, minute);
-    const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp, 7); // arg2 = phase2 duration
+    const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp, 7);
     const threeSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 3);
     const threeSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 3);
-    // const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 10);
-    // const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10);
+    // const tenSecAfterTimestamp1 = addSeconds(firstAlarmTimestamp, 10); // May need
+    // const tenSecAfterTimestamp2 = addSeconds(secondAlarmTimestamp, 10); // May need
     const state: TempAlarmState = {
       alarm1: firstAlarmTimestamp.toLocaleTimeString(),
       alarm2: secondAlarmTimestamp.toLocaleTimeString(),
       threeSecAfterAlarm1: threeSecAfterTimestamp1.toLocaleTimeString(),
       threeSecAfterAlarm2: threeSecAfterTimestamp2.toLocaleTimeString(),
-      // tenSecAfterAlarm1: tenSecAfterTimestamp1.toLocaleTimeString(),
-      // tenSecAfterAlarm2: tenSecAfterTimestamp2.toLocaleTimeString(),
+      // tenSecAfterAlarm1: tenSecAfterTimestamp1.toLocaleTimeString(), // May need
+      // tenSecAfterAlarm2: tenSecAfterTimestamp2.toLocaleTimeString(), // May need
     };
     setAlarmData((prevState: AlarmStateObj): AlarmStateObj => ({ ...prevState, ...state }));
   } catch (err) {
@@ -67,9 +66,9 @@ export const getDisarmStatus = async ({
   try {
     const { data } = await axios.get<DisarmRes>('/get-disarm-status');
     console.info('getDisarmStatus - data:', data);
-    let { disarmedstatus } = data[0];
-    disarmedstatus = swapBinaryAndBool(disarmedstatus);
-    setDisarmData((prevState: DisarmDataObj) => ({ ...prevState, isDisarmed: disarmedstatus }));
+    const { disarmedstatus } = data[0];
+    const convertStatus = (!!swapBinaryAndBool(disarmedstatus) === true);
+    setDisarmData((prevState: DisarmDataObj) => ({ ...prevState, isDisarmed: convertStatus }));
   } catch (err) {
     console.error('err?: ', err);
     setDisarmData((prevState: DisarmDataObj) => ({ ...prevState, isDisarmed: false }));

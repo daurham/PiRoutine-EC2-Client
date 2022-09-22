@@ -1,17 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import RecordsModal from './RecordsModal';
+import Loading from './utils/Loading';
 import {
   InfoContainer,
   InfoEntry,
   InfoRecEntry,
   InnerValRed,
-  InnerValRedU,
   InnerValWhite,
   MainInfoContainer,
   MetaContainer,
   SeeMoreStyle,
 } from './styles/InfoStyles';
-import Loading from './utils/Loading';
 import { DisarmRecordsObj } from '../../../types';
 
 type Props = {
@@ -50,6 +49,7 @@ export default function Info({
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
   return (
     <>
       <InfoContainer>

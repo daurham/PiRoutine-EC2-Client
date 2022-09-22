@@ -168,6 +168,7 @@ export default function App() {
     if (alarm1 && !currentAlarm) setAlarmData((prevS) => ({ ...prevS, currentAlarm: alarm1 }));
     const clock: NodeJS.Timer = setInterval(() => handleCurrentTime(), 1000);
     return () => clearInterval(clock);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime]);
 
   useEffect(() => { // INITIAL GET DATA ON MOUNT
@@ -181,6 +182,7 @@ export default function App() {
       .catch(console.warn);
     getMetaData();
     statusGenerator(setMotivation, hasFailed);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return !currentTime || !currentPhase ? <Loading big /> : (

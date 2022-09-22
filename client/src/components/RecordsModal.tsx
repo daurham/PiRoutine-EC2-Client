@@ -46,7 +46,6 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
             {[...disarmRecords].reverse().map((rec, i) => (
               <tbody
                 key={i}
-                // key={uuid()}
               >
                 <TableEntry
                   classN={!(i % 2) ? 'oddtable' : 'eventable'}

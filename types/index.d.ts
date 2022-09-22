@@ -36,7 +36,7 @@ export type AlarmTimeRes = [
 export type DisarmRes = [
   {
     id: number;
-    disarmedstatus: number;
+    disarmedstatus: 0 | 1;
   }];
 
 export type StreakRes = [

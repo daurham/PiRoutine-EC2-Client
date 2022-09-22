@@ -8,7 +8,6 @@ type Props = {
   currentPhase: number;
   currentTime: string;
   isDisarmed: boolean | undefined;
-  notSignedIn: boolean | undefined;
 };
 type LType = number | undefined;
 
@@ -18,11 +17,8 @@ export default function GeoProgressBar({
   currentPhase,
   isDisarmed,
   currentTime,
-  notSignedIn,
 }: Props) {
   const {
-    loading,
-    error,
     data: { latitude, longitude },
   } = useGeolocation();
 
@@ -58,6 +54,7 @@ export default function GeoProgressBar({
       setDistance(convertToDistance(changeLat)); // Comment out for Testing
     }
     if (distance > 100) setDistance(100);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [latitude, longitude, initialLat, initialLon, distance]);
 
   useEffect(() => {
@@ -67,6 +64,7 @@ export default function GeoProgressBar({
     if (!initialLon) {
       setInitialLon(() => longitude);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [latitude, longitude]);
 
   useEffect(() => {

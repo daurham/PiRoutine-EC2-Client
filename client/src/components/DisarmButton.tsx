@@ -106,6 +106,7 @@ export default function DisarmButton({
       // Hide after my alarms
       if (!hideDisarmBtn) setDisarmData((prevS) => ({ ...prevS, hideDisarmBtn: true }));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentTime]);
 
   if (hideDisarmBtn) return null;
