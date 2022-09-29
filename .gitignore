@@ -80,9 +80,6 @@ typings/
 
 # Nuxt.js build / generate output
 .nuxt
-bundle.js
-bundle.js.map
-.map
 
 # Gatsby files
 .cache/
@@ -104,3 +101,11 @@ bundle.js.map
 
 # TernJS port file
 .tern-port
+
+# My Additions
+bundle.js
+bundle.js.map
+.map
+TODO.md
+installs.md
+installs

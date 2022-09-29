@@ -41,7 +41,7 @@ export default function App() {
   const [disarmRecords, setDisarmRecords] = useState<DisarmRecordsData>([]);
   const [currentPhase, setCurrentPhase] = useState<1 | 2 | 3 | undefined>();
   const [hasFailed, setFailed] = useState<boolean>(false);
-  // GeoProgressBar
+  // 
   const [distance, setDistance] = useState<number | undefined>();
   //
   const [notSignedIn, setLock] = useState<boolean>(true);
@@ -75,8 +75,6 @@ export default function App() {
     skipDate,
     skippedCount,
   } = skipData;
-
-  // let clock: NodeJS.Timer;
 
   const closeUnlockModal = () => setShowUnlockModal(false);
   const launchUnlockModal = () => setShowUnlockModal(true);
@@ -209,15 +207,11 @@ export default function App() {
             currentPhase={currentPhase}
             currentTime={currentTime}
             isDisarmed={isDisarmed}
-            notSignedIn={notSignedIn}
           />
         )}
         {disarmRecords.length > 0 && (
           <Info
             motivation={motivation}
-            // setMotivation={setMotivation}
-            // statusGenerator={statusGenerator}
-            // getMetaData={getMetaData}
             hasFailed={hasFailed}
             currentPhase={currentPhase}
             streak={streak}
@@ -234,8 +228,9 @@ export default function App() {
         )}
         <EditButton
           skipDate={skipDate}
-          getSkipData={getSkipData}
           notSignedIn={notSignedIn}
+          alarmTime={currentAlarm}
+          getSkipData={getSkipData}
           updateAlarmData={updateAlarmData}
           launchUnlockModal={launchUnlockModal}
         />

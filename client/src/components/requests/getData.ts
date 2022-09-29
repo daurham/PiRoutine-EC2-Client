@@ -65,7 +65,6 @@ export const getDisarmStatus = async ({
 }: GetDisarmDataParams): Promise<void> => {
   try {
     const { data } = await axios.get<DisarmRes>('/get-disarm-status');
-    console.info('getDisarmStatus - data:', data);
     const { disarmedstatus } = data[0];
     const convertStatus = (!!swapBinaryAndBool(disarmedstatus) === true);
     setDisarmData((prevState: DisarmDataObj) => ({ ...prevState, isDisarmed: convertStatus }));

@@ -88,6 +88,8 @@ export const swapBinaryAndBool = (val: BinaryOrBool): BinaryOrBool => {
 };
 
 export const getHour = (time: string): number => Number(time.slice(0, time.indexOf(':')));
+export const getMinute = (time: string): number => Number(time.slice(time.indexOf(':') + 1, time.lastIndexOf(':')));
+export const getTOD = <T>(time: string) => time.slice(-2);
 
 /**
  * GET THE TRUE RANGE OF PHASES

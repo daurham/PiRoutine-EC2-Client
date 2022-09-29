@@ -7,6 +7,7 @@ import { TimeObj } from '../../../types';
 type Props = {
   skipDate: string | undefined;
   notSignedIn: boolean;
+  alarmTime: string | undefined;
   getSkipData: () => Promise<void>;
   updateAlarmData: (args0: TimeObj) => Promise<void>;
   launchUnlockModal: () => void;
@@ -15,6 +16,7 @@ type Props = {
 export default function EditButton({
   skipDate,
   notSignedIn,
+  alarmTime,
   getSkipData,
   updateAlarmData,
   launchUnlockModal,
@@ -36,6 +38,7 @@ export default function EditButton({
       <EditModal
         showModal={showEdit}
         skipDate={skipDate}
+        alarmTime={alarmTime? alarmTime: ''}
         getSkipData={getSkipData}
         updateAlarmData={updateAlarmData}
         handleCloseModal={closeEditModal}

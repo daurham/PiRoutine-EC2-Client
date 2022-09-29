@@ -34,6 +34,10 @@ export const GlobalStyle = createGlobalStyle`
     color: red;
   }
 
+  .skipped {
+    color: gray;
+  }
+
   .edit-alarm {
     display: block;
   }

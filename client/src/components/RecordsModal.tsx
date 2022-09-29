@@ -49,7 +49,7 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
               >
                 <TableEntry
                   classN={!(i % 2) ? 'oddtable' : 'eventable'}
-                  failed={(!swapBinaryAndBool(rec.success) ? 'failed' : 'succeeded')}
+                  failed={(!swapBinaryAndBool(rec.success) ? 'failed' : 'succeeded')} //TODO: Add "Skip" Possibility
                   key={uuid()}
                   date_={rec.date_}
                   alarm1={rec.alarm1}
