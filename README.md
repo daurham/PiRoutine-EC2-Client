@@ -1,4 +1,4 @@
-# PiRoutine | Client ⏰💦🏃‍♂️
+# PiRoutine | Client ⏰💦
 PiRoutine is a morning alarm system that uses a port forwarded raspberry pi, wired via relay switch to a water pump and interacted with, through a deployed front end. All of which aims to instill good habits in the user by waking up on time. This is done by leveraging a pavlovian fear of laying in bed too long after they've heard their external alarm go off, by soaking the user and/or their bed with water. In return, the user quickly learns to wake up alongside their external alarm, jumping out of bed, ready to start their day!
 
 
@@ -9,13 +9,11 @@ After waking up by an external alarm, it's suggested to give yourself 5-10 minut
 
 Once awake, unlock and disarm the initial alarm, before the current time hits alarm 1. 
 - Failure to do so, will result in the pump going off.
-
+  
 ![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
-![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
-
 - Once unlocked, other secured functionalities include: 
-- 1. The ability to change the desired alarm time
-- 2. Skip the current or upcoming day. While this results in a recorded failure, it will not trigger the pump.
+  - The ability to change PiRoutine's initial alarm.
+  - The ability to skip the current or upcoming day. While this will be recorded as a failure, it will not trigger the pump.
 
 ![](https://media.giphy.com/media/nf0ISX16TTOGgOZEtK/giphy.gif)
 ![](https://media.giphy.com/media/rTDwskhKtKKgtJgjgK/giphy.gif)
@@ -28,10 +26,12 @@ After the initial alarm is disarmed, I begin my morning run / walk. Waking up th
 ## Phase 3 - Disarming Alarm 2
 After the distance is traveled (roughly 0.25mi-0.5mi), disarm the final alarm. 
 - Failure to do so, will result in the pump going off. 
+
+![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
 - Note that the metadata is updated on its own upon the current time reaching the final alarm time.
 
 ![](https://media.giphy.com/media/3ZEJjQsOq5FoqUi98H/giphy.gif)
-## Phase # - Checking My Records
+## Checking My Records
 Keeping me consistant and inspired, in addition to the streak / max streak tracking I included, I can also check my previous records whenever I want.
 - White data entry indicates, I successfully stuck to my routine that day.
 - Red data entry indicates, I failed to stick to my routine that day.
@@ -55,4 +55,9 @@ npm run server
 
 I understand that these instructions may be a bit vague. One day, I plan on making a video. Meanwhile, just ask if you'd like help setting up. 
 
+<div align="center">
+  
+![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
+
 -Jake Ernest Daurham
+</div>
