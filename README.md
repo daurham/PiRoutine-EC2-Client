@@ -1,8 +1,16 @@
+
 <div align="center">
   
 # PiRoutine | Client ⏰💦
 
-
+![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Bootstrap](https://img.shields.io/badge/bootstrap-%23563D7C.svg?style=for-the-badge&logo=bootstrap&logoColor=white)
+![Styled Components](https://img.shields.io/badge/styled--components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white)
+![Webpack](https://img.shields.io/badge/webpack-%238DD6F9.svg?style=for-the-badge&logo=webpack&logoColor=black)
+![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
+![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
+  
 ###  PiRoutine is a morning alarm system that uses a port forwarded raspberry pi, that's wired via relay switch to a water pump, and interacted with through a deployed front end. 
  ### All of which aims to instill good habits in the user, starting by waking up on time. 
 
@@ -84,10 +92,12 @@ npm run server
 ```
 - Clone, Install & Deploy the PiRoutine Server on a raspberry pi & [read it's README](https://github.com/daurham/PiRoutine-Pi-Server)
 
+<div align="center">
+
+---
+  
 One day, I plan on making a video. Meanwhile, just ask if you'd like help setting up. 
 
-<div align="center">
-  
 ![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
 
 -Jake Ernest Daurham
