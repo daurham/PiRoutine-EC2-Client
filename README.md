@@ -84,7 +84,7 @@ npm run server
 ```
 - Clone, Install & Deploy the PiRoutine Server on a raspberry pi & [read it's README](https://github.com/daurham/PiRoutine-Pi-Server)
 
-I understand that these instructions may be a bit vague. One day, I plan on making a video. Meanwhile, just ask if you'd like help setting up. 
+One day, I plan on making a video. Meanwhile, just ask if you'd like help setting up. 
 
 <div align="center">
   
