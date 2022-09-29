@@ -17,6 +17,7 @@
 ![](https://media.giphy.com/media/u6WXNK5Z5AObZ9eOaa/giphy.gif)
  
 ###  This is done by leveraging a pavlovian fear of laying in bed too long after they've heard their external alarm go off, by soaking the user and/or their bed with water. In return, the user quickly learns to wake up alongside their external alarm, jumping out of bed, ready to start their day with a light jog!
+[Check It Out!](https://piroutine.com)
 </div>
 
 ---
@@ -74,12 +75,14 @@ Once awake, unlock and disarm the initial alarm, before the current time hits al
 </div>
     
 ## Raspberry Pi Installation
-  The raspberry pi is connected to a water pump in the 5 gallon bucket, and some tubing is feeding it to a piece of conduit with holes drilled into, attached to my headboard. 
-- (Outdated gif, but it gets the point across)
+  The raspberry pi is connected to a water pump, stored inside the 5 gallon bucket beside the bed. The pump has tubing connecting it to a piece of conduit with holes drilled into it, attached to my headboard. 
+
 
 <div align="center">
 
 ![](https://media.giphy.com/media/BOUoNFCUU2GLJcLk6I/giphy-downsized.gif)
+
+(While this gif is outdated, it gets the point across)
 </div>
 
 ## Set Up
