@@ -14,6 +14,7 @@ Once awake, unlock and disarm the initial alarm, before the current time hits al
 - 2. Skip the current or upcoming day. While this results in a recorded failure, it will not trigger the pump.
 
 ![](https://media.giphy.com/media/nf0ISX16TTOGgOZEtK/giphy.gif)
+![](https://media.giphy.com/media/rTDwskhKtKKgtJgjgK/giphy.gif)
 ## Phase 2 - Beginning My Routine Run
 After the initial alarm is disarmed, I begin my morning run / walk. Waking up the body and getting the blood pumping.
 - Note that while traveling, the client remains responsive to the users distance traveled. 
@@ -46,7 +47,7 @@ npm install
 npm start   # Builds the client bundler
 npm run server
 ```
-- Clone, Install & Deploy the PiRoutine Server & [read it's README](https://github.com/daurham/PiRoutine-Pi-Server/main/README.md)
+- Clone, Install & Deploy the PiRoutine Server & [read it's README](https://github.com/daurham/PiRoutine-Pi-Server)
 
 I understand that these instructions may be a bit vague. One day, I plan on making a video. Meanwhile, just ask if you'd like help setting up. 
 
