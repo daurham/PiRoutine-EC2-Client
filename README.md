@@ -9,6 +9,10 @@ After waking up by an external alarm, it's suggested to give yourself 5-10 minut
 
 Once awake, unlock and disarm the initial alarm, before the current time hits alarm 1. 
 - Failure to do so, will result in the pump going off.
+
+![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
+![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
+
 - Once unlocked, other secured functionalities include: 
 - 1. The ability to change the desired alarm time
 - 2. Skip the current or upcoming day. While this results in a recorded failure, it will not trigger the pump.
