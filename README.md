@@ -103,5 +103,5 @@ One day, I plan on making a video. Meanwhile, just ask if you'd like help settin
 
 ![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
 
-- Jake Ernest Daurham
+Jake Ernest Daurham
 </div>
