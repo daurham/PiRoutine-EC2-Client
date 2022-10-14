@@ -46,19 +46,28 @@ export default function EditModal({
       <Modal.Body>
         <FormContainer>
           <Form>
-            <SelectStyle value={String(getHour(alarmTime))} onChange={(e) => setHr(e.target.value)}>
+            <SelectStyle
+              defaultValue={String(getHour(alarmTime))}
+              onChange={(e) => setHr(e.target.value)}
+            >
               {[...range(1, 12)].map((t, i) => (
                 <OptionStyle style={{ color: 'white', background: 'transparent' }} value={t} key={i}>{t}</OptionStyle>
               ))}
             </SelectStyle>
 
-            <SelectStyle value={String(getMinute(alarmTime))} onChange={(e) => setMin(e.target.value)}>
+            <SelectStyle
+              defaultValue={String(getMinute(alarmTime))}
+              onChange={(e) => setMin(e.target.value)}
+            >
               {minuteSelections.map((t, i) => (
                 <OptionStyle value={t} key={i}>{t}</OptionStyle>
               ))}
             </SelectStyle>
 
-            <SelectStyle value={String(getTOD(alarmTime))} onChange={(e) => setTOD(e.target.value!)}>
+            <SelectStyle
+              defaultValue={String(getTOD(alarmTime))}
+              onChange={(e) => setTOD(e.target.value!)}
+            >
               {['AM', 'PM'].map((t, i) => (
                 <OptionStyle value={t} key={i}>{t}</OptionStyle>
               ))}
@@ -67,8 +76,8 @@ export default function EditModal({
             <Button
               variant="info"
               className="base-btn"
-              onClick={() => { 
-                updateAlarmData({ hour, minute, tod }).catch(console.error); 
+              onClick={() => {
+                updateAlarmData({ hour, minute, tod }).catch(console.error);
                 handleCloseModal();
               }}
             >
