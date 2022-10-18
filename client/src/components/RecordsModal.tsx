@@ -16,7 +16,7 @@ type Props = {
   disarmRecords: DisarmRecordsObj[];
 };
 
-function RecordsModal({ show, handleClose, disarmRecords }: Props) {
+export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
   return (
     <div>
       <Modal
@@ -69,6 +69,4 @@ function RecordsModal({ show, handleClose, disarmRecords }: Props) {
       </Modal>
     </div>
   );
-}
-
-export default RecordsModal;
+});

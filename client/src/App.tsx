@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import Header from './components/Header';
 import TimeDisplay from './components/TimeDisplay';
 import DisarmButton from './components/DisarmButton';
@@ -76,16 +76,16 @@ export default function App() {
     skippedCount,
   } = skipData;
 
-  const closeUnlockModal = () => setShowUnlockModal(false);
-  const launchUnlockModal = () => setShowUnlockModal(true);
+  const closeUnlockModal = useCallback(() => setShowUnlockModal(false), [setShowUnlockModal]);
+  const launchUnlockModal = useCallback(() => setShowUnlockModal(true), [setShowUnlockModal]);
 
   // Load Requests
-  const getAlarmData = () => getAlarmTime({ setAlarmData });
-  const getDisarmData = () => getDisarmStatus({ setDisarmData });
-  const getStreakData = () => getStreakCount({ setStreakData });
-  const getSoakedData = () => getSoakedCount({ setSoakedData });
-  const getDisarmRecordsData = () => getDisarmRecords({ setDisarmRecords });
-  const getSkipData = () => getSkipDateAndCount({ setSkipData });
+  const getAlarmData = useCallback(() => getAlarmTime({ setAlarmData }), [setAlarmData]);
+  const getDisarmData = useCallback(() => getDisarmStatus({ setDisarmData }), [setDisarmData]);
+  const getStreakData = useCallback(() => getStreakCount({ setStreakData }), [setStreakData]);
+  const getSoakedData = useCallback(() => getSoakedCount({ setSoakedData }), [setSoakedData]);
+  const getDisarmRecordsData = useCallback(() => getDisarmRecords({ setDisarmRecords }), [setDisarmRecords]);
+  const getSkipData = useCallback(() => getSkipDateAndCount({ setSkipData }), [setSkipData]);
   const getMetaData = () => {
     getSkipData()
       .catch(console.warn);
@@ -95,13 +95,13 @@ export default function App() {
       .catch(console.warn);
   };
 
-  const updateAlarmData = (newTime: TimeObj): Promise<void> => updateAlarmTime(
+  const updateAlarmData = useCallback((newTime: TimeObj): Promise<void> => updateAlarmTime(
     { timeData: newTime, getAlarmData },
-  );
+  ), [getAlarmData]);
 
-  const updateDisarmData = (newStatus: boolean): Promise<void> => updateDisarmStatus(
+  const updateDisarmData = useCallback((newStatus: boolean): Promise<void> => updateDisarmStatus(
     { disarmData: newStatus, getDisarmData },
-  );
+  ), [getDisarmData]);
 
   const handleCurrentTime = async () => {
     setCurrentTime(() => theCurrentTime());

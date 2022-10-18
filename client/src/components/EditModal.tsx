@@ -22,17 +22,17 @@ type Props = {
   handleCloseModal: () => void;
 };
 
-export default function EditModal({
+export default React.memo(({
   showModal,
   skipDate,
   alarmTime,
   getSkipData,
   updateAlarmData,
   handleCloseModal,
-}: Props) {
+}: Props) => {
   const [hour, setHr] = useState<HTMLSelectElement | string>(String(getHour(alarmTime)));
   const [minute, setMin] = useState<HTMLSelectElement | string>(String(getMinute(alarmTime)));
-  const [tod, setTOD] = useState<T>(getTOD(alarmTime));
+  const [tod, setTOD] = useState(getTOD(alarmTime));
 
   return (
     <Modal
@@ -66,6 +66,7 @@ export default function EditModal({
 
             <SelectStyle
               defaultValue={String(getTOD(alarmTime))}
+                  // @ts-ignore
               onChange={(e) => setTOD(e.target.value!)}
             >
               {['AM', 'PM'].map((t, i) => (
@@ -130,4 +131,4 @@ export default function EditModal({
       </Modal.Footer>
     </Modal>
   );
-}
+})

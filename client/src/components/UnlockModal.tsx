@@ -18,7 +18,7 @@ type Props = {
   setLock: (arg0: boolean) => void;
 };
 
-export default function UnlockModal({
+export default React.memo(({
   inputPin,
   inputStatus,
   show,
@@ -26,7 +26,7 @@ export default function UnlockModal({
   setInputPin,
   setInputStatus,
   setLock,
-}: Props) {
+}: Props) => {
   const [password, setPassword] = useState<string>();
 
   useEffect(() => {
@@ -80,4 +80,4 @@ export default function UnlockModal({
       </Modal.Body>
     </Modal>
   );
-}
+});

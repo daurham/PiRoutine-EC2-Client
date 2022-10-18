@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Button } from 'react-bootstrap';
 import { UnlockContainer } from './styles/EditTimeStyles';
 import EditModal from './EditModal';
@@ -13,17 +13,17 @@ type Props = {
   launchUnlockModal: () => void;
 };
 
-export default function EditButton({
+export default React.memo(({
   skipDate,
   notSignedIn,
   alarmTime,
   getSkipData,
   updateAlarmData,
   launchUnlockModal,
-}: Props) {
+}: Props) => {
   const [showEdit, setShowEdit] = useState(false);
-  const closeEditModal = () => setShowEdit(false);
-  const showEditModal = () => setShowEdit(true);
+  const closeEditModal = useCallback(() => setShowEdit(false), [setShowEdit]);
+  const showEditModal = useCallback(() => setShowEdit(true), [setShowEdit]);
 
   return (
     <UnlockContainer>
@@ -38,11 +38,11 @@ export default function EditButton({
       <EditModal
         showModal={showEdit}
         skipDate={skipDate}
-        alarmTime={alarmTime? alarmTime: ''}
+        alarmTime={alarmTime ? alarmTime : ''}
         getSkipData={getSkipData}
         updateAlarmData={updateAlarmData}
         handleCloseModal={closeEditModal}
       />
     </UnlockContainer>
   );
-}
+})

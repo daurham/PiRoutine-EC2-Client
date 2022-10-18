@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import RecordsModal from './RecordsModal';
 import Loading from './utils/Loading';
 import {
@@ -29,7 +29,7 @@ type Props = {
   disarmRecords: DisarmRecordsObj[];
 };
 
-export default function Info({
+export default React.memo(({
   motivation,
   hasFailed,
   currentPhase,
@@ -43,11 +43,11 @@ export default function Info({
   skippedCount,
   disarmRecords,
   soakedCount,
-}: Props) {
+}: Props) => {
   const [seeMore, setSeeMore] = useState(false);
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
+  const handleClose = useCallback(() => setShow(false), [setShow]);
   const handleShow = () => setShow(true);
 
   return (
@@ -130,4 +130,4 @@ export default function Info({
         && <RecordsModal show={show} handleClose={handleClose} disarmRecords={disarmRecords} />}
     </>
   );
-}
+});
