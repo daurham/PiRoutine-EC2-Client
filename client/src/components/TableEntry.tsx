@@ -1,5 +1,6 @@
 import React from 'react';
 import { TableFontSm } from './styles/ModalStyles';
+
 type Props = {
   date_: string | undefined;
   alarm1: string | undefined;
@@ -25,6 +26,7 @@ export default React.memo(({
   const editedDisTime2 = disarmedTime2 ? lowerCaseTOD(disarmedTime2) : '-';
   const editedAlarm1 = lowerCaseTOD(alarm1 || 'null');
   const editedAlarm2 = lowerCaseTOD(alarm2 || 'null');
+
   return (
     <tr className={classN}>
       <TableFontSm as="td" className={failed}>{editedDate}</TableFontSm>
@@ -34,5 +36,4 @@ export default React.memo(({
       <TableFontSm as="td" className={failed}>{editedAlarm2}</TableFontSm>
     </tr>
   );
-})
-
+});

@@ -38,11 +38,11 @@ export default React.memo(({
       <EditModal
         showModal={showEdit}
         skipDate={skipDate}
-        alarmTime={alarmTime ? alarmTime : ''}
+        alarmTime={alarmTime || ''}
         getSkipData={getSkipData}
         updateAlarmData={updateAlarmData}
         handleCloseModal={closeEditModal}
       />
     </UnlockContainer>
   );
-})
+});

@@ -1,7 +1,13 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Modal from 'react-bootstrap/Modal';
-import { getHour, getMinute, getTOD, range } from './utils';
+import { v4 as uuidv4 } from 'uuid';
+import {
+  getHour,
+  getMinute,
+  getTOD,
+  range,
+} from './utils';
 import { skipToday, skipNextDay, removeSkip } from './requests/updateData';
 import {
   FormContainer,
@@ -10,6 +16,8 @@ import {
   OptionStyle,
 } from './styles/EditTimeStyles';
 import { TimeObj } from '../../../types';
+
+const uuid = (): string => uuidv4();
 
 const minuteSelections = [...range(0, 59)].map((n) => (n < 10 ? `0${n}` : n));
 
@@ -50,8 +58,8 @@ export default React.memo(({
               defaultValue={String(getHour(alarmTime))}
               onChange={(e) => setHr(e.target.value)}
             >
-              {[...range(1, 12)].map((t, i) => (
-                <OptionStyle style={{ color: 'white', background: 'transparent' }} value={t} key={i}>{t}</OptionStyle>
+              {[...range(1, 12)].map((t) => (
+                <OptionStyle style={{ color: 'white', background: 'transparent' }} value={t} key={uuid()}>{t}</OptionStyle>
               ))}
             </SelectStyle>
 
@@ -59,18 +67,18 @@ export default React.memo(({
               defaultValue={String(getMinute(alarmTime))}
               onChange={(e) => setMin(e.target.value)}
             >
-              {minuteSelections.map((t, i) => (
-                <OptionStyle value={t} key={i}>{t}</OptionStyle>
+              {minuteSelections.map((t) => (
+                <OptionStyle value={t} key={uuid()}>{t}</OptionStyle>
               ))}
             </SelectStyle>
 
             <SelectStyle
               defaultValue={String(getTOD(alarmTime))}
-                  // @ts-ignore
-              onChange={(e) => setTOD(e.target.value!)}
+              // @ts-ignore
+              onChange={(e) => setTOD(e.target.value)}
             >
-              {['AM', 'PM'].map((t, i) => (
-                <OptionStyle value={t} key={i}>{t}</OptionStyle>
+              {['AM', 'PM'].map((t) => (
+                <OptionStyle value={t} key={uuid()}>{t}</OptionStyle>
               ))}
             </SelectStyle>
 
@@ -131,4 +139,4 @@ export default React.memo(({
       </Modal.Footer>
     </Modal>
   );
-})
+});

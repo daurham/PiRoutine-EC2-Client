@@ -28,6 +28,7 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-explicit-any': 'off',
         '@typescript-eslint/rule-name': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
         'no-console': ['warn', { allow: ['warn', 'error', 'info'] }],
         'no-underscore-dangle': 'off',
         // 'no-underscore-dangle': ['error', { allow: ['password_'] }],
