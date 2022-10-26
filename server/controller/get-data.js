@@ -10,7 +10,7 @@ module.exports = {
       const { data } = await axios.get(`${URL}/get-alarm-time/?table=alarmtime`);
       res.status(200).send(data);
     } catch (err) {
-      console.warn('Issue getting alarm data: ');
+      console.warn('Issue getting alarm data: ', err);
       res.status(200).send([{ hour: 6, minute: 5 }]);
     }
   },
@@ -20,7 +20,7 @@ module.exports = {
       const { data } = await axios.get(`${URL}/get-disarm-status/?table=isdisarmed`);
       res.status(200).send(data);
     } catch (err) {
-      console.warn('Issue getting defuse data: ');
+      console.warn('Issue getting defuse data: ', err);
       res.status(200).send([{ isDisarmed: 0 }]);
     }
   },
@@ -30,7 +30,7 @@ module.exports = {
       const { data } = await axios.get(`${URL}/get-streak-count/?table=streakcount`);
       res.status(200).send(data);
     } catch (err) {
-      console.warn('Issue getting streak data: ');
+      console.warn('Issue getting streak data: ', err);
       res.status(200).send([{ streak: true }]);
     }
   },
