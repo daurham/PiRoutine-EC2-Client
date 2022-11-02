@@ -38,8 +38,8 @@ export default React.memo(({
   updateAlarmData,
   handleCloseModal,
 }: Props) => {
-  const [hour, setHr] = useState<HTMLSelectElement | string>(String(getHour(alarmTime)));
-  const [minute, setMin] = useState<HTMLSelectElement | string>(String(getMinute(alarmTime)));
+  const [hour, setHr] = useState<string>(String(getHour(alarmTime)));
+  const [minute, setMin] = useState<string>(String(getMinute(alarmTime)));
   const [tod, setTOD] = useState(getTOD(alarmTime));
 
   return (
@@ -55,16 +55,16 @@ export default React.memo(({
         <FormContainer>
           <Form>
             <SelectStyle
-              defaultValue={String(getHour(alarmTime))}
+              value={hour}
               onChange={(e) => setHr(e.target.value)}
             >
               {[...range(1, 12)].map((t) => (
-                <OptionStyle style={{ color: 'white', background: 'transparent' }} value={t} key={uuid()}>{t}</OptionStyle>
+                <OptionStyle value={t} key={uuid()}>{t}</OptionStyle>
               ))}
             </SelectStyle>
 
             <SelectStyle
-              defaultValue={String(getMinute(alarmTime))}
+              value={minute}
               onChange={(e) => setMin(e.target.value)}
             >
               {minuteSelections.map((t) => (
@@ -73,7 +73,7 @@ export default React.memo(({
             </SelectStyle>
 
             <SelectStyle
-              defaultValue={String(getTOD(alarmTime))}
+              defaultValue={tod}
               // @ts-ignore
               onChange={(e) => setTOD(e.target.value)}
             >

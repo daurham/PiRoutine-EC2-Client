@@ -41,7 +41,7 @@ export default function App() {
   const [disarmRecords, setDisarmRecords] = useState<DisarmRecordsData>([]);
   const [currentPhase, setCurrentPhase] = useState<1 | 2 | 3 | undefined>();
   const [hasFailed, setFailed] = useState<boolean>(false);
-  // 
+  //
   const [distance, setDistance] = useState<number | undefined>();
   //
   const [notSignedIn, setLock] = useState<boolean>(true);
@@ -84,7 +84,9 @@ export default function App() {
   const getDisarmData = useCallback(() => getDisarmStatus({ setDisarmData }), [setDisarmData]);
   const getStreakData = useCallback(() => getStreakCount({ setStreakData }), [setStreakData]);
   const getSoakedData = useCallback(() => getSoakedCount({ setSoakedData }), [setSoakedData]);
-  const getDisarmRecordsData = useCallback(() => getDisarmRecords({ setDisarmRecords }), [setDisarmRecords]);
+  const getDisarmRecordsData = useCallback(() => getDisarmRecords(
+    { setDisarmRecords },
+  ), [setDisarmRecords]);
   const getSkipData = useCallback(() => getSkipDateAndCount({ setSkipData }), [setSkipData]);
   const getMetaData = () => {
     getSkipData()

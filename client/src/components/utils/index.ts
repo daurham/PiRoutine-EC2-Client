@@ -38,7 +38,7 @@ export const statusGenerator = (setMotivation: (arg0: string) => void, failed: b
   }
 };
 
-interface TimeObj { hour: number; minute: number; tod?: 'AM' | 'PM'}
+interface TimeObj { hour: number; minute: number; tod?: 'AM' | 'PM' }
 type AlarmTimeRes = [
   {
     id: number;
@@ -88,7 +88,7 @@ export const swapBinaryAndBool = (val: BinaryOrBool): BinaryOrBool => {
 };
 
 export const getHour = (time: string): number => Number(time.slice(0, time.indexOf(':')));
-export const getMinute = (time: string): number => Number(time.slice(time.indexOf(':') + 1, time.lastIndexOf(':')));
+export const getMinute = (time: string): string => time.slice(time.indexOf(':') + 1, time.lastIndexOf(':'));
 export const getTOD = (time: string): 'AM' | 'PM' => time.slice(-2);
 
 /**

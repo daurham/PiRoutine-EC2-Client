@@ -49,7 +49,7 @@ export const getAlarmTime = async ({
     };
     setAlarmData((prevState: AlarmStateObj): AlarmStateObj => ({ ...prevState, ...state }));
   } catch (err) {
-    console.info('err?: ', err);
+    console.error('Error GETTING alarm data: ', err);
     const firstAlarmTimestamp = getFirstAlarm(6, 0);
     const secondAlarmTimestamp = getSecondAlarm(firstAlarmTimestamp);
     const state = {
@@ -69,7 +69,7 @@ export const getDisarmStatus = async ({
     const convertStatus = (!!swapBinaryAndBool(disarmedstatus) === true);
     setDisarmData((prevState: DisarmDataObj) => ({ ...prevState, isDisarmed: convertStatus }));
   } catch (err) {
-    console.error('err?: ', err);
+    console.error('Error GETTING disarm status: ', err);
     setDisarmData((prevState: DisarmDataObj) => ({ ...prevState, isDisarmed: false }));
   }
 };
@@ -119,7 +119,7 @@ export const getDisarmRecords = async ({
     const { data } = await axios.get<DisarmRecordsData>('/get-disarm-records');
     setDisarmRecords(data);
   } catch (err) {
-    console.warn('Error getting disarm records: ', err);
+    console.warn('Error GETTTING disarm records: ', err);
   }
 };
 
@@ -131,6 +131,6 @@ export const getUserPassword = async (setPassword: (arg0: string) => void): Prom
     setPassword(password_);
   } catch (err) {
     setPassword('1234');
-    console.warn('Error getting User Info: ', err);
+    console.warn('Error GETTING user data: ', err);
   }
 };

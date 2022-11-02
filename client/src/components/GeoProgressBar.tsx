@@ -51,7 +51,8 @@ export default function GeoProgressBar({
     if (currentPhase === 2 && distance < 100 && latitude && longitude) {
       calculateDifference(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
       calculateDifference(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
-      setDistance(convertToDistance(changeLat)); // Comment out for Testing
+      // setDistance(convertToDistance(changeLat)); // Comment out for Testing
+      setDistance(convertToDistance(changeLat) + convertToDistance(changeLon)); // Testing
     }
     if (distance > 100) setDistance(100);
     // eslint-disable-next-line react-hooks/exhaustive-deps
