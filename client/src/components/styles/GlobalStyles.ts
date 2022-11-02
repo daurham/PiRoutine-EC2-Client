@@ -21,7 +21,21 @@ export const GlobalStyle = createGlobalStyle`
   .modal-title {
     justify-content: spaced-between;
   }
+  
+  .modal-headers {
+    justify-content: spaced-between;
+    margin-bottom: 0;
+    // display: inline;
+  }
 
+  h5 {
+    color: #ffc107; 
+  }
+
+  .modal-header .btn-close {
+    margin 0;
+  }
+  
   .modal-footer {
     justify-content: center;
   }
