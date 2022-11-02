@@ -73,7 +73,7 @@ export default React.memo(({
             </SelectStyle>
 
             <SelectStyle
-              defaultValue={tod}
+              value={tod}
               // @ts-ignore
               onChange={(e) => setTOD(e.target.value)}
             >
