@@ -18,6 +18,7 @@ type Props = {
 
 export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
   const [currMonth, setCurrMonth] = useState<string>('');
+  const [currYear, setCurrYear] = useState<string>('');
   const [oldestMonth, setOldestMonth] = useState('');
   // const [currMonthOfData, setCurrMonthOfData] = useState([]);
 
@@ -82,6 +83,7 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
     const high = Number(`${year}${currentMonth.length > 1 ? currentMonth : `0${currentMonth}`}31`);
     const numericVal = getDateStringsNumbericVal(date_!);
     // console.log('low, high, numV', low, high, numericVal);
+    if (numericVal >= low && numericVal <= high && year !== currYear) setCurrYear(year);
     return (numericVal >= low && numericVal <= high);
   });
 
@@ -109,7 +111,7 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
           <Modal.Title>
             <h1 className="modal-headers">{'Routine Records: '}</h1>
           </Modal.Title>
-          <h5 className="modal-headers">{getMonthName(currMonth)}</h5>
+          <h5 className="modal-headers">{`${getMonthName(currMonth)} '${currYear.slice(-2)}`}</h5>
         </Modal.Header>
         <Modal.Body style={{
           maxHeight: '40vh',
