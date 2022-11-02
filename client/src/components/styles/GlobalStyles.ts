@@ -37,11 +37,13 @@ export const GlobalStyle = createGlobalStyle`
   }
   
   .modal-footer {
-    justify-content: center;
+    justify-content: space-between;
   }
 
   .oddtable {
-    background-color: #091012;
+    // background-color: #2a2513; // yellow
+    background-color: #00212a; // blue
+
   }
 
   .failed {
