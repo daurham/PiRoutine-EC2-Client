@@ -25,6 +25,7 @@ export const GlobalStyle = createGlobalStyle`
   .modal-headers {
     justify-content: spaced-between;
     margin-bottom: 0;
+    font-size: 1.4rem;
     // display: inline;
   }
 

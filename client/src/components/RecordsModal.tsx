@@ -137,10 +137,10 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
         </Modal.Body>
         <Modal.Footer>
           <Button size="sm" variant={currMonth === oldestMonth ? 'outline-secondary' : 'warning'} disabled={(currMonth === oldestMonth) || false} onClick={decrementMonth}>
-            ⬅️
+            previous
           </Button>
           <Button size="sm" variant={currMonth === thisMonth ? 'outline-secondary' : 'warning'} disabled={(currMonth === thisMonth) || false} onClick={incrementMonth}>
-            ➡️
+            next
           </Button>
         </Modal.Footer>
       </Modal>

@@ -1,9 +1,9 @@
-import styled from "styled-components";
+import styled from 'styled-components';
 
 export const TableFont = styled.p`
-  font-size: .79rem;
+  font-size: .69rem;
 `;
 
 export const TableFontSm = styled.p`
-  font-size: .79rem;
+  font-size: .69rem;
 `;
