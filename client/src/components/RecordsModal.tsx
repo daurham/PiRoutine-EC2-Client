@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
@@ -20,16 +20,8 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
   const [currMonth, setCurrMonth] = useState<string>('');
   const [currYear, setCurrYear] = useState<string>('');
   const [oldestMonth, setOldestMonth] = useState('');
-  // const [currMonthOfData, setCurrMonthOfData] = useState([]);
 
   const thisMonth = String(new Date().getMonth() + 1);
-
-  const changeMonth = (shouldIncrmement?: any) => {
-    let month = currMonth;
-    if (shouldIncrmement) month = String(Number(month) + 1);
-    if (!shouldIncrmement) month = String(Number(month) - 1);
-    setCurrMonth(month);
-  };
 
   const getMonthName = (currentMonth: string) => {
     if (currentMonth === '1') return 'January';
@@ -47,57 +39,54 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
     return '';
   };
 
-  const getDayFromDate = (d: string): string => d.slice(d.indexOf('/') + 1, d.lastIndexOf('/'));
-  const getMonthFromDate = (d: string): string => d.slice(0, d.indexOf('/'));
+  const getDayFromDate = (d: string) => d.slice(d.indexOf('/') + 1, d.lastIndexOf('/'));
+  const getMonthFromDate = (d: string) => d.slice(0, d.indexOf('/'));
+  const getYearFromDate = (d: string) => d.slice(d.lastIndexOf('/') + 1, d.length);
 
-  const incrementMonth = (): void => changeMonth(true);
-  const decrementMonth = (): void => changeMonth();
+  const incrementMonth = (): void => setCurrMonth((prevMonth) => String(Number(prevMonth) + 1));
+  const decrementMonth = (): void => setCurrMonth((prevMonth) => String(Number(prevMonth) - 1));
+
+  const makeTwoDigits = (n: string) => (n.length === 1 ? `0${n}` : n);
 
   const breakdownDate = (d: string) => {
-    let day = getDayFromDate(d);
-    if (day.length === 1) day = `0${day}`;
-    let month = getMonthFromDate(d);
-    if (month.length === 1) month = `0${month}`;
-    const year = `${d.slice(d.lastIndexOf('/') + 1, d.length)}`;
-    return {
-      year,
-      month,
-      day,
-    };
+    const day = makeTwoDigits(getDayFromDate(d));
+    const month = makeTwoDigits(getMonthFromDate(d));
+    const year = getYearFromDate(d);
+    return { year, month, day };
   };
 
-  // Create funtion that returns a datestrings numeric place
   const getDateStringsNumbericVal = (date: string) => {
     const { year, month, day } = breakdownDate(date);
     const numericVal = Number(`${year}${month}${day}`);
-    // console.log('day, month, year', day, month, year, numericVal);
     return numericVal;
   };
 
-  // filter array of days that range between numberic values
-  const filterDataset = (currentMonth: string) => disarmRecords.filter(({ date_ }) => {
-    const { year } = breakdownDate(date_!);
-    let curMonth = currentMonth;
-    if (curMonth.length < 1) curMonth = `0${curMonth}`;
-    const low = Number(`${year}${currentMonth.length > 1 ? currentMonth : `0${currentMonth}`}01`);
-    const high = Number(`${year}${currentMonth.length > 1 ? currentMonth : `0${currentMonth}`}31`);
-    const numericVal = getDateStringsNumbericVal(date_!);
-    // console.log('low, high, numV', low, high, numericVal);
-    if (numericVal >= low && numericVal <= high && year !== currYear) setCurrYear(year);
-    return (numericVal >= low && numericVal <= high);
-  });
+  const filterRecordsByMonth = (currentMonth: string, currentYear: string) => disarmRecords.filter(
+    ({ date_ }) => {
+      const { year } = breakdownDate(date_!);
+      const adjustedCurrentMonth = makeTwoDigits(currentMonth);
+      const low = Number(`${year}${adjustedCurrentMonth}01`);
+      const high = Number(`${year}${adjustedCurrentMonth}31`);
+      const numericVal = getDateStringsNumbericVal(date_!);
+      if (numericVal >= low && numericVal <= high && year !== currentYear) setCurrYear(year);
+      return (numericVal >= low && numericVal <= high);
+    },
+  );
 
-  if (currMonth.length < 1) setCurrMonth(thisMonth);
-  if (oldestMonth.length < 1) {
-    let lowestVal = '12';
-    disarmRecords.forEach((rec) => {
-      if (Number(lowestVal) > Number(getMonthFromDate(rec.date_!))) {
-        lowestVal = getMonthFromDate(rec.date_!);
-      }
-    });
-    setOldestMonth(lowestVal);
-  }
-  // console.log(filterDataset(currMonth));
+  useEffect(() => {
+    if (!currMonth) setCurrMonth(thisMonth);
+
+    if (!oldestMonth) {
+      let lowestVal = '12';
+      disarmRecords.forEach((rec) => {
+        if (Number(lowestVal) > Number(getMonthFromDate(rec.date_!))) {
+          lowestVal = getMonthFromDate(rec.date_!);
+        }
+      });
+      setOldestMonth(lowestVal);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div>
@@ -128,16 +117,12 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
                 <TableFont as="th">Alarm 2</TableFont>
               </tr>
             </thead>
-            {/* {disarmRecords.filter( */}
-            {/* (r) => (getMonthFromDate(r.date_!) === currMonth), */}
-            {/* ).reverse().map((rec, i) => ( */}
-            {filterDataset(currMonth).reverse().map((rec, i) => (
+            {filterRecordsByMonth(currMonth, currYear).reverse().map((rec, i) => (
               <tbody
                 key={uuid()}
               >
                 <TableEntry
                   classN={!(i % 2) ? 'oddtable' : 'eventable'}
-                  /* TODO: Add "Skip" Possibility */
                   failed={(!swapBinaryAndBool(rec.success) ? 'failed' : 'succeeded')}
                   key={uuid()}
                   date_={rec.date_}
@@ -154,8 +139,6 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
           <Button size="sm" variant={currMonth === oldestMonth ? 'outline-secondary' : 'warning'} disabled={(currMonth === oldestMonth) || false} onClick={decrementMonth}>
             ⬅️
           </Button>
-          {/* <Button size="sm" variant="warning" onClick={handleClose}>Close</Button> */}
-
           <Button size="sm" variant={currMonth === thisMonth ? 'outline-secondary' : 'warning'} disabled={(currMonth === thisMonth) || false} onClick={incrementMonth}>
             ➡️
           </Button>

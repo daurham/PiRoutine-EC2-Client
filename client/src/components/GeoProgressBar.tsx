@@ -28,7 +28,8 @@ export default function GeoProgressBar({
   const [initialLon, setInitialLon] = useState(longitude);
 
   const convertToDistance = (input: number): number => {
-    const result = Math.floor(((input - 0) * 100) / (0.003 - 0));
+    const result = Math.floor(((input - 0) * 100) / (0.002 - 0)); // Edit
+    // const result = Math.floor(((input - 0) * 100) / (0.003 - 0)); // Original Value
     return result;
   };
 

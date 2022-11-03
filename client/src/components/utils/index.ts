@@ -11,13 +11,13 @@ export const range = (start: number, end: number, step = 1): number[] => {
 
 export const statusGenerator = (setMotivation: (arg0: string) => void, failed: boolean) => {
   const goodPhrases = [
-    'Make them proud',
-    'Keep it up',
+    // 'Make them proud',
+    // 'Keep it up',
     'Keep proving you\'ve had enough',
     'Keep crushing it!',
     // 'Crush the fuck out this day!',
     'Stick to your goals',
-    'Trust your wiser self',
+    // 'Trust your wiser self',
     'Keep going',
   ];
   const badPhrases = [

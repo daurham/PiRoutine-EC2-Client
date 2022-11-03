@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
+import { Button } from 'react-bootstrap';
 import RecordsModal from './RecordsModal';
 import Loading from './utils/Loading';
 import {
   InfoContainer,
   InfoEntry,
-  InfoRecEntry,
   InnerValRed,
   InnerValWhite,
   MainInfoContainer,
@@ -64,10 +64,12 @@ export default React.memo(({
                 <br />
               </>
             )}
+
           <InfoEntry>
             {'Streak Count: '}
             {streak !== undefined ? streak : <Loading />}
           </InfoEntry>
+
           <InfoEntry>
             {'Alarm: '}
             {currentAlarm ? <InnerValRed className="alarm">{currentAlarm}</InnerValRed> : <Loading />}
@@ -79,6 +81,7 @@ export default React.memo(({
               ? <InnerValRed>Armed 💦</InnerValRed>
               : <InnerValWhite>Disarmed 😌</InnerValWhite>}
           </InfoEntry>
+
           {seeMore
             && (
               <MetaContainer>
@@ -86,43 +89,53 @@ export default React.memo(({
                   {'Alarm 1: '}
                   {alarm1 ? <InnerValRed className="alarm">{alarm1}</InnerValRed> : <Loading />}
                 </InfoEntry>
+
                 <InfoEntry>
                   {'Alarm 2: '}
                   {alarm2 ? <InnerValRed className="alarm">{alarm2}</InnerValRed> : <Loading />}
                 </InfoEntry>
+
                 <InfoEntry>
                   {'Longest Streak: '}
                   {maxStreak !== undefined ? maxStreak : <Loading />}
                 </InfoEntry>
+
                 <InfoEntry>
                   {'Current Phase: '}
                   {currentPhase || <Loading />}
                 </InfoEntry>
+
                 <InfoEntry>
                   {'Skipping: '}
                   {skipDate ? <InnerValRed>{skipDate}</InnerValRed> : <Loading />}
                 </InfoEntry>
+
                 <InfoEntry>
                   {'Days Skipped: '}
                   {skippedCount !== undefined ? skippedCount : <Loading />}
                 </InfoEntry>
+
                 <InfoEntry>
                   {'Days Soaked: '}
                   {soakedCount !== undefined ? soakedCount : <Loading />}
                 </InfoEntry>
+
                 <InfoEntry>
-                  {'Records: '}
                   {disarmRecords
-                    ? <InfoRecEntry as="u" style={{ cursor: 'pointer' }} onClick={handleShow}>Show Records</InfoRecEntry>
+                    ? <Button size="sm" variant="outline-warning" onClick={handleShow}>Show Records</Button>
                     : <Loading />}
-                </InfoEntry>
-                <InfoEntry>
-                  {'Start Date: '}
-                  <InnerValRed>08/20/2022</InnerValRed>
                 </InfoEntry>
               </MetaContainer>
             )}
-          <InfoEntry><SeeMoreStyle onClick={() => setSeeMore(!seeMore)}>{!seeMore ? 'show more' : 'show less'}</SeeMoreStyle></InfoEntry>
+
+          <InfoEntry>
+            <SeeMoreStyle
+              onClick={() => setSeeMore(!seeMore)}
+            >
+              {!seeMore ? 'show more' : 'show less'}
+            </SeeMoreStyle>
+          </InfoEntry>
+
         </MainInfoContainer>
         <br />
       </InfoContainer>
