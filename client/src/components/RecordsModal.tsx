@@ -3,6 +3,8 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { v4 as uuidv4 } from 'uuid';
+// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+// import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import TableEntry from './TableEntry';
 import { TableFont } from './styles/ModalStyles';
 import { swapBinaryAndBool } from './utils';
@@ -138,8 +140,10 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
         <Modal.Footer>
           <Button size="sm" variant={currMonth === oldestMonth ? 'outline-secondary' : 'warning'} disabled={(currMonth === oldestMonth) || false} onClick={decrementMonth}>
             previous
+            {/* <i className="fa-solid fa-user" /> */}
           </Button>
           <Button size="sm" variant={currMonth === thisMonth ? 'outline-secondary' : 'warning'} disabled={(currMonth === thisMonth) || false} onClick={incrementMonth}>
+            {/* <i className="fa-brands fa-github-square" /> */}
             next
           </Button>
         </Modal.Footer>

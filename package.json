@@ -1,11 +1,11 @@
 {
   "name": "piroutine-ec2-client",
-  "version": "4.0.1",
+  "version": "4.1.1",
   "description": "Client-side portion of the PiRoutine project.",
   "scripts": {
     "start": "webpack --config webpack.config.js -w",
-    "start-dev-serv": "webpack serve --config webpack.config.js --open ",
-    "server": "nodemon server/index.js",
+    "server": "nodemon server/dist/index.js",
+    "server-build": "tsc --project tsconfig.server.json -w",
     "test": "nodemon server/index.js"
   },
   "repository": {
@@ -22,7 +22,11 @@
   },
   "homepage": "https://github.com/daurham/PiRoutine-EC2-Client#readme",
   "dependencies": {
+    "@fortawesome/fontawesome-free": "^6.2.0",
+    "@fortawesome/fontawesome-svg-core": "^6.2.0",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^0.27.2",
+    "babel-plugin-macros": "^3.1.0",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "html-webpack-plugin": "^5.5.0",

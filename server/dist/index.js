@@ -5,7 +5,7 @@ const { get, update, post } = require('./controller');
 const app = express();
 
 const PORT = 3000;
-const DIST_DIR = path.join(__dirname, '../client/dist/');
+const DIST_DIR = path.join(__dirname, '../../client/dist/');
 
 app.use(express.static(DIST_DIR));
 app.use(express.urlencoded({ extended: true }));
