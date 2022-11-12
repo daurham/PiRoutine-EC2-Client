@@ -11,8 +11,6 @@ import Loading from './components/utils/Loading';
 import {
   AppContainer,
   CenteringContainer,
-  ContentDivider,
-  MainContent,
 } from './components/styles/AppStyles';
 import { statusGenerator, theCurrentTime, getPhase } from './components/utils';
 import {
