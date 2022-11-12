@@ -7,7 +7,7 @@
     "server": "nodemon server/dist/index.js",
     "server-build": "tsc --project tsconfig.server.json -w",
     "format": "npx prettier --write .",
-    "test": "nodemon server/index.js"
+    "test": ""
   },
   "repository": {
     "type": "git",

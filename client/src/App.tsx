@@ -58,8 +58,6 @@ export default function App() {
     currentAlarm,
     threeSecAfterAlarm1,
     threeSecAfterAlarm2,
-    // tenSecAfterAlarm1,
-    // tenSecAfterAlarm2,
   } = alarmData;
 
   const { hideDisarmBtn, isDisarmed } = disarmData;
@@ -191,6 +189,7 @@ export default function App() {
     if (alarm1 && !currentAlarm) {
       setAlarmData((prevS) => ({ ...prevS, currentAlarm: alarm1 }));
     }
+    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     const clock: NodeJS.Timer = setInterval(() => handleCurrentTime(), 1000);
     return () => clearInterval(clock);
     // eslint-disable-next-line react-hooks/exhaustive-deps
