@@ -6,5 +6,5 @@ import { useRef } from 'react';
  */
 export default function useCountRenders() {
   const renders = useRef(0);
-  console.info(`Renders: ${renders.current += 1}`);
+  console.info(`Renders: ${(renders.current += 1)}`);
 }

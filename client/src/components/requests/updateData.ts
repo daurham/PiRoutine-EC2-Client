@@ -15,7 +15,8 @@ export const updateAlarmTime = async ({
   try {
     await axios.patch('/update-alarm-time', { hour: hr, minute: min, tod });
     await getAlarmData();
-  } catch (err) {
+  }
+  catch (err) {
     console.warn('Error UPDATING alarm data:', err);
   }
 };
@@ -28,34 +29,49 @@ export const updateDisarmStatus = async ({
   try {
     await axios.patch('/update-disarm-status', { data: convertedStatusData });
     await getDisarmData();
-  } catch (err) {
+  }
+  catch (err) {
     console.warn('Error UPDATING disarm data:', err);
   }
 };
 
-export const skipNextDay = async (getSkipData: () => Promise<void>): Promise<void> => {
+export const skipNextDay = async (
+  getSkipData: () => Promise<void>,
+): Promise<void> => {
   try {
     await axios.patch('/update-skipped-date', { data: getTomorrow() });
     await getSkipData();
-  } catch (err) {
+  }
+  catch (err) {
     console.warn('Error UPDATING skip data:', err);
   }
 };
 
-export const skipToday = async (getSkipData: () => Promise<void>): Promise<void> => {
+export const skipToday = async (
+  getSkipData: () => Promise<void>,
+): Promise<void> => {
   try {
-    await axios.patch('/update-skipped-date', { data: new Date().toLocaleDateString() });
+    await axios.patch(
+      '/update-skipped-date',
+      {
+        data: new Date().toLocaleDateString(),
+      },
+    );
     await getSkipData();
-  } catch (err) {
+  }
+  catch (err) {
     console.warn('Error UPDATING skip data:', err);
   }
 };
 
-export const removeSkip = async (getSkipData: () => Promise<void>): Promise<void> => {
+export const removeSkip = async (
+  getSkipData: () => Promise<void>,
+): Promise<void> => {
   try {
     await axios.patch('/update-skipped-date', { data: 'None 💪🏼' });
     await getSkipData();
-  } catch (err) {
+  }
+  catch (err) {
     console.warn('Error UPDATING skip data:', err);
   }
 };

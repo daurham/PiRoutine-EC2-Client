@@ -28,7 +28,7 @@ export default function GeoProgressBar({
   const [initialLon, setInitialLon] = useState(longitude);
 
   const convertToDistance = (input: number): number => {
-    const result = Math.floor(((input - 0) * 100) / (0.001 - 0)); // Edit 2
+    const result = Math.floor(((input - 0) * 100) / (0.004)); // Edit 2
     // const result = Math.floor(((input - 0) * 100) / (0.002 - 0)); // Edit 1
     // const result = Math.floor(((input - 0) * 100) / (0.003 - 0)); // Original Value
     return result;
@@ -42,17 +42,35 @@ export default function GeoProgressBar({
     setInitCb: (arg0: () => number) => void,
     setChangeCb: (arg0: () => number) => void,
   ) => {
-    if (initL !== lonLat && initL !== undefined && lonLat !== undefined && change !== undefined) {
+    if (
+      initL !== lonLat
+      && initL !== undefined
+      && lonLat !== undefined
+      && change !== undefined
+    ) {
       const v = change + Math.abs(Math.abs(initL) - Math.abs(lonLat));
       setChangeCb(() => v);
       setInitCb(() => lonLat);
     }
   };
 
-  useEffect(() => { // TRACK CURRENT LOCATION CHANGE
+  useEffect(() => {
+    // TRACK CURRENT LOCATION CHANGE
     if (currentPhase === 2 && distance < 100 && latitude && longitude) {
-      calculateDifference(changeLat, latitude, initialLat, setInitialLat, getChangeLat);
-      calculateDifference(changeLon, longitude, initialLon, setInitialLon, getChangeLon);
+      calculateDifference(
+        changeLat,
+        latitude,
+        initialLat,
+        setInitialLat,
+        getChangeLat,
+      );
+      calculateDifference(
+        changeLon,
+        longitude,
+        initialLon,
+        setInitialLon,
+        getChangeLon,
+      );
       // setDistance(convertToDistance(changeLat)); // Comment out for Testing
       setDistance(convertToDistance(changeLat) + convertToDistance(changeLon)); // Testing
     }
@@ -78,7 +96,12 @@ export default function GeoProgressBar({
 
   return (
     <div>
-      <ProgressBar animated variant="info" now={distance} label={`${distance || 0}%`} />
+      <ProgressBar
+        animated
+        variant="info"
+        now={distance}
+        label={`${distance || 0}%`}
+      />
       <br />
     </div>
   );

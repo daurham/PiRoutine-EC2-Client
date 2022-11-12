@@ -31,33 +31,38 @@ export type AlarmTimeRes = [
     hour: number;
     minute: number;
     tod: 'AM' | 'PM';
-  }];
+  },
+];
 
 export type DisarmRes = [
   {
     id: number;
     disarmedstatus: 0 | 1;
-  }];
+  },
+];
 
 export type StreakRes = [
   {
     id: number;
     streak: number;
     maxstreak: number;
-  }];
+  },
+];
 
 export type SkipRes = [
   {
     id: number;
     skipped: number;
     skipdate: string;
-  }];
+  },
+];
 
 export type SoakedRes = [
   {
     id: number;
     soaked: number;
-  }];
+  },
+];
 
 export type RecordsRes = DisarmDataObj[];
 
@@ -66,7 +71,8 @@ export type UserRes = [
     id: number;
     username: string;
     password_: string;
-  }];
+  },
+];
 
 export interface UpdateAlarmDataParams {
   timeData: TimeObj;
@@ -80,7 +86,9 @@ export interface UpdateDisarmDataParams {
 
 export interface GetAlarmTimeParams {
   alarmData?: AlarmStateObj;
-  setAlarmData: (arg0: AlarmStateObj | ((arg0: AlarmStateObj) => AlarmStateObj)) => void
+  setAlarmData: (
+    arg0: AlarmStateObj | ((arg0: AlarmStateObj) => AlarmStateObj),
+  ) => void;
 }
 export interface TempAlarmState {
   alarm1?: string;
@@ -93,24 +101,32 @@ export interface TempAlarmState {
 
 export interface GetDisarmDataParams {
   disarmData?: DisarmDataObj;
-  setDisarmData: (arg0: DisarmDataObj | ((arg0: DisarmDataObj) => DisarmDataObj)) => void;
+  setDisarmData: (
+    arg0: DisarmDataObj | ((arg0: DisarmDataObj) => DisarmDataObj),
+  ) => void;
 }
 
 export interface GetStreakDataParams {
   streakData?: StreakDataObj;
-  setStreakData: (arg0: StreakDataObj | ((arg0: StreakDataObj) => StreakDataObj)) => void;
+  setStreakData: (
+    arg0: StreakDataObj | ((arg0: StreakDataObj) => StreakDataObj),
+  ) => void;
 }
 
 export interface GetSkipDataParams {
   SkipData?: SkipDataObj;
-  setSkipData: (arg0: SkipDataObj | ((arg0: SkipDataObj) => SkipDataObj)) => void;
+  setSkipData: (
+    arg0: SkipDataObj | ((arg0: SkipDataObj) => SkipDataObj),
+  ) => void;
 }
 
 export type SoakedData = number;
 
 export interface GetSoakedDataParams {
   soakedCount?: number | undefined;
-  setSoakedData: (arg0: SoakedData | ((arg0: SoakedData) => SoakedData)) => void;
+  setSoakedData: (
+    arg0: SoakedData | ((arg0: SoakedData) => SoakedData),
+  ) => void;
 }
 
 export interface DisarmRecordsObj {
@@ -131,8 +147,9 @@ export interface SoakedDataObj {
 }
 export interface GetDisarmRecordsDataParams {
   disarmRecords?: DisarmRecordsData | undefined;
-  setDisarmRecords: (arg0: DisarmRecordsData | (
-    (arg0: DisarmRecordsData) => DisarmRecordsData)) => void;
+  setDisarmRecords: (
+    arg0: DisarmRecordsData | ((arg0: DisarmRecordsData) => DisarmRecordsData),
+  ) => void;
 }
 
 export interface UnlockPropsObj {
@@ -140,7 +157,7 @@ export interface UnlockPropsObj {
   handleClose: (arg0: boolean) => void;
   inputStatus: string;
   setInputStatus: (arg0: string) => void;
-  inputPin: string
+  inputPin: string;
   setInputPin: (arg0: string) => void;
   setLock: (arg0: string) => void;
 }

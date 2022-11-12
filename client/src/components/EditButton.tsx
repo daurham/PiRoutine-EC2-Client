@@ -13,36 +13,38 @@ type Props = {
   launchUnlockModal: () => void;
 };
 
-export default React.memo(({
-  skipDate,
-  notSignedIn,
-  alarmTime,
-  getSkipData,
-  updateAlarmData,
-  launchUnlockModal,
-}: Props) => {
-  const [showEdit, setShowEdit] = useState(false);
-  const closeEditModal = useCallback(() => setShowEdit(false), [setShowEdit]);
-  const showEditModal = useCallback(() => setShowEdit(true), [setShowEdit]);
+export default React.memo(
+  ({
+    skipDate,
+    notSignedIn,
+    alarmTime,
+    getSkipData,
+    updateAlarmData,
+    launchUnlockModal,
+  }: Props) => {
+    const [showEdit, setShowEdit] = useState(false);
+    const closeEditModal = useCallback(() => setShowEdit(false), [setShowEdit]);
+    const showEditModal = useCallback(() => setShowEdit(true), [setShowEdit]);
 
-  return (
-    <UnlockContainer>
-      <Button
-        variant="outline-secondary"
-        size="sm"
-        onClick={notSignedIn ? launchUnlockModal : showEditModal}
-      >
-        {notSignedIn ? 'Edit 🔒' : 'Edit'}
-      </Button>
+    return (
+      <UnlockContainer>
+        <Button
+          variant="outline-secondary"
+          size="sm"
+          onClick={notSignedIn ? launchUnlockModal : showEditModal}
+        >
+          {notSignedIn ? 'Edit 🔒' : 'Edit'}
+        </Button>
 
-      <EditModal
-        showModal={showEdit}
-        skipDate={skipDate}
-        alarmTime={alarmTime || ''}
-        getSkipData={getSkipData}
-        updateAlarmData={updateAlarmData}
-        handleCloseModal={closeEditModal}
-      />
-    </UnlockContainer>
-  );
-});
+        <EditModal
+          showModal={showEdit}
+          skipDate={skipDate}
+          alarmTime={alarmTime || ''}
+          getSkipData={getSkipData}
+          updateAlarmData={updateAlarmData}
+          handleCloseModal={closeEditModal}
+        />
+      </UnlockContainer>
+    );
+  },
+);

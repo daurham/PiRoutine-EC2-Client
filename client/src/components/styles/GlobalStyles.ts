@@ -62,9 +62,20 @@ export const GlobalStyle = createGlobalStyle`
   .base-btn {
     vertical-align: baseline;
   }
+
+  .about-link {
+    color: #00c1f5;
+  }
+
+  .footer {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 0;
+  }
 `;
 
 export const FlexCenteringContainer = styled.div`
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 `;

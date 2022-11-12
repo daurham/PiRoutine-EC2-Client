@@ -1,11 +1,11 @@
 const path = require('path');
-// const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ENV = require('dotenv').config().parsed;
 
 const MODE = ENV.NODE_ENV || 'development';
 
 module.exports = {
   entry: path.resolve(__dirname, './client/src/index.tsx'),
+  mode: MODE,
   resolve: {
     extensions: ['.tsx', '.ts', '.js', '.jsx'],
   },
@@ -38,7 +38,6 @@ module.exports = {
     path: path.resolve(__dirname, './client/dist'),
     filename: 'bundle.js',
   },
-  mode: MODE,
   // devtool: 'source-map',
 
   // plugins: [

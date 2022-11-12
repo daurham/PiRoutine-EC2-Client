@@ -29,70 +29,80 @@ type Props = {
   disarmRecords: DisarmRecordsObj[];
 };
 
-export default React.memo(({
-  motivation,
-  hasFailed,
-  currentPhase,
-  streak,
-  currentAlarm,
-  isDisarmed,
-  alarm1,
-  alarm2,
-  skipDate,
-  maxStreak,
-  skippedCount,
-  disarmRecords,
-  soakedCount,
-}: Props) => {
-  const [seeMore, setSeeMore] = useState(false);
-  const [show, setShow] = useState(false);
+export default React.memo(
+  ({
+    motivation,
+    hasFailed,
+    currentPhase,
+    streak,
+    currentAlarm,
+    isDisarmed,
+    alarm1,
+    alarm2,
+    skipDate,
+    maxStreak,
+    skippedCount,
+    disarmRecords,
+    soakedCount,
+  }: Props) => {
+    const [seeMore, setSeeMore] = useState(false);
+    const [show, setShow] = useState(false);
 
-  const handleClose = useCallback(() => setShow(false), [setShow]);
-  const handleShow = () => setShow(true);
+    const handleClose = useCallback(() => setShow(false), [setShow]);
+    const handleShow = () => setShow(true);
 
-  return (
-    <>
-      <InfoContainer>
-        <MainInfoContainer>
-          {currentPhase === 3 && !hasFailed
-            && motivation
-            && (
+    return (
+      <>
+        <InfoContainer>
+          <MainInfoContainer>
+            {currentPhase === 3 && !hasFailed && motivation && (
               <>
-                <InfoEntry>
-                  {motivation.toUpperCase()}
-                </InfoEntry>
+                <InfoEntry>{motivation.toUpperCase()}</InfoEntry>
                 <br />
               </>
             )}
 
-          <InfoEntry>
-            {'Streak Count: '}
-            {streak !== undefined ? streak : <Loading />}
-          </InfoEntry>
+            <InfoEntry>
+              {'Streak Count: '}
+              {streak !== undefined ? streak : <Loading />}
+            </InfoEntry>
 
-          <InfoEntry>
-            {'Alarm: '}
-            {currentAlarm ? <InnerValRed className="alarm">{currentAlarm}</InnerValRed> : <Loading />}
-          </InfoEntry>
+            <InfoEntry>
+              {'Alarm: '}
+              {currentAlarm ? (
+                <InnerValRed className="alarm">{currentAlarm}</InnerValRed>
+              ) : (
+                <Loading />
+              )}
+            </InfoEntry>
 
-          <InfoEntry>
-            {'Status: '}
-            {!isDisarmed
-              ? <InnerValRed>Armed 💦</InnerValRed>
-              : <InnerValWhite>Disarmed 😌</InnerValWhite>}
-          </InfoEntry>
+            <InfoEntry>
+              {'Status: '}
+              {!isDisarmed ? (
+                <InnerValRed>Armed 💦</InnerValRed>
+              ) : (
+                <InnerValWhite>Disarmed 😌</InnerValWhite>
+              )}
+            </InfoEntry>
 
-          {seeMore
-            && (
+            {seeMore && (
               <MetaContainer>
                 <InfoEntry>
                   {'Alarm 1: '}
-                  {alarm1 ? <InnerValRed className="alarm">{alarm1}</InnerValRed> : <Loading />}
+                  {alarm1 ? (
+                    <InnerValRed className="alarm">{alarm1}</InnerValRed>
+                  ) : (
+                    <Loading />
+                  )}
                 </InfoEntry>
 
                 <InfoEntry>
                   {'Alarm 2: '}
-                  {alarm2 ? <InnerValRed className="alarm">{alarm2}</InnerValRed> : <Loading />}
+                  {alarm2 ? (
+                    <InnerValRed className="alarm">{alarm2}</InnerValRed>
+                  ) : (
+                    <Loading />
+                  )}
                 </InfoEntry>
 
                 <InfoEntry>
@@ -107,7 +117,11 @@ export default React.memo(({
 
                 <InfoEntry>
                   {'Skipping: '}
-                  {skipDate ? <InnerValRed>{skipDate}</InnerValRed> : <Loading />}
+                  {skipDate ? (
+                    <InnerValRed>{skipDate}</InnerValRed>
+                  ) : (
+                    <Loading />
+                  )}
                 </InfoEntry>
 
                 <InfoEntry>
@@ -121,26 +135,37 @@ export default React.memo(({
                 </InfoEntry>
 
                 <InfoEntry>
-                  {disarmRecords
-                    ? <Button size="sm" variant="outline-warning" onClick={handleShow}>Show Records</Button>
-                    : <Loading />}
+                  {disarmRecords ? (
+                    <Button
+                      size="sm"
+                      variant="outline-warning"
+                      onClick={handleShow}
+                    >
+                      Show Records
+                    </Button>
+                  ) : (
+                    <Loading />
+                  )}
                 </InfoEntry>
               </MetaContainer>
             )}
 
-          <InfoEntry>
-            <SeeMoreStyle
-              onClick={() => setSeeMore(!seeMore)}
-            >
-              {!seeMore ? 'show more' : 'show less'}
-            </SeeMoreStyle>
-          </InfoEntry>
-
-        </MainInfoContainer>
-        <br />
-      </InfoContainer>
-      {disarmRecords
-        && <RecordsModal show={show} handleClose={handleClose} disarmRecords={disarmRecords} />}
-    </>
-  );
-});
+            <InfoEntry>
+              <SeeMoreStyle onClick={() => setSeeMore(!seeMore)}>
+                {!seeMore ? 'show more' : 'show less'}
+              </SeeMoreStyle>
+            </InfoEntry>
+          </MainInfoContainer>
+          <br />
+        </InfoContainer>
+        {disarmRecords && (
+          <RecordsModal
+            show={show}
+            handleClose={handleClose}
+            disarmRecords={disarmRecords}
+          />
+        )}
+      </>
+    );
+  },
+);

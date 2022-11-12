@@ -1,0 +1,66 @@
+{
+  "parser": "@typescript-eslint/parser",
+  "extends": ["airbnb", "airbnb/hooks"],
+  "plugins": ["@typescript-eslint/eslint-plugin"],
+  "rules": {
+    "no-console": "off",
+    "no-extend-native": "off"
+    // "operator-linebreak": ["error", "before"],
+    // "implicit-arrow-linebreak": "off",
+    // "nonblock-statement-body-position": "off"
+  },
+  // Typescript configs:
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"], // Your TypeScript files extension
+      "plugins": ["@typescript-eslint/eslint-plugin"],
+      "extends": [
+        "airbnb",
+        "airbnb-typescript",
+        // "airbnb/hooks",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/rule-name": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/brace-style": "off",
+        "react/jsx-one-expression-per-line":"off",
+        "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+        "no-underscore-dangle": "off",
+        "operator-linebreak": ["error", "before"],
+        "nonblock-statement-body-position": "off",
+        "curly": "off",
+        "implicit-arrow-linebreak": "off"
+      },
+      "parserOptions": {
+        "project": "./tsconfig.json", // Specify it only for TypeScript files
+        "sourceType": "module",
+        "ecmaVersion": "latest"
+      }
+    },
+    {
+      "files": ["*.ts"], // Your TypeScript files extension
+      "plugins": ["@typescript-eslint/eslint-plugin"],
+      "extends": [
+        "airbnb-typescript/base",
+        "plugin:@typescript-eslint/recommended",
+        "plugin:@typescript-eslint/recommended-requiring-type-checking"
+      ],
+      "rules": {
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/rule-name": "off",
+        "@typescript-eslint/ban-ts-comment": "off",
+        "@typescript-eslint/brace-style": "off",
+        "no-console": ["warn", { "allow": ["warn", "error", "info"] }],
+        "no-underscore-dangle": "off"
+      },
+      "parserOptions": {
+        "project": "./tsconfig.server.json",
+        "sourceType": "module",
+        "ecmaVersion": "latest"
+      }
+    }
+  ]
+}

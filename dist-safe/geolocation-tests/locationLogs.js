@@ -12,29 +12,38 @@ const writeLog = (loc, lat, lon, des, oldData = null) => {
 }
 ${oldData}
   `;
-  fs.writeFile(file, mergedData, (err) => {
-    if (err) {
-      console.log('fs.writeFile ERR: ', err);
-    }
-    console.log('Recorded new txt data!');
-  });
+  fs.writeFile(
+    file,
+    mergedData,
+    (err) => {
+      if (err) {
+        console.log('fs.writeFile ERR: ', err);
+      }
+      console.log('Recorded new txt data!');
+    },
+  );
 };
 
 const readLog = (cb) => {
-  fs.readFile(file, (err, txtFileData) => {
-    if (err) {
-      cb(err);
-    } else {
-      cb(null, txtFileData);
-    }
-  });
+  fs.readFile(
+    file,
+    (err, txtFileData) => {
+      if (err) {
+        cb(err);
+      }
+      else {
+        cb(null, txtFileData);
+      }
+    },
+  );
 };
 
 const passData = (loc, lat, lon, des) => {
   readLog((err, txt) => {
     if (err) {
       console.log('[function] "readData" ERROR: ', err);
-    } else {
+    }
+    else {
       writeLog(loc, lat, lon, des, txt);
     }
   });

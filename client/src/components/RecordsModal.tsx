@@ -3,8 +3,6 @@ import Table from 'react-bootstrap/Table';
 import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 import { v4 as uuidv4 } from 'uuid';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { solid, regular, brands, icon } from '@fortawesome/fontawesome-svg-core/import.macro';
 import TableEntry from './TableEntry';
 import { TableFont } from './styles/ModalStyles';
 import { swapBinaryAndBool } from './utils';
@@ -14,7 +12,7 @@ const uuid = (): string => uuidv4();
 
 type Props = {
   show: boolean;
-  handleClose: () => void
+  handleClose: () => void;
   disarmRecords: DisarmRecordsObj[];
 };
 
@@ -41,12 +39,16 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
     return '';
   };
 
-  const getDayFromDate = (d: string) => d.slice(d.indexOf('/') + 1, d.lastIndexOf('/'));
+  const getDayFromDate = (d: string) =>
+    d.slice(d.indexOf('/') + 1, d.lastIndexOf('/'));
   const getMonthFromDate = (d: string) => d.slice(0, d.indexOf('/'));
-  const getYearFromDate = (d: string) => d.slice(d.lastIndexOf('/') + 1, d.length);
+  const getYearFromDate = (d: string) =>
+    d.slice(d.lastIndexOf('/') + 1, d.length);
 
-  const incrementMonth = (): void => setCurrMonth((prevMonth) => String(Number(prevMonth) + 1));
-  const decrementMonth = (): void => setCurrMonth((prevMonth) => String(Number(prevMonth) - 1));
+  const incrementMonth = (): void =>
+    setCurrMonth((prevMonth) => String(Number(prevMonth) + 1));
+  const decrementMonth = (): void =>
+    setCurrMonth((prevMonth) => String(Number(prevMonth) - 1));
 
   const makeTwoDigits = (n: string) => (n.length === 1 ? `0${n}` : n);
 
@@ -63,17 +65,18 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
     return numericVal;
   };
 
-  const filterRecordsByMonth = (currentMonth: string, currentYear: string) => disarmRecords.filter(
-    ({ date_ }) => {
+  const filterRecordsByMonth = (currentMonth: string, currentYear: string) =>
+    disarmRecords.filter(({ date_ }) => {
       const { year } = breakdownDate(date_!);
       const adjustedCurrentMonth = makeTwoDigits(currentMonth);
       const low = Number(`${year}${adjustedCurrentMonth}01`);
       const high = Number(`${year}${adjustedCurrentMonth}31`);
       const numericVal = getDateStringsNumbericVal(date_!);
-      if (numericVal >= low && numericVal <= high && year !== currentYear) setCurrYear(year);
-      return (numericVal >= low && numericVal <= high);
-    },
-  );
+      if (numericVal >= low && numericVal <= high && year !== currentYear) {
+        setCurrYear(year);
+      }
+      return numericVal >= low && numericVal <= high;
+    });
 
   useEffect(() => {
     if (!currMonth) setCurrMonth(thisMonth);
@@ -92,22 +95,21 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
 
   return (
     <div>
-      <Modal
-        show={show}
-        onHide={handleClose}
-        centered
-        scrollable
-      >
+      <Modal show={show} onHide={handleClose} centered scrollable>
         <Modal.Header>
           <Modal.Title>
             <h1 className="modal-headers">{'Routine Records: '}</h1>
           </Modal.Title>
-          <h5 className="modal-headers">{`${getMonthName(currMonth)} '${currYear.slice(-2)}`}</h5>
+          <h5 className="modal-headers">{`${getMonthName(
+            currMonth,
+          )} '${currYear.slice(-2)}`}
+          </h5>
         </Modal.Header>
-        <Modal.Body style={{
-          maxHeight: '40vh',
-          overflowY: 'auto',
-        }}
+        <Modal.Body
+          style={{
+            maxHeight: '40vh',
+            overflowY: 'auto',
+          }}
         >
           <Table size="sm">
             <thead>
@@ -119,31 +121,43 @@ export default React.memo(({ show, handleClose, disarmRecords }: Props) => {
                 <TableFont as="th">Alarm 2</TableFont>
               </tr>
             </thead>
-            {filterRecordsByMonth(currMonth, currYear).reverse().map((rec, i) => (
-              <tbody
-                key={uuid()}
-              >
-                <TableEntry
-                  classN={!(i % 2) ? 'oddtable' : 'eventable'}
-                  failed={(!swapBinaryAndBool(rec.success) ? 'failed' : 'succeeded')}
-                  key={uuid()}
-                  date_={rec.date_}
-                  alarm1={rec.alarm1}
-                  alarm2={rec.alarm2}
-                  disarmedTime1={rec.disarmedtime1}
-                  disarmedTime2={rec.disarmedtime2}
-                />
-              </tbody>
-            ))}
+            {filterRecordsByMonth(currMonth, currYear)
+              .reverse()
+              .map((rec, i) => (
+                <tbody key={uuid()}>
+                  <TableEntry
+                    classN={!(i % 2) ? 'oddtable' : 'eventable'}
+                    failed={
+                      !swapBinaryAndBool(rec.success) ? 'failed' : 'succeeded'
+                    }
+                    key={uuid()}
+                    date_={rec.date_}
+                    alarm1={rec.alarm1}
+                    alarm2={rec.alarm2}
+                    disarmedTime1={rec.disarmedtime1}
+                    disarmedTime2={rec.disarmedtime2}
+                  />
+                </tbody>
+              ))}
           </Table>
         </Modal.Body>
         <Modal.Footer>
-          <Button size="sm" variant={currMonth === oldestMonth ? 'outline-secondary' : 'warning'} disabled={(currMonth === oldestMonth) || false} onClick={decrementMonth}>
+          <Button
+            size="sm"
+            variant={
+              currMonth === oldestMonth ? 'outline-secondary' : 'warning'
+            }
+            disabled={currMonth === oldestMonth || false}
+            onClick={decrementMonth}
+          >
             previous
-            {/* <i className="fa-solid fa-user" /> */}
           </Button>
-          <Button size="sm" variant={currMonth === thisMonth ? 'outline-secondary' : 'warning'} disabled={(currMonth === thisMonth) || false} onClick={incrementMonth}>
-            {/* <i className="fa-brands fa-github-square" /> */}
+          <Button
+            size="sm"
+            variant={currMonth === thisMonth ? 'outline-secondary' : 'warning'}
+            disabled={currMonth === thisMonth || false}
+            onClick={incrementMonth}
+          >
             next
           </Button>
         </Modal.Footer>

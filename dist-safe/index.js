@@ -1,15 +1,13 @@
-import express from 'express';
-import path from 'path';
-import dotenv from 'dotenv';
-import { get, update, post } from './controller';
-
-dotenv.config();
+const express = require('express');
+const path = require('path');
+const { get, update, post } = require('./controller');
 
 const app = express();
-const CLIENT = path.join(__dirname, '../../client/dist/');
-const PORT = process.env.PORT || 3000;
 
-app.use(express.static(CLIENT));
+const PORT = 3000;
+const DIST_DIR = path.join(__dirname, '../../client/dist/');
+
+app.use(express.static(DIST_DIR));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

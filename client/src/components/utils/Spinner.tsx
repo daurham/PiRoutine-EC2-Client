@@ -3,18 +3,18 @@ import styled, { keyframes } from 'styled-components';
 // Spinner Styles:
 
 export const SpinnerContainer = styled.div`
-display: inline-flex;
+  display: inline-flex;
 `;
 export const SpinnerInnerContainer = styled.div`
-display: flex;
-justify-content: center;
+  display: flex;
+  justify-content: center;
 `;
 export const BigSpinnerContainer = styled.div`
-display: flex;
-justify-content: center;
-height: 100vh;
-width: 100vw;
-flex-direction: column;
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  width: 100vw;
+  flex-direction: column;
 `;
 
 // Spinner:

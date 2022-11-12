@@ -4,6 +4,6 @@ import { FlexCenteringContainer } from './GlobalStyles';
 export const ButtonContainer = FlexCenteringContainer;
 
 export const DisarmButtonContainer = styled.div`
-display: inherit;
-justify-content: center;
+  display: inherit;
+  justify-content: center;
 `;

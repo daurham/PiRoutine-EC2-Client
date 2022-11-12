@@ -18,66 +18,60 @@ type Props = {
   setLock: (arg0: boolean) => void;
 };
 
-export default React.memo(({
-  inputPin,
-  inputStatus,
-  show,
-  handleClose,
-  setInputPin,
-  setInputStatus,
-  setLock,
-}: Props) => {
-  const [password, setPassword] = useState<string>();
+export default React.memo(
+  ({
+    inputPin,
+    inputStatus,
+    show,
+    handleClose,
+    setInputPin,
+    setInputStatus,
+    setLock,
+  }: Props) => {
+    const [password, setPassword] = useState<string>();
 
-  useEffect(() => {
-    getUserPassword(setPassword)
-      .catch((err) => console.warn(err));
-  }, []);
+    useEffect(() => {
+      getUserPassword(setPassword).catch((err) => console.warn(err));
+    }, []);
 
-  return (
-    <Modal
-      show={show}
-      onHide={handleClose}
-      size="sm"
-      centered
-      scrollable
-    >
-      <Modal.Header closeButton>
-        <Modal.Title>
-          Unlock 🔒
-        </Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <OutterContainer>
-          <InputContainer>
-            <PasswordInput
-              placeholder="Passcode"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              type="password"
-              autoFocus
-              onChange={(e) => {
-                setInputPin(e.target.value);
-                if (inputStatus !== 'Submit') setInputStatus('Submit');
-              }}
-            />
-            <Button
-              type="submit"
-              variant={inputStatus === 'Submit' ? 'outline-info' : 'danger'}
-              onClick={(e) => {
-                e.preventDefault();
-                if (inputPin === password) {
-                  setLock(false);
-                } else {
-                  setInputStatus('Invalid');
-                }
-              }}
-            >
-              {inputStatus}
-            </Button>
-          </InputContainer>
-        </OutterContainer>
-      </Modal.Body>
-    </Modal>
-  );
-});
+    return (
+      <Modal show={show} onHide={handleClose} size="sm" centered scrollable>
+        <Modal.Header closeButton>
+          <Modal.Title>Unlock 🔒</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <OutterContainer>
+            <InputContainer>
+              <PasswordInput
+                placeholder="Passcode"
+                inputMode="numeric"
+                pattern="[0-9]*"
+                type="password"
+                autoFocus
+                onChange={(e) => {
+                  setInputPin(e.target.value);
+                  if (inputStatus !== 'Submit') setInputStatus('Submit');
+                }}
+              />
+              <Button
+                type="submit"
+                variant={inputStatus === 'Submit' ? 'outline-info' : 'danger'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  if (inputPin === password) {
+                    setLock(false);
+                  }
+                  else {
+                    setInputStatus('Invalid');
+                  }
+                }}
+              >
+                {inputStatus}
+              </Button>
+            </InputContainer>
+          </OutterContainer>
+        </Modal.Body>
+      </Modal>
+    );
+  },
+);

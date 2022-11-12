@@ -1,25 +1,13 @@
-import axios from 'axios';
-import dotenv from 'dotenv';
-import { Request, Response, RequestHandler } from 'express';
-import {
-  DisarmRes,
-  UserRes,
-  SkipRes,
-  AlarmTimeRes,
-  SoakedRes,
-  StreakRes,
-  DisarmRecordsData,
-} from '../../../types';
+const axios = require('axios');
+require('dotenv').config();
 
-dotenv.config();
-
-const URL = process.env.URL || `http://localhost:${process.env.PORT || 3000}`;
+const { URL } = process.env;
 
 // GET
-export default {
-  alarmTime: (async (req: Request, res: Response) => {
+module.exports = {
+  alarmTime: async (req, res) => {
     try {
-      const { data } = await axios.get<AlarmTimeRes>(
+      const { data } = await axios.get(
         `${URL}/get-alarm-time/?table=alarmtime`,
       );
       res.status(200).send(data);
@@ -28,11 +16,11 @@ export default {
       console.warn('Issue getting alarm data: ', err);
       res.status(200).send([{ hour: 6, minute: 5 }]);
     }
-  }) as RequestHandler,
+  },
 
-  disarmStatus: (async (req: Request, res: Response) => {
+  disarmStatus: async (req, res) => {
     try {
-      const { data } = await axios.get<DisarmRes>(
+      const { data } = await axios.get(
         `${URL}/get-disarm-status/?table=isdisarmed`,
       );
       res.status(200).send(data);
@@ -41,11 +29,11 @@ export default {
       console.warn('Issue getting defuse data: ', err);
       res.status(200).send([{ isDisarmed: 0 }]);
     }
-  }) as RequestHandler,
+  },
 
-  streakCount: (async (req: Request, res: Response) => {
+  streakCount: async (req, res) => {
     try {
-      const { data } = await axios.get<StreakRes>(
+      const { data } = await axios.get(
         `${URL}/get-streak-count/?table=streakcount`,
       );
       res.status(200).send(data);
@@ -54,24 +42,22 @@ export default {
       console.warn('Issue getting streak data: ', err);
       res.status(200).send([{ streak: true }]);
     }
-  }) as RequestHandler,
+  },
 
-  userInfo: (async (req: Request, res: Response) => {
+  userInfo: async (req, res) => {
     try {
-      const { data } = await axios.get<UserRes>(
-        `${URL}/get-user-info/?table=users`,
-      );
+      const { data } = await axios.get(`${URL}/get-user-info/?table=users`);
       res.status(200).send(data);
     }
     catch (err) {
       console.warn('Issue getting user info data: ', err);
       res.status(200).send([{ password: '1234' }]);
     }
-  }) as RequestHandler,
+  },
 
-  soakedCount: (async (req: Request, res: Response) => {
+  soakedCount: async (req, res) => {
     try {
-      const { data } = await axios.get<SoakedRes>(
+      const { data } = await axios.get(
         `${URL}/get-soaked-count/?table=soakedcount`,
       );
       res.status(200).send(data);
@@ -80,11 +66,11 @@ export default {
       console.warn('Issue getting soakedCount data: ', err);
       res.status(200).send([{ soakedCount: 0 }]);
     }
-  }) as RequestHandler,
+  },
 
-  skippedData: (async (req: Request, res: Response) => {
+  skippedData: async (req, res) => {
     try {
-      const { data } = await axios.get<SkipRes>(
+      const { data } = await axios.get(
         `${URL}/get-skipped-data/?table=skippedcount`,
       );
       res.status(200).send(data);
@@ -93,11 +79,11 @@ export default {
       console.warn('Issue getting skippedCount data: ', err);
       res.status(200).send([{ skippedCount: 0 }]);
     }
-  }) as RequestHandler,
+  },
 
-  disarmRecords: (async (req: Request, res: Response) => {
+  disarmRecords: async (req, res) => {
     try {
-      const { data } = await axios.get<DisarmRecordsData>(
+      const { data } = await axios.get(
         `${URL}/get-disarm-records/?table=disarmrecords`,
       );
       res.status(200).send(data);
@@ -106,5 +92,5 @@ export default {
       console.warn('Issue getting disarmRecords data: ', err);
       res.sendStatus(500);
     }
-  }) as RequestHandler,
+  },
 };

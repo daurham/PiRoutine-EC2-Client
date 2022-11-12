@@ -10,3 +10,9 @@ export const CenteringContainer = styled.div`
   display: grid;
   justify-content: center;
 `;
+
+export const ContentDivider = styled.div`
+
+`;
+
+export const MainContent = styled.div``;
