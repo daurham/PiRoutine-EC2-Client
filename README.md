@@ -1,5 +1,5 @@
 <div align="center">
-  
+
 # PiRoutine | Client ⏰💦
 
 ![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)
@@ -14,7 +14,7 @@
 
 ### All of which aims to instill good habits in the user, starting by waking up on time.
 
-![](https://media.giphy.com/media/u6WXNK5Z5AObZ9eOaa/giphy.gif)
+![](https://media.giphy.com/media/sfz6S74HqraQRCemlz/giphy.gif)
 
 ### This is done by leveraging a pavlovian fear of laying in bed too long after they've heard their external alarm go off, by soaking the user and/or their bed with water. In return, the user quickly learns to wake up alongside their external alarm, jumping out of bed, ready to start their day with a light jog!
 
@@ -60,16 +60,16 @@ After the initial alarm is disarmed, I begin my morning run / walk. Waking up th
 ![](https://media.giphy.com/media/JpCnppJj1nx25lgt79/giphy.gif)
 
 </div>
-  
+
 ## Phase 3 - Disarming Alarm 2
-  After the distance is traveled (roughly 0.25mi-0.5mi), disarm the final alarm. 
-- Failure to do so, will result in the pump going off. 
+  After the distance is traveled (roughly 0.25mi-0.5mi), disarm the final alarm.
+- Failure to do so, will result in the pump going off.
 <div align="center">
 
 ![](https://media.giphy.com/media/4T9FrMFKvVCOVPt3AD/giphy.gif)
 
 </div>
-  
+
 - Note that the metadata is updated on its own upon the current time reaching the final alarm time.
 <div align="center">
 
@@ -89,7 +89,7 @@ Keeping me consistant and inspired, in addition to the streak / max streak track
 ![](https://media.giphy.com/media/Vx0uMBsm3K6pU9FqBT/giphy.gif)
 
 </div>
-    
+
 ## Raspberry Pi Installation
   The raspberry pi is connected to a water pump, stored inside the 5 gallon bucket beside the bed. The pump has tubing connecting it to a piece of conduit with holes drilled into it, attached to my headboard.
 
